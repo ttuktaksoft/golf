@@ -62,6 +62,7 @@
   <ItemGroup>
     <Compile Include="Assets\PracticeUI.cs" />
     <Compile Include="Assets\Script\Manager\GyroScopeManager.cs" />
+    <Compile Include="Assets\Script\Manager\PracticeManager.cs" />
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>D:/ddukddak/Golf/Golf/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>
