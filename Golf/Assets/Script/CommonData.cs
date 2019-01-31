@@ -30,4 +30,12 @@ public class CommonData : MonoBehaviour
         GENDER_MAN = 0,
         GENDER_WOMAN  = 1
     }
+
+    public enum SOUND_TYPE
+    {
+        BUTTON,
+        TRAINING_START,
+        TRAINING_SUCCESS,
+    }
+
 }

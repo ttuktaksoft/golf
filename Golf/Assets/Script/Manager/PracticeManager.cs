@@ -58,11 +58,11 @@ public class PracticeManager : MonoBehaviour
         //roll : side
         UserStatus[2] = Mathf.Rad2Deg * roll;// - InitUserStatus_z;
 
-        /*
+       
         Debug.Log("!@@@@@ UserStatus_x :" + UserStatus[0]);
         Debug.Log("!@@@@@ UserStatus_y :" + UserStatus[1]);
         Debug.Log("!@@@@@ UserStatus_z :" + UserStatus[2]);
-        */
+        
 
     }
 

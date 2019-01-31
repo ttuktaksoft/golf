@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class PracticeUI : MonoBehaviour
 {
@@ -12,7 +13,8 @@ public class PracticeUI : MonoBehaviour
 
     public Text txtMode;
 
-  
+    public Button btnInit;
+    public Button btnBack;
 
     float[] tempStatus = new float[3];
     bool bStatus = false;
@@ -25,16 +27,40 @@ public class PracticeUI : MonoBehaviour
 
         txtMode.text = tempString;
 
-        GyroScopeManager.Instance.Init();
-        PracticeManager.Instance.SetCalibration();
+        btnInit.onClick.AddListener(OnClickInit);
+        btnBack.onClick.AddListener(OnClickBack);
+
+
+        //GyroScopeManager.Instance.Init();
+        //  PracticeManager.Instance.SetCalibration();
     }
-    
+
+    public void OnClickInit()
+    {
+        //isModelActive = !isModelActive;
+        GyroScopeManager.Instance.Init(true);
+
+
+        //PracticeManager.Instance.SetCalibration();
+    }
+
+    public void OnClickBack()
+    {
+        GyroScopeManager.Instance.DestroyGyro();
+        SceneManager.LoadScene("SampleScene", LoadSceneMode.Single);
+
+    }
+
+
 
     // Update is called once per frame
     void Update()
     {
         tempStatus = PracticeManager.Instance.GetGyroStatus();
+        //txtTurn.text = "tempStatus : " + tempStatus[0];
+        Debug.Log("tempStatus : " + tempStatus[0]);
         CheckGyroStatus();
+        SuccessTraining();
     }
 
 
@@ -51,6 +77,21 @@ public class PracticeUI : MonoBehaviour
         
     }
 
+    int nTrainingSuccess = 0;
+    bool bTrainingSuccess = false;
+
+    public void SuccessTraining()
+    {        
+        if(bTrainingSuccess == false)
+        {
+            if (nTrainingSuccess == 2)
+            {
+                SoundManager.Instance.PlaySuccessSound();
+                bTrainingSuccess = true;
+            }
+       
+        }
+    }
 
     public void CheckGyroStatus_Man()
     {
@@ -59,21 +100,23 @@ public class PracticeUI : MonoBehaviour
         if (CommonData.REF_MAN[nTrainMode] <= tempStatus[2] && tempStatus[2] <= CommonData.REF_MAN[nTrainMode + 1])
         {
             txtTurn.text = "TURN OK";
+            nTrainingSuccess = 1;
         }
         else
         {
-            txtTurn.text = "TURN : " + (int)tempStatus[2];
+            txtTurn.text = "TURN : " + (int)tempStatus[2] + "(" + CommonData.REF_MAN[nTrainMode] + " to " + CommonData.REF_MAN[nTrainMode +1] + ")";
         }
             
 
-        if (CommonData.REF_MAN[nTrainMode + 2] <= tempStatus[1] && tempStatus[1] <= CommonData.REF_MAN[nTrainMode + 3]
-            )
+        if (CommonData.REF_MAN[nTrainMode + 2] <= tempStatus[1] && tempStatus[1] <= CommonData.REF_MAN[nTrainMode + 3])
         {
             txtBend.text = "BEND OK";
+            if (nTrainingSuccess == 1)
+                nTrainingSuccess = 2;
         }
         else
         {
-            txtBend.text = "BEND : " + (int)tempStatus[1];
+            txtBend.text = "BEND : " + (int)tempStatus[1] + "(" + CommonData.REF_MAN[nTrainMode +2 ] + " to " + CommonData.REF_MAN[nTrainMode + 3] + ")";
         }
 
         if (CommonData.REF_MAN[nTrainMode + 4] <= tempStatus[0] && tempStatus[0] <= CommonData.REF_MAN[nTrainMode + 5] )
@@ -82,7 +125,7 @@ public class PracticeUI : MonoBehaviour
         }
         else
         {
-            txtSide.text = "SIDE : " + (int)tempStatus[0];
+            txtSide.text = "SIDE : " + (int)tempStatus[0] + "(" + CommonData.REF_MAN[nTrainMode + 4] + " to " + CommonData.REF_MAN[nTrainMode + 5] + ")";
         }    
 
     }

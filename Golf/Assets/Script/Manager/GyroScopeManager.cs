@@ -8,7 +8,6 @@ public class GyroScopeManager : MonoBehaviour
     private int initialOrientationY;
     private int initialOrientationZ;
 
-    private Gyroscope gyro;
     public Quaternion rotation = Quaternion.identity;
     private Quaternion initialGyroRotation;
     private Quaternion initialRotation;
@@ -32,57 +31,72 @@ public class GyroScopeManager : MonoBehaviour
 
     void Start()
     {
+
+        StartCoroutine(Co_Init());
+
+ 
+
+        /*
+        initialOrientationX = (int)Input.gyro.rotationRateUnbiased.x;
+        initialOrientationY = (int)Input.gyro.rotationRateUnbiased.y;
+        initialOrientationZ = (int)-Input.gyro.rotationRateUnbiased.z;
+        */
+
+        /*
         Input.gyro.enabled = true;
-
-        //   if (Input.gyro.enabled)
-     
-            initialRotation = transform.rotation;
-             Debug.Log("!!! gyro initialRotation : " + initialRotation);
-
-            gyroInitialRotation = Input.gyro.attitude;
-               Debug.Log("!!! gyro gyroInitialRotation : " + gyroInitialRotation);
-
-            Screen.orientation = ScreenOrientation.Portrait;
-
-            /*
-            initialOrientationX = (int)Input.gyro.rotationRateUnbiased.x;
-            initialOrientationY = (int)Input.gyro.rotationRateUnbiased.y;
-            initialOrientationZ = (int)-Input.gyro.rotationRateUnbiased.z;
-            */
-
-            /*
-            Input.gyro.enabled = true;
-            Input.gyro.updateInterval = 0.01f;
+        Input.gyro.updateInterval = 0.01f;
 
 
-            initialOrientationX = (int)Input.gyro.rotationRate.x;
-            initialOrientationY = (int)Input.gyro.rotationRate.y;
-            initialOrientationZ = (int)-Input.gyro.rotationRate.z;
-            */
-        }
+        initialOrientationX = (int)Input.gyro.rotationRate.x;
+        initialOrientationY = (int)Input.gyro.rotationRate.y;
+        initialOrientationZ = (int)-Input.gyro.rotationRate.z;
+        */
+    }
+
+    IEnumerator Co_Init()
+    {
+        TKManager.Instance.gyro.enabled = false;
+        yield return new WaitForSeconds(3f);
+
+        SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_START);
+
+        Init(true);
+
+        yield return null;
+
+    }
 
 
 
-             public void Init()
-             {
-      
 
-            /*
-initialOrientationX = (int)Input.gyro.rotationRateUnbiased.x;
-initialOrientationY = (int)Input.gyro.rotationRateUnbiased.y;
-initialOrientationZ = (int)-Input.gyro.rotationRateUnbiased.z;
-*/
-            /*
-            Input.gyro.updateInterval = 0.01f;
+    public void Init(bool bStatus)
+    {
+        TKManager.Instance.gyro.enabled = bStatus;
+        initialRotation = Model.transform.rotation;
+        Debug.Log("!!! gyro initialRotation : " + initialRotation);
+        gyroInitialRotation = TKManager.Instance.gyro.attitude;
+        Debug.Log("!!! gyro gyroInitialRotation : " + gyroInitialRotation);
 
+        Screen.orientation = ScreenOrientation.Portrait;
 
+        /*
+        initialOrientationX = (int)Input.gyro.rotationRateUnbiased.x;
+        initialOrientationY = (int)Input.gyro.rotationRateUnbiased.y;
+        initialOrientationZ = (int)-Input.gyro.rotationRateUnbiased.z;
+        */
 
-            initialOrientationX = (int)Input.gyro.rotationRate.x;
-            initialOrientationY = (int)Input.gyro.rotationRate.y;
-            initialOrientationZ = (int)-Input.gyro.rotationRate.z;
-            */
-                 }
+        /*
+        Input.gyro.updateInterval = 0.01f;
+        initialOrientationX = (int)Input.gyro.rotationRate.x;
+        initialOrientationY = (int)Input.gyro.rotationRate.y;
+        initialOrientationZ = (int)-Input.gyro.rotationRate.z;
+        */
+    }
 
+    public void DestroyGyro()
+    {
+        TKManager.Instance.gyro.enabled = false;
+    }
 
     void Update()
     {        
@@ -147,17 +161,17 @@ initialOrientationZ = (int)-Input.gyro.rotationRateUnbiased.z;
 
     void gyroupdate()
     {
-        if (Input.gyro.enabled)
-        {      
+        if (TKManager.Instance.gyro.enabled)
+        {
 
-            Quaternion offsetRotation = Quaternion.Inverse(gyroInitialRotation) * Input.gyro.attitude;
-        
-            transform.rotation = initialRotation * offsetRotation;
+            Quaternion offsetRotation = Quaternion.Inverse(gyroInitialRotation) * TKManager.Instance.gyro.attitude;
+
+            Model.transform.rotation = initialRotation * offsetRotation;
             GyroToUnity(initialRotation * offsetRotation);
 
-            float AngleX = transform.rotation.eulerAngles.x;
-            float AngleY = transform.rotation.eulerAngles.y;
-            float AngleZ = transform.rotation.eulerAngles.z;
+            float AngleX = Model.transform.rotation.eulerAngles.x;
+            float AngleY = Model.transform.rotation.eulerAngles.y;
+            float AngleZ = Model.transform.rotation.eulerAngles.z;
 
             Debug.Log("!@@@@@ Address x" + AngleX);
             Debug.Log("!@@@@@ Address y" + AngleY);
@@ -181,7 +195,7 @@ initialOrientationZ = (int)-Input.gyro.rotationRateUnbiased.z;
         }
         else
         {
-            Input.gyro.enabled = true;
+            TKManager.Instance.gyro.enabled = true;
         }
 
     }

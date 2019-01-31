@@ -23,23 +23,27 @@ public class SampleUI : MonoBehaviour
 
     public void OnClickAddress()
     {
+        TKManager.Instance.gyro.enabled = false;
         TKManager.Instance.SetMode(CommonData.TRAINING_MODE.TRAINING_ADDRESS);
         SceneManager.LoadScene("PracticeScene", LoadSceneMode.Single);
     }
 
     public void OnClickBackSwing()
     {
+        TKManager.Instance.gyro.enabled = false;
         TKManager.Instance.SetMode(CommonData.TRAINING_MODE.TRAINING_BACKSWING);
         SceneManager.LoadScene("PracticeScene", LoadSceneMode.Single);
     }
     public void OnClickImpact()
     {
+        TKManager.Instance.gyro.enabled = false;
         TKManager.Instance.SetMode(CommonData.TRAINING_MODE.TRAINING_IMPACT);
         SceneManager.LoadScene("PracticeScene", LoadSceneMode.Single);
     }
 
     public void OnClickTempo()
     {
+        TKManager.Instance.gyro.enabled = false;
         TKManager.Instance.SetMode(CommonData.TRAINING_MODE.TRAINING_TEMPO);
         SceneManager.LoadScene("PracticeScene", LoadSceneMode.Single);
     }
