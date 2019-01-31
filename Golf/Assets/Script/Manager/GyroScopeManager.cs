@@ -14,7 +14,7 @@ public class GyroScopeManager : MonoBehaviour
     private Quaternion initialRotation;
     private Quaternion baseRotation;
     private Quaternion gyroInitialRotation;
-
+    public GameObject Model;
 
 
     public static GyroScopeManager _instance = null;
@@ -32,35 +32,40 @@ public class GyroScopeManager : MonoBehaviour
 
     void Start()
     {
-
-        /*
-        initialOrientationX = (int)Input.gyro.rotationRateUnbiased.x;
-        initialOrientationY = (int)Input.gyro.rotationRateUnbiased.y;
-        initialOrientationZ = (int)-Input.gyro.rotationRateUnbiased.z;
-        */
-
-        /*
         Input.gyro.enabled = true;
-        Input.gyro.updateInterval = 0.01f;
 
-
-        initialOrientationX = (int)Input.gyro.rotationRate.x;
-        initialOrientationY = (int)Input.gyro.rotationRate.y;
-        initialOrientationZ = (int)-Input.gyro.rotationRate.z;
-        */
-    }
-
-
-
-    public void Init(bool status)
-    {
-        Input.gyro.enabled = status;
-
-        if (Input.gyro.enabled)
-        {
+        //   if (Input.gyro.enabled)
+     
             initialRotation = transform.rotation;
+             Debug.Log("!!! gyro initialRotation : " + initialRotation);
+
             gyroInitialRotation = Input.gyro.attitude;
+               Debug.Log("!!! gyro gyroInitialRotation : " + gyroInitialRotation);
+
             Screen.orientation = ScreenOrientation.Portrait;
+
+            /*
+            initialOrientationX = (int)Input.gyro.rotationRateUnbiased.x;
+            initialOrientationY = (int)Input.gyro.rotationRateUnbiased.y;
+            initialOrientationZ = (int)-Input.gyro.rotationRateUnbiased.z;
+            */
+
+            /*
+            Input.gyro.enabled = true;
+            Input.gyro.updateInterval = 0.01f;
+
+
+            initialOrientationX = (int)Input.gyro.rotationRate.x;
+            initialOrientationY = (int)Input.gyro.rotationRate.y;
+            initialOrientationZ = (int)-Input.gyro.rotationRate.z;
+            */
+        }
+
+
+
+             public void Init()
+             {
+      
 
             /*
 initialOrientationX = (int)Input.gyro.rotationRateUnbiased.x;
@@ -76,12 +81,7 @@ initialOrientationZ = (int)-Input.gyro.rotationRateUnbiased.z;
             initialOrientationY = (int)Input.gyro.rotationRate.y;
             initialOrientationZ = (int)-Input.gyro.rotationRate.z;
             */
-
-
-        }
-
-
-    }
+                 }
 
 
     void Update()
@@ -148,21 +148,20 @@ initialOrientationZ = (int)-Input.gyro.rotationRateUnbiased.z;
     void gyroupdate()
     {
         if (Input.gyro.enabled)
-        {
-      
+        {      
 
-        Quaternion offsetRotation = Quaternion.Inverse(gyroInitialRotation) * Input.gyro.attitude;
+            Quaternion offsetRotation = Quaternion.Inverse(gyroInitialRotation) * Input.gyro.attitude;
         
-        transform.rotation = initialRotation * offsetRotation;
-        GyroToUnity(initialRotation * offsetRotation);
+            transform.rotation = initialRotation * offsetRotation;
+            GyroToUnity(initialRotation * offsetRotation);
 
-        float AngleX = transform.rotation.eulerAngles.x;
-        float AngleY = transform.rotation.eulerAngles.y;
-        float AngleZ = transform.rotation.eulerAngles.z;
+            float AngleX = transform.rotation.eulerAngles.x;
+            float AngleY = transform.rotation.eulerAngles.y;
+            float AngleZ = transform.rotation.eulerAngles.z;
 
-        Debug.Log("!@@@@@ Address x" + AngleX);
-        Debug.Log("!@@@@@ Address y" + AngleY);
-        Debug.Log("!@@@@@ Address z" + AngleZ);
+            Debug.Log("!@@@@@ Address x" + AngleX);
+            Debug.Log("!@@@@@ Address y" + AngleY);
+            Debug.Log("!@@@@@ Address z" + AngleZ);
 
             // transform.rotation = Input.gyro.attitude;
             /*
@@ -179,6 +178,10 @@ initialOrientationZ = (int)-Input.gyro.rotationRateUnbiased.z;
                      initialOrientationZ + Input.gyro.rotationRate.z);
 
          */
+        }
+        else
+        {
+            Input.gyro.enabled = true;
         }
 
     }

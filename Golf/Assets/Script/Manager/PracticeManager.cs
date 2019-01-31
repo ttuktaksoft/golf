@@ -37,7 +37,7 @@ public class PracticeManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        CheckGyroStatus();
+        //CheckGyroStatus();
     }
 
     public void SetCalibration()
@@ -71,17 +71,5 @@ public class PracticeManager : MonoBehaviour
         return UserStatus;
     }
 
-    public void CheckGyroStatus()
-    {
 
-        //Debug.Log("!@@@@@ UserStatus" + UserStatus);
-        if (7 <= UserStatus[0] && UserStatus[0] <= 17)
-            Debug.Log("!@@@@@ Address Turn OK");
-
-        if (35 <= UserStatus[1] && UserStatus[1] <= 45)
-            Debug.Log("!@@@@@ Address Bend OK");
-
-        if (11 <= UserStatus[2] && UserStatus[2] <= 18)
-            Debug.Log("!@@@@@ Address Side OK");
-    }
 }
