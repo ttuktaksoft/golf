@@ -13,6 +13,8 @@ public class MainUI : MonoBehaviour {
     }
 
     public TraningUI TraningUIPage;
+    public AlarmUI AlarmUIPage;
+    public UserInfoUI UserInfoUIPage;
 
     public UITabButton TraningTab;
     public UITabButton AlarmTab;
@@ -28,8 +30,8 @@ public class MainUI : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-		
-	}
+        OnClickTraning();
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -51,7 +53,7 @@ public class MainUI : MonoBehaviour {
 
     private void ChangeTab(MAIN_MENU_TYPE type)
     {
-        if (CurrType == type)
+        if (TraningUIPage.MenuAction || CurrType == type)
             return;
 
         CurrType = type;
@@ -60,6 +62,8 @@ public class MainUI : MonoBehaviour {
         UserInfoTab.SetSelect(false);
 
         TraningUIPage.gameObject.SetActive(false);
+        AlarmUIPage.gameObject.SetActive(false);
+        UserInfoUIPage.gameObject.SetActive(false);
 
         switch (CurrType)
         {
@@ -70,9 +74,11 @@ public class MainUI : MonoBehaviour {
                 break;
             case MAIN_MENU_TYPE.ALARM:
                 AlarmTab.SetSelect(true);
+                AlarmUIPage.gameObject.SetActive(true);
                 break;
             case MAIN_MENU_TYPE.USER_INFO:
                 UserInfoTab.SetSelect(true);
+                UserInfoUIPage.gameObject.SetActive(true);
                 break;
             default:
                 break;

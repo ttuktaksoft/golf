@@ -47,7 +47,7 @@ public class PracticeUI : MonoBehaviour
     public void OnClickBack()
     {
         GyroScopeManager.Instance.DestroyGyro();
-        SceneManager.LoadScene("SampleScene", LoadSceneMode.Single);
+        SceneManager.LoadScene("MainScene", LoadSceneMode.Single);
 
     }
 

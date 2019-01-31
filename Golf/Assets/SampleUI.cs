@@ -6,19 +6,24 @@ using UnityEngine.SceneManagement;
 
 public class SampleUI : MonoBehaviour
 {
-    public Button Btn_Address;
-    public Button Btn_Backswing;
-    public Button Btn_Impact;
-    public Button Btn_Temp;
-    
-
+    // TODO 로딩씬으로 변경 예정
     // Start is called before the first frame update
     void Start()
     {
-        Btn_Address.onClick.AddListener(OnClickAddress);
-        Btn_Backswing.onClick.AddListener(OnClickBackSwing);
-        Btn_Impact.onClick.AddListener(OnClickImpact);
-        Btn_Temp.onClick.AddListener(OnClickTempo);
+        StartCoroutine(LoadingData());
+    }
+
+    IEnumerator LoadingData()
+    {
+        yield return null;
+        yield return null;
+        yield return null;
+        yield return null;
+        yield return null;
+        yield return null;
+
+        TKManager.Instance.gyro.enabled = false;
+        SceneManager.LoadScene("MainScene", LoadSceneMode.Single);
     }
 
     public void OnClickAddress()

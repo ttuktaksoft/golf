@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class TraningUI : MonoBehaviour {
@@ -50,7 +51,7 @@ public class TraningUI : MonoBehaviour {
     private Dictionary<TRANING_POSE_LEVEL_TYPE, int> TraningPoseLevel = new Dictionary<TRANING_POSE_LEVEL_TYPE, int>();
     private Dictionary<TRANING_POSE_LEVEL_TYPE, int> TraningPoseLevelBtnIndex = new Dictionary<TRANING_POSE_LEVEL_TYPE, int>();
 
-    private bool MenuAction = false;
+    public bool MenuAction = false;
 
     private void Awake()
     {
@@ -76,6 +77,10 @@ public class TraningUI : MonoBehaviour {
         TraningPoseLevelStr.Add("\n중급");
         TraningPoseLevelStr.Add("\n프로");
 
+    }
+
+    public void Start()
+    {
     }
 
     public void Init()
@@ -411,5 +416,8 @@ public class TraningUI : MonoBehaviour {
     {
         if (MenuAction)
             return;
+
+        TKManager.Instance.SetMode(CommonFunc.ConvertTrainingMode(TraningPoseType));
+        SceneManager.LoadScene("PracticeScene", LoadSceneMode.Single);
     }
 }
