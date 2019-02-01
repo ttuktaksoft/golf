@@ -97,37 +97,56 @@ public class PracticeUI : MonoBehaviour
     {
         int nTrainMode = Convert.ToInt32(TKManager.Instance.GetMode());
 
-        if (CommonData.REF_MAN[nTrainMode] <= tempStatus[2] && tempStatus[2] <= CommonData.REF_MAN[nTrainMode + 1])
+        if (TKManager.Instance.IsAngleType(CommonData.TRAINING_ANGLE_MODE.TRAINING_ANGLE_TURN))
         {
-            txtTurn.text = "TURN OK";
-            nTrainingSuccess = 1;
+            int angleLevel = TKManager.Instance.GetAngleLevel(CommonData.TRAINING_ANGLE_MODE.TRAINING_ANGLE_TURN);
+
+            if (CommonData.REF_MAN[nTrainMode] <= tempStatus[2] && tempStatus[2] <= CommonData.REF_MAN[nTrainMode + 1])
+            {
+                txtTurn.text = "TURN OK";
+                nTrainingSuccess = 1;
+            }
+            else
+            {
+                txtTurn.text = "TURN : " + (int)tempStatus[2] + "(" + CommonData.REF_MAN[nTrainMode] + " to " + CommonData.REF_MAN[nTrainMode + 1] + ")";
+            }
         }
         else
-        {
-            txtTurn.text = "TURN : " + (int)tempStatus[2] + "(" + CommonData.REF_MAN[nTrainMode] + " to " + CommonData.REF_MAN[nTrainMode +1] + ")";
-        }
-            
+            txtTurn.text = "TURN : 측정안함";
 
-        if (CommonData.REF_MAN[nTrainMode + 2] <= tempStatus[1] && tempStatus[1] <= CommonData.REF_MAN[nTrainMode + 3])
+        if (TKManager.Instance.IsAngleType(CommonData.TRAINING_ANGLE_MODE.TRAINING_ANGLE_BEND))
         {
-            txtBend.text = "BEND OK";
-            if (nTrainingSuccess == 1)
-                nTrainingSuccess = 2;
+            int angleLevel = TKManager.Instance.GetAngleLevel(CommonData.TRAINING_ANGLE_MODE.TRAINING_ANGLE_BEND);
+
+            if (CommonData.REF_MAN[nTrainMode + 2] <= tempStatus[1] && tempStatus[1] <= CommonData.REF_MAN[nTrainMode + 3])
+            {
+                txtBend.text = "BEND OK";
+                if (nTrainingSuccess == 1)
+                    nTrainingSuccess = 2;
+            }
+            else
+            {
+                txtBend.text = "BEND : " + (int)tempStatus[1] + "(" + CommonData.REF_MAN[nTrainMode + 2] + " to " + CommonData.REF_MAN[nTrainMode + 3] + ")";
+            }
         }
         else
-        {
-            txtBend.text = "BEND : " + (int)tempStatus[1] + "(" + CommonData.REF_MAN[nTrainMode +2 ] + " to " + CommonData.REF_MAN[nTrainMode + 3] + ")";
-        }
+            txtBend.text = "BEND : 측정안함";
 
-        if (CommonData.REF_MAN[nTrainMode + 4] <= tempStatus[0] && tempStatus[0] <= CommonData.REF_MAN[nTrainMode + 5] )
+        if (TKManager.Instance.IsAngleType(CommonData.TRAINING_ANGLE_MODE.TRAINING_ANGLE_SIDE))
         {
-            txtSide.text = "SIDE OK";
+            int angleLevel = TKManager.Instance.GetAngleLevel(CommonData.TRAINING_ANGLE_MODE.TRAINING_ANGLE_SIDE);
+
+            if (CommonData.REF_MAN[nTrainMode + 4] <= tempStatus[0] && tempStatus[0] <= CommonData.REF_MAN[nTrainMode + 5])
+            {
+                txtSide.text = "SIDE OK";
+            }
+            else
+            {
+                txtSide.text = "SIDE : " + (int)tempStatus[0] + "(" + CommonData.REF_MAN[nTrainMode + 4] + " to " + CommonData.REF_MAN[nTrainMode + 5] + ")";
+            }
         }
         else
-        {
-            txtSide.text = "SIDE : " + (int)tempStatus[0] + "(" + CommonData.REF_MAN[nTrainMode + 4] + " to " + CommonData.REF_MAN[nTrainMode + 5] + ")";
-        }    
-
+            txtSide.text = "SIDE : 측정안함";
     }
 
     public void CheckGyroStatus_Woman()
@@ -135,34 +154,53 @@ public class PracticeUI : MonoBehaviour
         int nTrainMode = Convert.ToInt32(TKManager.Instance.GetMode());
 
         //Debug.Log("!@@@@@ UserStatus" + UserStatus);
-        if (CommonData.REF_WOMAN[nTrainMode] <= tempStatus[2] && tempStatus[2] <= CommonData.REF_WOMAN[nTrainMode + 1])
+        if (TKManager.Instance.IsAngleType(CommonData.TRAINING_ANGLE_MODE.TRAINING_ANGLE_TURN))
         {
-            txtTurn.text = "TURN OK";
+            int angleLevel = TKManager.Instance.GetAngleLevel(CommonData.TRAINING_ANGLE_MODE.TRAINING_ANGLE_TURN);
+
+            if (CommonData.REF_WOMAN[nTrainMode] <= tempStatus[2] && tempStatus[2] <= CommonData.REF_WOMAN[nTrainMode + 1])
+            {
+                txtTurn.text = "TURN OK";
+            }
+            else
+            {
+                txtTurn.text = "TURN : " + (int)tempStatus[2];
+            }
         }
         else
-        {
-            txtTurn.text = "TURN : " + (int)tempStatus[2];
-        }
+            txtTurn.text = "TURN 측정안함";
 
 
-        if (CommonData.REF_WOMAN[nTrainMode + 2] <= tempStatus[1] && tempStatus[1] <= CommonData.REF_WOMAN[nTrainMode + 3]
-            )
+        if (TKManager.Instance.IsAngleType(CommonData.TRAINING_ANGLE_MODE.TRAINING_ANGLE_BEND))
         {
-            txtBend.text = "BEND OK";
+            int angleLevel = TKManager.Instance.GetAngleLevel(CommonData.TRAINING_ANGLE_MODE.TRAINING_ANGLE_BEND);
+
+            if (CommonData.REF_WOMAN[nTrainMode + 2] <= tempStatus[1] && tempStatus[1] <= CommonData.REF_WOMAN[nTrainMode + 3])
+            {
+                txtBend.text = "BEND OK";
+            }
+            else
+            {
+                txtBend.text = "BEND : " + (int)tempStatus[1];
+            }
         }
         else
-        {
-            txtBend.text = "BEND : " + (int)tempStatus[1];
-        }
+            txtBend.text = "TURN 측정안함";
 
-        if (CommonData.REF_WOMAN[nTrainMode + 4] <= tempStatus[0] && tempStatus[0] <= CommonData.REF_WOMAN[nTrainMode + 5])
+        if (TKManager.Instance.IsAngleType(CommonData.TRAINING_ANGLE_MODE.TRAINING_ANGLE_SIDE))
         {
-            txtSide.text = "SIDE OK";
+            int angleLevel = TKManager.Instance.GetAngleLevel(CommonData.TRAINING_ANGLE_MODE.TRAINING_ANGLE_SIDE);
+
+            if (CommonData.REF_WOMAN[nTrainMode + 4] <= tempStatus[0] && tempStatus[0] <= CommonData.REF_WOMAN[nTrainMode + 5])
+            {
+                txtSide.text = "SIDE OK";
+            }
+            else
+            {
+                txtSide.text = "SIDE : " + (int)tempStatus[0];
+            }
         }
         else
-        {
-            txtSide.text = "SIDE : " + (int)tempStatus[0];
-        }
-
+            txtSide.text = "SIDE 측정안함";
     }
 }

@@ -21,7 +21,7 @@ public class TraningUI : MonoBehaviour {
         ADDRESS
     }
 
-    public enum TRANING_POSE_LEVEL_TYPE
+    public enum TRANING_POSE_ANGLE_TYPE
     {
         NONE,
         SIDE,
@@ -49,8 +49,8 @@ public class TraningUI : MonoBehaviour {
     private List<string> HexagonMenuColor = new List<string>();
     private List<Vector3> HexagonMenuPos = new List<Vector3>();
     private List<string> TraningPoseLevelStr = new List<string>();
-    private Dictionary<TRANING_POSE_LEVEL_TYPE, int> TraningPoseLevel = new Dictionary<TRANING_POSE_LEVEL_TYPE, int>();
-    private Dictionary<TRANING_POSE_LEVEL_TYPE, int> TraningPoseLevelBtnIndex = new Dictionary<TRANING_POSE_LEVEL_TYPE, int>();
+    private Dictionary<TRANING_POSE_ANGLE_TYPE, int> TraningPoseLevel = new Dictionary<TRANING_POSE_ANGLE_TYPE, int>();
+    private Dictionary<TRANING_POSE_ANGLE_TYPE, int> TraningPoseLevelBtnIndex = new Dictionary<TRANING_POSE_ANGLE_TYPE, int>();
 
     public bool MenuAction = false;
 
@@ -165,20 +165,20 @@ public class TraningUI : MonoBehaviour {
                 else if (i == 1)
                 {
                     HexagonMenu[i].Init("SIDE", "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickLevelSide);
-                    TraningPoseLevel.Add(TRANING_POSE_LEVEL_TYPE.SIDE, 0);
-                    TraningPoseLevelBtnIndex.Add(TRANING_POSE_LEVEL_TYPE.SIDE, i);
+                    TraningPoseLevel.Add(TRANING_POSE_ANGLE_TYPE.SIDE, 0);
+                    TraningPoseLevelBtnIndex.Add(TRANING_POSE_ANGLE_TYPE.SIDE, i);
                 }
                 else if (i == 2)
                 {
                     HexagonMenu[i].Init("TURN", "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickLevelTurn);
-                    TraningPoseLevel.Add(TRANING_POSE_LEVEL_TYPE.TURN, 0);
-                    TraningPoseLevelBtnIndex.Add(TRANING_POSE_LEVEL_TYPE.TURN, i);
+                    TraningPoseLevel.Add(TRANING_POSE_ANGLE_TYPE.TURN, 0);
+                    TraningPoseLevelBtnIndex.Add(TRANING_POSE_ANGLE_TYPE.TURN, i);
                 }
                 else if (i == 3)
                 {
                     HexagonMenu[i].Init("BEND", "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickLevelBend);
-                    TraningPoseLevel.Add(TRANING_POSE_LEVEL_TYPE.BEND, 0);
-                    TraningPoseLevelBtnIndex.Add(TRANING_POSE_LEVEL_TYPE.BEND, i);
+                    TraningPoseLevel.Add(TRANING_POSE_ANGLE_TYPE.BEND, 0);
+                    TraningPoseLevelBtnIndex.Add(TRANING_POSE_ANGLE_TYPE.BEND, i);
                 }
                 else if (i == 4)
                     HexagonMenu[i].Init("", "", CommonFunc.HexToColor(HexagonMenuColor[i], 0.5f), null);
@@ -342,13 +342,13 @@ public class TraningUI : MonoBehaviour {
   
             switch (type)
             {
-                case TRANING_POSE_LEVEL_TYPE.SIDE:
+                case TRANING_POSE_ANGLE_TYPE.SIDE:
                     HexagonMenu[btnIndex].SetText(string.Format("SIDE{0}", TraningPoseLevelStr[level]));
                     break;
-                case TRANING_POSE_LEVEL_TYPE.TURN:
+                case TRANING_POSE_ANGLE_TYPE.TURN:
                     HexagonMenu[btnIndex].SetText(string.Format("TURN{0}", TraningPoseLevelStr[level]));
                     break;
-                case TRANING_POSE_LEVEL_TYPE.BEND:
+                case TRANING_POSE_ANGLE_TYPE.BEND:
                     HexagonMenu[btnIndex].SetText(string.Format("BEND{0}", TraningPoseLevelStr[level]));
                     break;
                 default:
@@ -362,10 +362,10 @@ public class TraningUI : MonoBehaviour {
         if (MenuAction)
             return;
 
-        TraningPoseLevel[TRANING_POSE_LEVEL_TYPE.SIDE]++;
+        TraningPoseLevel[TRANING_POSE_ANGLE_TYPE.SIDE]++;
 
-        if (TraningPoseLevelStr.Count <= TraningPoseLevel[TRANING_POSE_LEVEL_TYPE.SIDE])
-            TraningPoseLevel[TRANING_POSE_LEVEL_TYPE.SIDE] = 0;
+        if (TraningPoseLevelStr.Count <= TraningPoseLevel[TRANING_POSE_ANGLE_TYPE.SIDE])
+            TraningPoseLevel[TRANING_POSE_ANGLE_TYPE.SIDE] = 0;
 
         ChangeTraningPosLevel();
     }
@@ -375,10 +375,10 @@ public class TraningUI : MonoBehaviour {
         if (MenuAction)
             return;
 
-        TraningPoseLevel[TRANING_POSE_LEVEL_TYPE.TURN]++;
+        TraningPoseLevel[TRANING_POSE_ANGLE_TYPE.TURN]++;
 
-        if (TraningPoseLevelStr.Count <= TraningPoseLevel[TRANING_POSE_LEVEL_TYPE.TURN])
-            TraningPoseLevel[TRANING_POSE_LEVEL_TYPE.TURN] = 0;
+        if (TraningPoseLevelStr.Count <= TraningPoseLevel[TRANING_POSE_ANGLE_TYPE.TURN])
+            TraningPoseLevel[TRANING_POSE_ANGLE_TYPE.TURN] = 0;
 
         ChangeTraningPosLevel();
     }
@@ -388,10 +388,10 @@ public class TraningUI : MonoBehaviour {
         if (MenuAction)
             return;
 
-        TraningPoseLevel[TRANING_POSE_LEVEL_TYPE.BEND]++;
+        TraningPoseLevel[TRANING_POSE_ANGLE_TYPE.BEND]++;
 
-        if (TraningPoseLevelStr.Count <= TraningPoseLevel[TRANING_POSE_LEVEL_TYPE.BEND])
-            TraningPoseLevel[TRANING_POSE_LEVEL_TYPE.BEND] = 0;
+        if (TraningPoseLevelStr.Count <= TraningPoseLevel[TRANING_POSE_ANGLE_TYPE.BEND])
+            TraningPoseLevel[TRANING_POSE_ANGLE_TYPE.BEND] = 0;
 
         ChangeTraningPosLevel();
     }
@@ -422,6 +422,21 @@ public class TraningUI : MonoBehaviour {
         if (MenuAction)
             return;
 
+        Dictionary<CommonData.TRAINING_ANGLE_MODE, int> dic = new Dictionary<CommonData.TRAINING_ANGLE_MODE, int>();
+
+        var enumerator = TraningPoseLevel.GetEnumerator();
+        while(enumerator.MoveNext())
+        {
+            if (enumerator.Current.Value == 0)
+                continue;
+
+            dic.Add(CommonFunc.ConvertTrainingMode(enumerator.Current.Key), enumerator.Current.Value);
+        }
+
+        if (dic.Count <= 0)
+            return;
+
+        TKManager.Instance.SetAngleType(dic);
         TKManager.Instance.SetMode(CommonFunc.ConvertTrainingMode(TraningPoseType));
         SceneManager.LoadScene("PracticeScene", LoadSceneMode.Single);
     }

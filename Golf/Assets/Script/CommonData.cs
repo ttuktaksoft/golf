@@ -25,6 +25,13 @@ public class CommonData : MonoBehaviour
         TRAINING_IMPACT = 12,
         TRAINING_TEMPO = 3
     }
+    public enum TRAINING_ANGLE_MODE
+    {
+        TRAINING_ANGLE_SIDE,
+        TRAINING_ANGLE_TURN,
+        TRAINING_ANGLE_BEND,
+    }
+
     public enum GENDER
     {
         GENDER_MAN = 0,
