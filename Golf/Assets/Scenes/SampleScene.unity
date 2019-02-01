@@ -347,10 +347,10 @@ MonoBehaviour:
   m_Script: {fileID: 1980459831, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 1080, y: 1920}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
@@ -841,10 +841,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55f18daba30608541aef8dffa21b0aaa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Btn_Address: {fileID: 1798597339}
-  Btn_Backswing: {fileID: 548222021}
-  Btn_Impact: {fileID: 347983959}
-  Btn_Temp: {fileID: 6721458}
 --- !u!1 &1123861302
 GameObject:
   m_ObjectHideFlags: 0
@@ -1363,6 +1359,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 1057de96678935941a4df2227a534b77, type: 3}
   - {fileID: 8300000, guid: 3725673e040a66a4a88c389b52944cf1, type: 3}
   - {fileID: 8300000, guid: 18e8ff8287b3fac4fab95d3b0d00d44d, type: 3}
+  - {fileID: 8300000, guid: 5485038409f98be4ea82938529258b3b, type: 3}
 --- !u!82 &2112856915
 AudioSource:
   m_ObjectHideFlags: 0

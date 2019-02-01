@@ -30,7 +30,6 @@ public class PracticeUI : MonoBehaviour
         btnInit.onClick.AddListener(OnClickInit);
         btnBack.onClick.AddListener(OnClickBack);
 
-
         //GyroScopeManager.Instance.Init();
         //  PracticeManager.Instance.SetCalibration();
     }
@@ -38,7 +37,10 @@ public class PracticeUI : MonoBehaviour
     public void OnClickInit()
     {
         //isModelActive = !isModelActive;
-        GyroScopeManager.Instance.Init(true);
+        if (TKManager.Instance.GetMode() != CommonData.TRAINING_MODE.TRAINING_TEMPO)
+            GyroScopeManager.Instance.Init(true);
+        else
+            SoundManager.Instance.PlayTempoTraining(5.0f);
 
 
         //PracticeManager.Instance.SetCalibration();
@@ -52,15 +54,20 @@ public class PracticeUI : MonoBehaviour
     }
 
 
-
     // Update is called once per frame
     void Update()
     {
-        tempStatus = PracticeManager.Instance.GetGyroStatus();
-        //txtTurn.text = "tempStatus : " + tempStatus[0];
-        Debug.Log("tempStatus : " + tempStatus[0]);
-        CheckGyroStatus();
-        SuccessTraining();
+        
+        if (TKManager.Instance.GetMode() != CommonData.TRAINING_MODE.TRAINING_TEMPO)
+        {
+            tempStatus = PracticeManager.Instance.GetGyroStatus();
+            //txtTurn.text = "tempStatus : " + tempStatus[0];
+            Debug.Log("tempStatus : " + tempStatus[0]);
+            CheckGyroStatus();
+            SuccessTraining();
+        }
+        
+
     }
 
 
@@ -78,16 +85,17 @@ public class PracticeUI : MonoBehaviour
     }
 
     int nTrainingSuccess = 0;
-    bool bTrainingSuccess = false;
+ 
 
     public void SuccessTraining()
     {        
-        if(bTrainingSuccess == false)
+        if(TKManager.Instance.bTrainingSuccess == false)
         {
             if (nTrainingSuccess == 2)
             {
+                TKManager.Instance.bTrainingSuccess = true;
                 SoundManager.Instance.PlaySuccessSound();
-                bTrainingSuccess = true;
+             
             }
        
         }

@@ -21,6 +21,8 @@ public class TKManager : MonoBehaviour
     public CommonData.GENDER Gender;
     public CommonData.TRAINING_MODE Mode;
     public Gyroscope gyro;
+
+    public bool bTrainingSuccess = false;
     // Start is called before the first frame update
     void Start()
     {

@@ -36,6 +36,7 @@ public class CommonData : MonoBehaviour
         BUTTON,
         TRAINING_START,
         TRAINING_SUCCESS,
+        TRAINING_TEMPO
     }
 
 }

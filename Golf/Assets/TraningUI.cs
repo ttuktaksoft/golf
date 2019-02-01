@@ -268,6 +268,9 @@ public class TraningUI : MonoBehaviour {
     {
         if (MenuAction)
             return;
+
+        TKManager.Instance.SetMode(CommonData.TRAINING_MODE.TRAINING_TEMPO);
+        SceneManager.LoadScene("PracticeScene", LoadSceneMode.Single);
     }
 
     public void OnClickAcademyInfo()
