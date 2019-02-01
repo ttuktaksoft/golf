@@ -36,6 +36,7 @@ public class TraningUI : MonoBehaviour {
         RHYTHM,
     }
 
+    private MainUI MainUIObj;
 
     public UIHexagonButton CenterButton;
     public List<UIHexagonButton> HexagonMenu;
@@ -83,8 +84,10 @@ public class TraningUI : MonoBehaviour {
     {
     }
 
-    public void Init()
+    public void Init(MainUI obj)
     {
+        MainUIObj = obj;
+
         TraningType = TRANING_TYPE.NONE;
         TraningStep = TRANING_POSE_STEP.NONE;
 
@@ -205,7 +208,7 @@ public class TraningUI : MonoBehaviour {
         {
             float delayTime = i * 0.05f;
             float time = 0.3f;
-            iTween.MoveTo(HexagonMenu[i].gameObject, iTween.Hash("position", new Vector3(0, 0, 0), "delay", delayTime, "time", time, "islocal", true, "movetopath", false, "easetype", iTween.EaseType.easeInOutQuad));
+            iTween.MoveTo(HexagonMenu[i].gameObject, iTween.Hash("position", new Vector3(0, 0, 0), "delay", delayTime, "time", time, "islocal", true, "movetopath", false, "easetype", iTween.EaseType.easeInBack));
 
             if (waitTime < delayTime + time)
                 waitTime = delayTime + time;
@@ -223,7 +226,7 @@ public class TraningUI : MonoBehaviour {
         {
             float delayTime = i * 0.05f;
             float time = 0.3f;
-            iTween.MoveTo(HexagonMenu[i].gameObject, iTween.Hash("position", HexagonMenuPos[i], "delay", delayTime, "time", time, "islocal", true, "movetopath", false, "easetype", iTween.EaseType.easeInOutQuad));
+            iTween.MoveTo(HexagonMenu[i].gameObject, iTween.Hash("position", HexagonMenuPos[i], "delay", delayTime, "time", time, "islocal", true, "movetopath", false, "easetype", iTween.EaseType.easeOutBack));
 
             if (waitTime < delayTime + time)
                 waitTime = delayTime + time;
@@ -262,6 +265,8 @@ public class TraningUI : MonoBehaviour {
     {
         if (MenuAction)
             return;
+
+        MainUIObj.OnClickAlarm();
     }
 
     public void OnClickSoundTraning()

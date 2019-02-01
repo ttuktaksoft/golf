@@ -70,7 +70,7 @@ public class MainUI : MonoBehaviour {
             case MAIN_MENU_TYPE.TRANING:
                 TraningTab.SetSelect(true);
                 TraningUIPage.gameObject.SetActive(true);
-                TraningUIPage.Init();
+                TraningUIPage.Init(this);
                 break;
             case MAIN_MENU_TYPE.ALARM:
                 AlarmTab.SetSelect(true);
