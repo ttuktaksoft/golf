@@ -12,7 +12,7 @@ public class MainUI : MonoBehaviour {
         USER_INFO,
     }
 
-    public TraningUI TraningUIPage;
+    public MainTraningUI TraningUIPage;
     public AlarmUI AlarmUIPage;
     public UserInfoUI UserInfoUIPage;
 

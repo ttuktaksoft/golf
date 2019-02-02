@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class SampleUI : MonoBehaviour
+public class LoadingUI : MonoBehaviour
 {
     // TODO 로딩씬으로 변경 예정
     // Start is called before the first frame update

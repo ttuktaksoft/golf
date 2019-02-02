@@ -25,7 +25,7 @@ public class CommonData : MonoBehaviour
         TRAINING_IMPACT = 12,
         TRAINING_TEMPO = 3
     }
-    public enum TRAINING_ANGLE_MODE
+    public enum TRAINING_ANGLE
     {
         TRAINING_ANGLE_SIDE,
         TRAINING_ANGLE_TURN,
@@ -46,4 +46,5 @@ public class CommonData : MonoBehaviour
         TRAINING_TEMPO
     }
 
+    public static int[] TRAINING_TIME = { 5, 10, 15, 20 };
 }

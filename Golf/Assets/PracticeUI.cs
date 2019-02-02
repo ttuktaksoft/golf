@@ -105,9 +105,9 @@ public class PracticeUI : MonoBehaviour
     {
         int nTrainMode = Convert.ToInt32(TKManager.Instance.GetMode());
 
-        if (TKManager.Instance.IsAngleType(CommonData.TRAINING_ANGLE_MODE.TRAINING_ANGLE_TURN))
+        if (TKManager.Instance.IsAngleType(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_TURN))
         {
-            int angleLevel = TKManager.Instance.GetAngleLevel(CommonData.TRAINING_ANGLE_MODE.TRAINING_ANGLE_TURN);
+            int angleLevel = TKManager.Instance.GetAngleLevel(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_TURN);
 
             if (CommonData.REF_MAN[nTrainMode] <= tempStatus[2] && tempStatus[2] <= CommonData.REF_MAN[nTrainMode + 1])
             {
@@ -122,9 +122,9 @@ public class PracticeUI : MonoBehaviour
         else
             txtTurn.text = "TURN : 측정안함";
 
-        if (TKManager.Instance.IsAngleType(CommonData.TRAINING_ANGLE_MODE.TRAINING_ANGLE_BEND))
+        if (TKManager.Instance.IsAngleType(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_BEND))
         {
-            int angleLevel = TKManager.Instance.GetAngleLevel(CommonData.TRAINING_ANGLE_MODE.TRAINING_ANGLE_BEND);
+            int angleLevel = TKManager.Instance.GetAngleLevel(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_BEND);
 
             if (CommonData.REF_MAN[nTrainMode + 2] <= tempStatus[1] && tempStatus[1] <= CommonData.REF_MAN[nTrainMode + 3])
             {
@@ -140,9 +140,9 @@ public class PracticeUI : MonoBehaviour
         else
             txtBend.text = "BEND : 측정안함";
 
-        if (TKManager.Instance.IsAngleType(CommonData.TRAINING_ANGLE_MODE.TRAINING_ANGLE_SIDE))
+        if (TKManager.Instance.IsAngleType(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_SIDE))
         {
-            int angleLevel = TKManager.Instance.GetAngleLevel(CommonData.TRAINING_ANGLE_MODE.TRAINING_ANGLE_SIDE);
+            int angleLevel = TKManager.Instance.GetAngleLevel(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_SIDE);
 
             if (CommonData.REF_MAN[nTrainMode + 4] <= tempStatus[0] && tempStatus[0] <= CommonData.REF_MAN[nTrainMode + 5])
             {
@@ -162,9 +162,9 @@ public class PracticeUI : MonoBehaviour
         int nTrainMode = Convert.ToInt32(TKManager.Instance.GetMode());
 
         //Debug.Log("!@@@@@ UserStatus" + UserStatus);
-        if (TKManager.Instance.IsAngleType(CommonData.TRAINING_ANGLE_MODE.TRAINING_ANGLE_TURN))
+        if (TKManager.Instance.IsAngleType(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_TURN))
         {
-            int angleLevel = TKManager.Instance.GetAngleLevel(CommonData.TRAINING_ANGLE_MODE.TRAINING_ANGLE_TURN);
+            int angleLevel = TKManager.Instance.GetAngleLevel(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_TURN);
 
             if (CommonData.REF_WOMAN[nTrainMode] <= tempStatus[2] && tempStatus[2] <= CommonData.REF_WOMAN[nTrainMode + 1])
             {
@@ -179,9 +179,9 @@ public class PracticeUI : MonoBehaviour
             txtTurn.text = "TURN 측정안함";
 
 
-        if (TKManager.Instance.IsAngleType(CommonData.TRAINING_ANGLE_MODE.TRAINING_ANGLE_BEND))
+        if (TKManager.Instance.IsAngleType(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_BEND))
         {
-            int angleLevel = TKManager.Instance.GetAngleLevel(CommonData.TRAINING_ANGLE_MODE.TRAINING_ANGLE_BEND);
+            int angleLevel = TKManager.Instance.GetAngleLevel(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_BEND);
 
             if (CommonData.REF_WOMAN[nTrainMode + 2] <= tempStatus[1] && tempStatus[1] <= CommonData.REF_WOMAN[nTrainMode + 3])
             {
@@ -195,9 +195,9 @@ public class PracticeUI : MonoBehaviour
         else
             txtBend.text = "TURN 측정안함";
 
-        if (TKManager.Instance.IsAngleType(CommonData.TRAINING_ANGLE_MODE.TRAINING_ANGLE_SIDE))
+        if (TKManager.Instance.IsAngleType(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_SIDE))
         {
-            int angleLevel = TKManager.Instance.GetAngleLevel(CommonData.TRAINING_ANGLE_MODE.TRAINING_ANGLE_SIDE);
+            int angleLevel = TKManager.Instance.GetAngleLevel(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_SIDE);
 
             if (CommonData.REF_WOMAN[nTrainMode + 4] <= tempStatus[0] && tempStatus[0] <= CommonData.REF_WOMAN[nTrainMode + 5])
             {

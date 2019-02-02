@@ -4,53 +4,66 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class TraningUI : MonoBehaviour {
+public class MainTraningUI : MonoBehaviour {
     
-    public enum TRANING_POSE_STEP
+    public enum TRAINING_SET_STEP
     {
-        NONE,
-        SELECT,
-        LEVEL,
-    }
-
-    public enum TRANING_POSE_TYPE
-    {
-        NONE,
-        IMPACT,
-        BACK_SWING_TOP,
-        ADDRESS
-    }
-
-    public enum TRANING_POSE_ANGLE_TYPE
-    {
-        NONE,
-        SIDE,
-        TURN,
-        BEND,
+        MAIN,
+        POSE,
+        ANGLE
     }
 
     public enum TRANING_TYPE
     {
         NONE,
         POSE,
-        RHYTHM,
+        TEMPO,
     }
+
+    //public enum TRANING_POSE_STEP
+    //{
+    //    NONE,
+    //    SELECT,
+    //    LEVEL,
+    //}
+
+    //public enum TRANING_POSE_TYPE
+    //{
+    //    NONE,
+    //    IMPACT,
+    //    BACK_SWING_TOP,
+    //    ADDRESS
+    //}
+
+    //public enum TRANING_ANGLE_TYPE
+    //{
+    //    NONE,
+    //    SIDE,
+    //    TURN,
+    //    BEND,
+    //}
+
+    
 
     private MainUI MainUIObj;
 
     public UIHexagonButton CenterButton;
     public List<UIHexagonButton> HexagonMenu;
     public Text TraningTypeText;
-
-    private TRANING_TYPE TraningType = TRANING_TYPE.NONE;
-    private TRANING_POSE_STEP TraningStep = TRANING_POSE_STEP.NONE;
-    private TRANING_POSE_TYPE TraningPoseType = TRANING_POSE_TYPE.NONE;
-
+    
     private List<string> HexagonMenuColor = new List<string>();
     private List<Vector3> HexagonMenuPos = new List<Vector3>();
-    private List<string> TraningPoseLevelStr = new List<string>();
-    private Dictionary<TRANING_POSE_ANGLE_TYPE, int> TraningPoseLevel = new Dictionary<TRANING_POSE_ANGLE_TYPE, int>();
-    private Dictionary<TRANING_POSE_ANGLE_TYPE, int> TraningPoseLevelBtnIndex = new Dictionary<TRANING_POSE_ANGLE_TYPE, int>();
+    private List<string> TrainingModeLevelStr = new List<string>();
+
+    private TRAINING_SET_STEP TrainingSetStep = TRAINING_SET_STEP.MAIN;
+    //private TRANING_TYPE TraningType = TRANING_TYPE.NONE;
+    private CommonData.TRAINING_MODE TrainingMode = CommonData.TRAINING_MODE.TRAINING_ADDRESS;
+
+    private Dictionary<CommonData.TRAINING_ANGLE, int> TrainingModeLevel = new Dictionary<CommonData.TRAINING_ANGLE, int>();
+    private Dictionary<CommonData.TRAINING_ANGLE, int> TrainingModeLevelBtnIndex = new Dictionary<CommonData.TRAINING_ANGLE, int>();
+
+    private int TrainingTimeIndex = 0;
+    private int TrainingTimeBtnIndex = 0;
 
     public bool MenuAction = false;
 
@@ -72,11 +85,11 @@ public class TraningUI : MonoBehaviour {
         HexagonMenuPos.Add(new Vector3(175, -300, 0));
         HexagonMenuPos.Add(new Vector3(-175, -300, 0));
 
-        TraningPoseLevelStr.Clear();
-        TraningPoseLevelStr.Add("");
-        TraningPoseLevelStr.Add("\n비기너");
-        TraningPoseLevelStr.Add("\n중급");
-        TraningPoseLevelStr.Add("\n프로");
+        TrainingModeLevelStr.Clear();
+        TrainingModeLevelStr.Add("");
+        TrainingModeLevelStr.Add("\n비기너");
+        TrainingModeLevelStr.Add("\n중급");
+        TrainingModeLevelStr.Add("\n프로");
 
     }
 
@@ -88,8 +101,8 @@ public class TraningUI : MonoBehaviour {
     {
         MainUIObj = obj;
 
-        TraningType = TRANING_TYPE.NONE;
-        TraningStep = TRANING_POSE_STEP.NONE;
+        TrainingSetStep = TRAINING_SET_STEP.MAIN;
+        TrainingTimeIndex = 0;
 
         for (int i = 0; i < HexagonMenu.Count; i++)
         {
@@ -101,7 +114,7 @@ public class TraningUI : MonoBehaviour {
 
     private void SetMenu()
     {
-        if (TraningType == TRANING_TYPE.NONE && TraningStep == TRANING_POSE_STEP.NONE)
+        if (TrainingSetStep == TRAINING_SET_STEP.MAIN)
         {
             TraningTypeText.text = "";
             CenterButton.Init("", "logo", new Color(1, 1, 1, 1f), null);
@@ -123,7 +136,7 @@ public class TraningUI : MonoBehaviour {
                     HexagonMenu[i].Init("튜토리얼\n영상", "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickTutorial);
             }
         }
-        else if(TraningType == TRANING_TYPE.POSE && TraningStep == TRANING_POSE_STEP.SELECT)
+        else if(TrainingSetStep == TRAINING_SET_STEP.POSE)
         {
             TraningTypeText.text = "";
             CenterButton.Init("", "logo", new Color(1, 1, 1, 1f), null);
@@ -137,23 +150,23 @@ public class TraningUI : MonoBehaviour {
                     HexagonMenu[i].SetImageSize(new Vector2(227.3f, 168.1f));
                 }
                 else if (i == 1)
-                    HexagonMenu[i].Init("임팩트", "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickImpact);
+                    HexagonMenu[i].Init("어드레스", "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickAddress);
                 else if (i == 2)
                     HexagonMenu[i].Init("백스윙 탑", "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickBackSwingTop);
                 else if (i == 3)
-                    HexagonMenu[i].Init("어드레스", "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickAddress);
+                    HexagonMenu[i].Init("임팩트", "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickImpact);
                 else if (i == 4)
-                    HexagonMenu[i].Init("", "", CommonFunc.HexToColor(HexagonMenuColor[i], 0.5f), null);
+                    HexagonMenu[i].Init("사운드\n트레이닝", "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickSoundTraning);
                 else if (i == 5)
                     HexagonMenu[i].Init("튜토리얼\n영상", "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickTutorial);
             }
         }
-        else if (TraningType == TRANING_TYPE.POSE && TraningStep == TRANING_POSE_STEP.LEVEL)
+        else if (TrainingSetStep == TRAINING_SET_STEP.ANGLE)
         {
             CenterButton.Init("트레이닝\n시작", "", CommonFunc.HexToColor("#393939", 1f), OnClickTraningStart);
 
-            TraningPoseLevel.Clear();
-            TraningPoseLevelBtnIndex.Clear();
+            TrainingModeLevel.Clear();
+            TrainingModeLevelBtnIndex.Clear();
 
             for (int i = 0; i < HexagonMenu.Count; i++)
             {
@@ -164,24 +177,27 @@ public class TraningUI : MonoBehaviour {
                 }
                 else if (i == 1)
                 {
-                    HexagonMenu[i].Init("SIDE", "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickLevelSide);
-                    TraningPoseLevel.Add(TRANING_POSE_ANGLE_TYPE.SIDE, 0);
-                    TraningPoseLevelBtnIndex.Add(TRANING_POSE_ANGLE_TYPE.SIDE, i);
+                    HexagonMenu[i].Init("BEND", "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickLevelBend);
+                    TrainingModeLevel.Add(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_BEND, 0);
+                    TrainingModeLevelBtnIndex.Add(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_BEND, i);
                 }
                 else if (i == 2)
                 {
-                    HexagonMenu[i].Init("TURN", "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickLevelTurn);
-                    TraningPoseLevel.Add(TRANING_POSE_ANGLE_TYPE.TURN, 0);
-                    TraningPoseLevelBtnIndex.Add(TRANING_POSE_ANGLE_TYPE.TURN, i);
+                    HexagonMenu[i].Init("ROTATION", "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickLevelTurn);
+                    TrainingModeLevel.Add(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_TURN, 0);
+                    TrainingModeLevelBtnIndex.Add(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_TURN, i);
                 }
                 else if (i == 3)
                 {
-                    HexagonMenu[i].Init("BEND", "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickLevelBend);
-                    TraningPoseLevel.Add(TRANING_POSE_ANGLE_TYPE.BEND, 0);
-                    TraningPoseLevelBtnIndex.Add(TRANING_POSE_ANGLE_TYPE.BEND, i);
+                    HexagonMenu[i].Init("SIDE BEND", "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickLevelSide);
+                    TrainingModeLevel.Add(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_SIDE, 0);
+                    TrainingModeLevelBtnIndex.Add(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_SIDE, i);
                 }
                 else if (i == 4)
-                    HexagonMenu[i].Init("", "", CommonFunc.HexToColor(HexagonMenuColor[i], 0.5f), null);
+                {
+                    HexagonMenu[i].Init("트레이닝 시간\n5초", "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickTrainingTime);
+                    TrainingTimeBtnIndex = i;
+                }
                 else if (i == 5)
                     HexagonMenu[i].Init("튜토리얼\n영상", "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickTutorial);
             }
@@ -249,8 +265,7 @@ public class TraningUI : MonoBehaviour {
         if (MenuAction)
             return;
 
-        TraningType = TRANING_TYPE.POSE;
-        TraningStep = TRANING_POSE_STEP.SELECT;
+        TrainingSetStep = TRAINING_SET_STEP.POSE;
 
         StartMenuAction();
     }
@@ -296,9 +311,8 @@ public class TraningUI : MonoBehaviour {
             return;
 
         TraningTypeText.text = "임팩트";
-        TraningType = TRANING_TYPE.POSE;
-        TraningStep = TRANING_POSE_STEP.LEVEL;
-        TraningPoseType = TRANING_POSE_TYPE.IMPACT;
+        TrainingSetStep = TRAINING_SET_STEP.ANGLE;
+        TrainingMode = CommonData.TRAINING_MODE.TRAINING_IMPACT;
 
         StartMenuAction();
     }
@@ -309,9 +323,8 @@ public class TraningUI : MonoBehaviour {
             return;
 
         TraningTypeText.text = "백스윙 탑";
-        TraningType = TRANING_TYPE.POSE;
-        TraningStep = TRANING_POSE_STEP.LEVEL;
-        TraningPoseType = TRANING_POSE_TYPE.BACK_SWING_TOP;
+        TrainingSetStep = TRAINING_SET_STEP.ANGLE;
+        TrainingMode = CommonData.TRAINING_MODE.TRAINING_BACKSWING;
 
         StartMenuAction();
     }
@@ -322,22 +335,21 @@ public class TraningUI : MonoBehaviour {
             return;
 
         TraningTypeText.text = "어드레스";
-        TraningType = TRANING_TYPE.POSE;
-        TraningStep = TRANING_POSE_STEP.LEVEL;
-        TraningPoseType = TRANING_POSE_TYPE.ADDRESS;
+        TrainingSetStep = TRAINING_SET_STEP.ANGLE;
+        TrainingMode = CommonData.TRAINING_MODE.TRAINING_ADDRESS;
 
         StartMenuAction();
     }
 
     public void ChangeTraningPosLevel()
     {
-        var enumerator = TraningPoseLevelBtnIndex.GetEnumerator();
+        var enumerator = TrainingModeLevelBtnIndex.GetEnumerator();
 
         while(enumerator.MoveNext())
         {
             var type = enumerator.Current.Key;
             var btnIndex = enumerator.Current.Value;
-            var level = TraningPoseLevel[type];
+            var level = TrainingModeLevel[type];
             if(level == 0)
                 HexagonMenu[btnIndex].SetButtonColor(CommonFunc.HexToColor(HexagonMenuColor[btnIndex], 0.5f));
             else
@@ -345,14 +357,14 @@ public class TraningUI : MonoBehaviour {
   
             switch (type)
             {
-                case TRANING_POSE_ANGLE_TYPE.SIDE:
-                    HexagonMenu[btnIndex].SetText(string.Format("SIDE{0}", TraningPoseLevelStr[level]));
+                case CommonData.TRAINING_ANGLE.TRAINING_ANGLE_SIDE:
+                    HexagonMenu[btnIndex].SetText(string.Format("SIDE BEND{0}", TrainingModeLevelStr[level]));
                     break;
-                case TRANING_POSE_ANGLE_TYPE.TURN:
-                    HexagonMenu[btnIndex].SetText(string.Format("TURN{0}", TraningPoseLevelStr[level]));
+                case CommonData.TRAINING_ANGLE.TRAINING_ANGLE_TURN:
+                    HexagonMenu[btnIndex].SetText(string.Format("ROTATION{0}", TrainingModeLevelStr[level]));
                     break;
-                case TRANING_POSE_ANGLE_TYPE.BEND:
-                    HexagonMenu[btnIndex].SetText(string.Format("BEND{0}", TraningPoseLevelStr[level]));
+                case CommonData.TRAINING_ANGLE.TRAINING_ANGLE_BEND:
+                    HexagonMenu[btnIndex].SetText(string.Format("BEND{0}", TrainingModeLevelStr[level]));
                     break;
                 default:
                     break;
@@ -365,11 +377,7 @@ public class TraningUI : MonoBehaviour {
         if (MenuAction)
             return;
 
-        TraningPoseLevel[TRANING_POSE_ANGLE_TYPE.SIDE]++;
-
-        if (TraningPoseLevelStr.Count <= TraningPoseLevel[TRANING_POSE_ANGLE_TYPE.SIDE])
-            TraningPoseLevel[TRANING_POSE_ANGLE_TYPE.SIDE] = 0;
-
+        AngleLevelUp(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_SIDE);
         ChangeTraningPosLevel();
     }
 
@@ -378,11 +386,7 @@ public class TraningUI : MonoBehaviour {
         if (MenuAction)
             return;
 
-        TraningPoseLevel[TRANING_POSE_ANGLE_TYPE.TURN]++;
-
-        if (TraningPoseLevelStr.Count <= TraningPoseLevel[TRANING_POSE_ANGLE_TYPE.TURN])
-            TraningPoseLevel[TRANING_POSE_ANGLE_TYPE.TURN] = 0;
-
+        AngleLevelUp(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_TURN);
         ChangeTraningPosLevel();
     }
 
@@ -391,12 +395,26 @@ public class TraningUI : MonoBehaviour {
         if (MenuAction)
             return;
 
-        TraningPoseLevel[TRANING_POSE_ANGLE_TYPE.BEND]++;
 
-        if (TraningPoseLevelStr.Count <= TraningPoseLevel[TRANING_POSE_ANGLE_TYPE.BEND])
-            TraningPoseLevel[TRANING_POSE_ANGLE_TYPE.BEND] = 0;
-
+        AngleLevelUp(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_BEND);
         ChangeTraningPosLevel();
+    }
+
+    public void AngleLevelUp(CommonData.TRAINING_ANGLE type)
+    {
+        TrainingModeLevel[type]++;
+
+        if (TrainingModeLevelStr.Count <= TrainingModeLevel[type])
+            TrainingModeLevel[type] = 0;
+    }
+
+    public void OnClickTrainingTime()
+    {
+        TrainingTimeIndex++;
+
+        if (CommonData.TRAINING_TIME.Length <= TrainingTimeIndex)
+            TrainingTimeIndex = 0;
+        HexagonMenu[TrainingTimeBtnIndex].SetText(string.Format("트레이닝 시간\n{0}초", CommonData.TRAINING_TIME[TrainingTimeIndex]));
     }
 
     public void OnClickBack()
@@ -404,18 +422,9 @@ public class TraningUI : MonoBehaviour {
         if (MenuAction)
             return;
 
-        if (TraningType == TRANING_TYPE.POSE && TraningStep == TRANING_POSE_STEP.SELECT)
-        {
-            TraningType = TRANING_TYPE.NONE;
-            TraningStep = TRANING_POSE_STEP.NONE;
-            TraningPoseType = TRANING_POSE_TYPE.NONE;
-        }
-        else if(TraningType == TRANING_TYPE.POSE && TraningStep == TRANING_POSE_STEP.LEVEL)
-        {
-            TraningType = TRANING_TYPE.POSE;
-            TraningStep = TRANING_POSE_STEP.SELECT;
-            TraningPoseType = TRANING_POSE_TYPE.NONE;
-        }
+        TrainingSetStep--;
+        if (TrainingSetStep < 0)
+            TrainingSetStep = TRAINING_SET_STEP.MAIN;
 
         StartMenuAction();
     }
@@ -424,23 +433,15 @@ public class TraningUI : MonoBehaviour {
     {
         if (MenuAction)
             return;
-
-        Dictionary<CommonData.TRAINING_ANGLE_MODE, int> dic = new Dictionary<CommonData.TRAINING_ANGLE_MODE, int>();
-
-        var enumerator = TraningPoseLevel.GetEnumerator();
-        while(enumerator.MoveNext())
+        if (TrainingModeLevel.Count <= 0)
         {
-            if (enumerator.Current.Value == 0)
-                continue;
-
-            dic.Add(CommonFunc.ConvertTrainingMode(enumerator.Current.Key), enumerator.Current.Value);
-        }
-
-        if (dic.Count <= 0)
+            // TODO 팝업
             return;
+        }
+            
 
-        TKManager.Instance.SetAngleType(dic);
-        TKManager.Instance.SetMode(CommonFunc.ConvertTrainingMode(TraningPoseType));
+        TKManager.Instance.SetAngleType(TrainingModeLevel);
+        TKManager.Instance.SetMode(TrainingMode);
         SceneManager.LoadScene("PracticeScene", LoadSceneMode.Single);
     }
 }
