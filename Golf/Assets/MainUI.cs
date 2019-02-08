@@ -9,15 +9,18 @@ public class MainUI : MonoBehaviour {
         NONE,
         TRANING,
         ALARM,
+        REWARD,
         USER_INFO,
     }
 
     public MainTraningUI TraningUIPage;
     public AlarmUI AlarmUIPage;
+    public RewardUI RewardUIPage;
     public UserInfoUI UserInfoUIPage;
 
     public UITabButton TraningTab;
     public UITabButton AlarmTab;
+    public UITabButton RewardTab;
     public UITabButton UserInfoTab;
     private MAIN_MENU_TYPE CurrType = MAIN_MENU_TYPE.NONE;
 
@@ -25,6 +28,7 @@ public class MainUI : MonoBehaviour {
     {
         TraningTab.SetButtonAction(OnClickTraning);
         AlarmTab.SetButtonAction(OnClickAlarm);
+        RewardTab.SetButtonAction(OnClickReward);
         UserInfoTab.SetButtonAction(OnClickUserInfo);
     }
 
@@ -46,6 +50,10 @@ public class MainUI : MonoBehaviour {
     {
         ChangeTab(MAIN_MENU_TYPE.ALARM);
     }
+    public void OnClickReward()
+    {
+        ChangeTab(MAIN_MENU_TYPE.REWARD);
+    }
     public void OnClickUserInfo()
     {
         ChangeTab(MAIN_MENU_TYPE.USER_INFO);
@@ -59,10 +67,12 @@ public class MainUI : MonoBehaviour {
         CurrType = type;
         TraningTab.SetSelect(false);
         AlarmTab.SetSelect(false);
+        RewardTab.SetSelect(false);
         UserInfoTab.SetSelect(false);
 
         TraningUIPage.gameObject.SetActive(false);
         AlarmUIPage.gameObject.SetActive(false);
+        RewardUIPage.gameObject.SetActive(false);
         UserInfoUIPage.gameObject.SetActive(false);
 
         switch (CurrType)
@@ -75,6 +85,10 @@ public class MainUI : MonoBehaviour {
             case MAIN_MENU_TYPE.ALARM:
                 AlarmTab.SetSelect(true);
                 AlarmUIPage.gameObject.SetActive(true);
+                break;
+            case MAIN_MENU_TYPE.REWARD:
+                RewardTab.SetSelect(true);
+                RewardUIPage.gameObject.SetActive(true);
                 break;
             case MAIN_MENU_TYPE.USER_INFO:
                 UserInfoTab.SetSelect(true);
