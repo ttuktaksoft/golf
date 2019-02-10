@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/PracticeScene.unity
     guid: a82935cc6e4bdf64db5d28de6073af2c
+  - enabled: 1
+    path: Assets/Scenes/PopupScene.unity
+    guid: cd4847b39f2954d4fb65421c7e0b930b
   m_configObjects: {}

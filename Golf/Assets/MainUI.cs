@@ -48,7 +48,9 @@ public class MainUI : MonoBehaviour {
     }
     public void OnClickAlarm()
     {
-        ChangeTab(MAIN_MENU_TYPE.ALARM);
+        PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.MSG);
+//        Application.OpenURL("http://unity3d.com/");
+        //ChangeTab(MAIN_MENU_TYPE.ALARM);
     }
     public void OnClickReward()
     {
@@ -85,6 +87,7 @@ public class MainUI : MonoBehaviour {
             case MAIN_MENU_TYPE.ALARM:
                 AlarmTab.SetSelect(true);
                 AlarmUIPage.gameObject.SetActive(true);
+                AlarmUIPage.Init();
                 break;
             case MAIN_MENU_TYPE.REWARD:
                 RewardTab.SetSelect(true);
@@ -93,6 +96,7 @@ public class MainUI : MonoBehaviour {
             case MAIN_MENU_TYPE.USER_INFO:
                 UserInfoTab.SetSelect(true);
                 UserInfoUIPage.gameObject.SetActive(true);
+                UserInfoUIPage.Init();
                 break;
             default:
                 break;

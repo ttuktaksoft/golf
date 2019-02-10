@@ -23,6 +23,8 @@ public class LoadingUI : MonoBehaviour
         yield return null;
 
         TKManager.Instance.gyro.enabled = false;
+        SceneManager.LoadScene("PopupScene", LoadSceneMode.Additive);
+        yield return null;
         SceneManager.LoadScene("MainScene", LoadSceneMode.Single);
     }
 
