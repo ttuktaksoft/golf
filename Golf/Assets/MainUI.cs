@@ -48,9 +48,9 @@ public class MainUI : MonoBehaviour {
     }
     public void OnClickAlarm()
     {
-        PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.MSG);
+        //PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.WEB_VIEW);
 //        Application.OpenURL("http://unity3d.com/");
-        //ChangeTab(MAIN_MENU_TYPE.ALARM);
+        ChangeTab(MAIN_MENU_TYPE.ALARM);
     }
     public void OnClickReward()
     {

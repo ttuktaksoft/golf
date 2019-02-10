@@ -26,6 +26,7 @@ public class PopupMgr : MonoBehaviour
     {
         NONE,
         MSG,
+        WEB_VIEW,
     }
     
     private Dictionary<POPUP_TYPE, Popup> PopupList = new Dictionary<POPUP_TYPE, Popup>();

@@ -36,8 +36,6 @@ public class PopupMsg : Popup
         PopupMgr.Instance.RegisterPopup(this);
     }
 
-    
-
     public void OnClickOK()
     {
         PopupMgr.Instance.DismissPopup();
