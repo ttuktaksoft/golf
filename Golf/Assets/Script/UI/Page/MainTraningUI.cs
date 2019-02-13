@@ -422,9 +422,22 @@ public class MainTraningUI : MonoBehaviour {
     {
         if (MenuAction)
             return;
-        if (TrainingModeLevel.Count <= 0)
+
+        bool startEnable = false;
+        var enumerator = TrainingModeLevel.GetEnumerator();
+        while(enumerator.MoveNext())
+        {
+            if (enumerator.Current.Value > 0)
+            {
+                startEnable = true;
+                break;
+            }
+        }
+
+        if (startEnable == false)
         {
             // TODO 팝업
+            PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.MSG, new PopupMsg.PopupData("트레이닝을 시작 할 수 없습니다."));
             return;
         }
             

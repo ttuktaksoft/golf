@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class PopupMsg : Popup
 {
+    public Text Msg;
     public Button OK;
     public Button Cancel;
 
@@ -16,12 +17,19 @@ public class PopupMsg : Popup
 
     public class PopupData : PopupBaseData
     {
+        public string Msg;
 
+        public PopupData(string msg)
+        {
+            Msg = msg;
+        }
     }
 
     public override void SetData(PopupBaseData data)
     {
+        var popupData = data as PopupData;
 
+        Msg.text = popupData.Msg;
     }
 
 
