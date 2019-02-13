@@ -18,6 +18,10 @@ public class CommonData : MonoBehaviour
        25,  39, 27, 45,  21,  31
     };
 
+    public static float[] LEVEL_COVER = {
+        6.0f, 3.0f, 0.0f
+    };
+
     public enum TRAINING_TYPE
     {
         TRAINING_POSE,

@@ -56,8 +56,7 @@ public class PracticeUI : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {
-        
+    {        
         if (TKManager.Instance.GetTrainingType() != CommonData.TRAINING_TYPE.TRAINING_TEMPO)
         {
             tempStatus = PracticeManager.Instance.GetGyroStatus();
@@ -85,19 +84,20 @@ public class PracticeUI : MonoBehaviour
     }
 
     int nTrainingSuccess = 0;
- 
+    bool bTrainingSuccess_Rotate = false;
+    bool bTrainingSuccess_Bend = false;
+    bool bTrainingSuccess_Side = false;
+
 
     public void SuccessTraining()
     {        
         if(TKManager.Instance.bTrainingSuccess == false)
         {
-            if (nTrainingSuccess == 2)
+            if (bTrainingSuccess_Rotate && bTrainingSuccess_Bend && bTrainingSuccess_Side)
             {
                 TKManager.Instance.bTrainingSuccess = true;
-                SoundManager.Instance.PlaySuccessSound();
-             
-            }
-       
+                SoundManager.Instance.PlaySuccessSound();             
+            }       
         }
     }
 
@@ -108,53 +108,78 @@ public class PracticeUI : MonoBehaviour
         if (TKManager.Instance.IsAngleType(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_TURN))
         {
             int angleLevel = TKManager.Instance.GetAngleLevel(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_TURN);
-
-            if (CommonData.REF_MAN[nTrainMode] <= tempStatus[2] && tempStatus[2] <= CommonData.REF_MAN[nTrainMode + 1])
+            if(angleLevel > 0)
             {
-                txtTurn.text = "TURN OK";
-                nTrainingSuccess = 1;
+                float LevelCover = CommonData.LEVEL_COVER[angleLevel];
+
+                if (CommonData.REF_MAN[nTrainMode] - LevelCover <= tempStatus[2] && tempStatus[2] <= CommonData.REF_MAN[nTrainMode + 1] + LevelCover)
+                {
+                    txtTurn.text = "ROTATION OK";
+                    bTrainingSuccess_Rotate = true;
+                }
+                else
+                {
+                    bTrainingSuccess_Rotate = false;
+                    txtTurn.text = "TURN : " + (int)tempStatus[2] + "(" + (CommonData.REF_MAN[nTrainMode] - LevelCover) + " to " + (CommonData.REF_MAN[nTrainMode + 1] + LevelCover) + ")";
+                }
             }
             else
             {
-                txtTurn.text = "TURN : " + (int)tempStatus[2] + "(" + CommonData.REF_MAN[nTrainMode] + " to " + CommonData.REF_MAN[nTrainMode + 1] + ")";
-            }
+                bTrainingSuccess_Rotate = true;
+                txtTurn.text = "ROTATION : 측정안함";
+            }      
         }
-        else
-            txtTurn.text = "TURN : 측정안함";
+            
 
         if (TKManager.Instance.IsAngleType(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_BEND))
         {
             int angleLevel = TKManager.Instance.GetAngleLevel(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_BEND);
 
-            if (CommonData.REF_MAN[nTrainMode + 2] <= tempStatus[1] && tempStatus[1] <= CommonData.REF_MAN[nTrainMode + 3])
+            if (angleLevel > 0)
             {
-                txtBend.text = "BEND OK";
-                if (nTrainingSuccess == 1)
-                    nTrainingSuccess = 2;
+                float LevelCover = CommonData.LEVEL_COVER[angleLevel];
+                if (CommonData.REF_MAN[nTrainMode + 2] - LevelCover <= tempStatus[1] && tempStatus[1] <= CommonData.REF_MAN[nTrainMode + 3] + LevelCover)
+                {
+                    txtBend.text = "BEND OK";
+                    bTrainingSuccess_Bend = true;
+                }
+                else
+                {
+                    bTrainingSuccess_Bend = false;
+                    txtBend.text = "BEND : " + (int)tempStatus[1] + "(" + (CommonData.REF_MAN[nTrainMode + 2] - LevelCover) + " to " + (CommonData.REF_MAN[nTrainMode + 3] + LevelCover) + ")";
+                }
             }
             else
             {
-                txtBend.text = "BEND : " + (int)tempStatus[1] + "(" + CommonData.REF_MAN[nTrainMode + 2] + " to " + CommonData.REF_MAN[nTrainMode + 3] + ")";
-            }
+                bTrainingSuccess_Bend = true;
+                txtBend.text = "BEND : 측정안함";
+            } 
         }
-        else
-            txtBend.text = "BEND : 측정안함";
+         
 
         if (TKManager.Instance.IsAngleType(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_SIDE))
         {
             int angleLevel = TKManager.Instance.GetAngleLevel(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_SIDE);
-
-            if (CommonData.REF_MAN[nTrainMode + 4] <= tempStatus[0] && tempStatus[0] <= CommonData.REF_MAN[nTrainMode + 5])
+            if (angleLevel > 0)
             {
-                txtSide.text = "SIDE OK";
+                float LevelCover = CommonData.LEVEL_COVER[angleLevel];
+                if (CommonData.REF_MAN[nTrainMode + 4] - LevelCover <= tempStatus[0] && tempStatus[0] <= CommonData.REF_MAN[nTrainMode + 5] + LevelCover)
+                {
+                    bTrainingSuccess_Side = true;
+                    txtSide.text = "SIDE OK";
+                }
+                else
+                {
+                    bTrainingSuccess_Side = false;
+                    txtSide.text = "SIDE : " + (int)tempStatus[0] + "(" + (CommonData.REF_MAN[nTrainMode + 4] - LevelCover) + " to " + (CommonData.REF_MAN[nTrainMode + 5] + LevelCover) + ")";
+                }
             }
             else
             {
-                txtSide.text = "SIDE : " + (int)tempStatus[0] + "(" + CommonData.REF_MAN[nTrainMode + 4] + " to " + CommonData.REF_MAN[nTrainMode + 5] + ")";
+                bTrainingSuccess_Side = true;
+                txtSide.text = "SIDE : 측정안함";
             }
-        }
-        else
-            txtSide.text = "SIDE : 측정안함";
+        }        
     }
 
     public void CheckGyroStatus_Woman()
