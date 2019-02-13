@@ -31,7 +31,6 @@ public class TKManager : MonoBehaviour
         Gender = CommonData.GENDER.GENDER_MAN;
         TrainingType = CommonData.TRAINING_TYPE.TRAINING_POSE;
         PoseType = CommonData.TRAINING_POSE.TRAINING_ADDRESS;
-        AngleTypeList.Add(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_SIDE, 1);
         gyro = Input.gyro;
         gyro.enabled = false;
         DontDestroyOnLoad(this);

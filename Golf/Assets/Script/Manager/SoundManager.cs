@@ -53,28 +53,7 @@ public class SoundManager : MonoBehaviour
 
     IEnumerator Co_TempoTraining(float tempo)
     {
-        while(true)
-        {
-            SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_SUCCESS);
-            yield return new WaitForSeconds(1f);
-
-            SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_START);
-            yield return new WaitForSeconds(1f);
-
-            SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_START);
-            yield return new WaitForSeconds(1f);
-
-            SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_START);
-            yield return new WaitForSeconds(1f);
-
-            SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_START);
-            yield return new WaitForSeconds(1f);
-
-            SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_TEMPO);
-            yield return new WaitForSeconds(3f);
-        }
-
-
+  
 
         yield return null;
     }
