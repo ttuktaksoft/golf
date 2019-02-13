@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 222357381940510254}
   - component: {fileID: 114826891651364086}
   - component: {fileID: 114520545515966158}
-  - component: {fileID: 114320376182091508}
+  - component: {fileID: 8356409623609497744}
   m_Layer: 5
   m_Name: UIHexagonButton
   m_TagString: Untagged
@@ -120,7 +120,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
---- !u!114 &114320376182091508
+--- !u!114 &8356409623609497744
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -129,7 +129,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1190941642848086}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 813b553d24eec1e4293c74aef918bd1c, type: 3}
+  m_Script: {fileID: 11500000, guid: be43a3b748363a04582dc0e173b8f605, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   HexagonButton: {fileID: 114520545515966158}

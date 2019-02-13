@@ -18,12 +18,17 @@ public class CommonData : MonoBehaviour
        25,  39, 27, 45,  21,  31
     };
 
-    public enum TRAINING_MODE
+    public enum TRAINING_TYPE
+    {
+        TRAINING_POSE,
+        TRAINING_TEMPO,
+    }
+   
+    public enum TRAINING_POSE
     {
         TRAINING_ADDRESS = 0,
         TRAINING_BACKSWING = 6,
         TRAINING_IMPACT = 12,
-        TRAINING_TEMPO = 3
     }
     public enum TRAINING_ANGLE
     {
@@ -46,14 +51,10 @@ public class CommonData : MonoBehaviour
         TRAINING_TEMPO
     }
 
+    public static int ANGLE_MAX_LEVEL = 3;
+
     public static int[] TRAINING_TIME = { 5, 10, 15, 20 };
 
-    public static string[] TEMP_ALARM_TITLE =
-    {
-        "1월 아카데미 특강안내",
-        "2월 아카데미 특강안내",
-        "3월 아카데미 특강안내",
-    };
     public static string[] TEMP_ALARM_MSG =
     {
         "1월 아카데미 특강안내\n\nPGA 그린적중률 1위를 기록한 제이슨 데이입니다.\n\n파워풀하고 아주 간결한 스윙 스타일로 유명합니다.\n제이슨 데이가 시합 직전에 연습하는 패턴에서\n몇 개의 공을 치는지 정리해보았습니다.\n60 웨지샷 20~30미터 거리 6개\n60도 러프에서의 연습 6개\n그린 주변의 벙커샷 5개\n샌드웨지 어프로치샷 4개\n9번 아이언 풀스윙 8개\n7번 아이언 풀스윙 5개\n5번 아이언 풀스윙 9개",

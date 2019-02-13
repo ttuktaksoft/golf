@@ -23,6 +23,7 @@ public class LoadingUI : MonoBehaviour
         yield return null;
 
         TKManager.Instance.gyro.enabled = false;
+        DataManager.Instance.init();
         SceneManager.LoadScene("PopupScene", LoadSceneMode.Additive);
         yield return null;
         SceneManager.LoadScene("MainScene", LoadSceneMode.Single);
@@ -31,27 +32,27 @@ public class LoadingUI : MonoBehaviour
     public void OnClickAddress()
     {
         TKManager.Instance.gyro.enabled = false;
-        TKManager.Instance.SetMode(CommonData.TRAINING_MODE.TRAINING_ADDRESS);
+        TKManager.Instance.SetMode(CommonData.TRAINING_POSE.TRAINING_ADDRESS);
         SceneManager.LoadScene("PracticeScene", LoadSceneMode.Single);
     }
 
     public void OnClickBackSwing()
     {
         TKManager.Instance.gyro.enabled = false;
-        TKManager.Instance.SetMode(CommonData.TRAINING_MODE.TRAINING_BACKSWING);
+        TKManager.Instance.SetMode(CommonData.TRAINING_POSE.TRAINING_BACKSWING);
         SceneManager.LoadScene("PracticeScene", LoadSceneMode.Single);
     }
     public void OnClickImpact()
     {
         TKManager.Instance.gyro.enabled = false;
-        TKManager.Instance.SetMode(CommonData.TRAINING_MODE.TRAINING_IMPACT);
+        TKManager.Instance.SetMode(CommonData.TRAINING_POSE.TRAINING_IMPACT);
         SceneManager.LoadScene("PracticeScene", LoadSceneMode.Single);
     }
 
     public void OnClickTempo()
     {
         TKManager.Instance.gyro.enabled = false;
-        TKManager.Instance.SetMode(CommonData.TRAINING_MODE.TRAINING_TEMPO);
+        TKManager.Instance.SetTrainingType(CommonData.TRAINING_TYPE.TRAINING_TEMPO);
         SceneManager.LoadScene("PracticeScene", LoadSceneMode.Single);
     }
 

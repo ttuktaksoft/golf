@@ -22,7 +22,7 @@ public class PracticeUI : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        string tempString = TKManager.Instance.GetMode().ToString();
+        string tempString = TKManager.Instance.GetPoseType().ToString();
         tempString = tempString.Substring(9);
 
         txtMode.text = tempString;
@@ -37,7 +37,7 @@ public class PracticeUI : MonoBehaviour
     public void OnClickInit()
     {
         //isModelActive = !isModelActive;
-        if (TKManager.Instance.GetMode() != CommonData.TRAINING_MODE.TRAINING_TEMPO)
+        if (TKManager.Instance.GetTrainingType() != CommonData.TRAINING_TYPE.TRAINING_TEMPO)
             GyroScopeManager.Instance.Init(true);
         else
             SoundManager.Instance.PlayTempoTraining(5.0f);
@@ -58,7 +58,7 @@ public class PracticeUI : MonoBehaviour
     void Update()
     {
         
-        if (TKManager.Instance.GetMode() != CommonData.TRAINING_MODE.TRAINING_TEMPO)
+        if (TKManager.Instance.GetTrainingType() != CommonData.TRAINING_TYPE.TRAINING_TEMPO)
         {
             tempStatus = PracticeManager.Instance.GetGyroStatus();
             //txtTurn.text = "tempStatus : " + tempStatus[0];
@@ -103,7 +103,7 @@ public class PracticeUI : MonoBehaviour
 
     public void CheckGyroStatus_Man()
     {
-        int nTrainMode = Convert.ToInt32(TKManager.Instance.GetMode());
+        int nTrainMode = Convert.ToInt32(TKManager.Instance.GetPoseType());
 
         if (TKManager.Instance.IsAngleType(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_TURN))
         {
@@ -159,7 +159,7 @@ public class PracticeUI : MonoBehaviour
 
     public void CheckGyroStatus_Woman()
     {
-        int nTrainMode = Convert.ToInt32(TKManager.Instance.GetMode());
+        int nTrainMode = Convert.ToInt32(TKManager.Instance.GetPoseType());
 
         //Debug.Log("!@@@@@ UserStatus" + UserStatus);
         if (TKManager.Instance.IsAngleType(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_TURN))
