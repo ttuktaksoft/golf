@@ -50,6 +50,7 @@ public class MainTraningUI : MonoBehaviour {
     public UIHexagonButton CenterButton;
     public List<UIHexagonButton> HexagonMenu;
     public Text TraningTypeText;
+    public Text AngleSelectInfoText;
 
     private string HexagonCenterColor = "#686666";
     private List<string> HexagonMenuColor = new List<string>();
@@ -107,6 +108,8 @@ public class MainTraningUI : MonoBehaviour {
 
     private void SetMenu()
     {
+        AngleSelectInfoText.gameObject.SetActive(false);
+
         if (TrainingSetStep == TRAINING_SET_STEP.MAIN)
         {
             TraningTypeText.text = "";
@@ -160,6 +163,8 @@ public class MainTraningUI : MonoBehaviour {
 
             TrainingModeLevel.Clear();
             TrainingModeLevelBtnIndex.Clear();
+
+            AngleSelectInfoText.gameObject.SetActive(true);
 
             for (int i = 0; i < HexagonMenu.Count; i++)
             {
@@ -267,6 +272,7 @@ public class MainTraningUI : MonoBehaviour {
     {
         if (MenuAction)
             return;
+        MainUIObj.OnClickReward();
     }
 
     public void OnClickAlarm()
@@ -348,7 +354,10 @@ public class MainTraningUI : MonoBehaviour {
             else
                 HexagonMenu[btnIndex].SetButtonColor(CommonFunc.HexToColor(HexagonMenuColor[btnIndex], 1f));
 
-            HexagonMenu[btnIndex].SetText(string.Format("{0}{1}",CommonFunc.ConvertPoseAngleTypeStr(type), CommonFunc.ConvertPoseLevelStr(level)));
+            if(level == 0)
+                HexagonMenu[btnIndex].SetText(string.Format("{0}",CommonFunc.ConvertPoseAngleTypeStr(type)));
+            else
+                HexagonMenu[btnIndex].SetText(string.Format("{0}\n{1}", CommonFunc.ConvertPoseAngleTypeStr(type), CommonFunc.ConvertPoseLevelStr(level)));
         }
     }
 

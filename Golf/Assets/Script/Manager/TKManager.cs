@@ -34,6 +34,13 @@ public class TKManager : MonoBehaviour
         gyro = Input.gyro;
         gyro.enabled = false;
         DontDestroyOnLoad(this);
+
+        Screen.sleepTimeout = SleepTimeout.NeverSleep;
+        Application.targetFrameRate = 50;
+#if UNITY_ANDROID || UNITY_EDITOR
+        Screen.SetResolution((int)Screen.safeArea.width, ((int)Screen.safeArea.width * 16) / 9, false);
+#endif
+        //Screen.SetResolution((int)Screen.safeArea.width, ((int)Screen.safeArea.width * 16) / 9, false);
     }
 
     // Update is called once per frame

@@ -17,7 +17,9 @@ public class UIGiftconSlot : MonoBehaviour
 
     public void SetData(GiftconData data)
     {
-
+        CommonFunc.SetImageFile("Temp/test_1", ref GiftconImg);
+        Title.text = data.Title;
+        Desc.text = data.ExpirationTime;
     }
 
     public void OnClickSlot()
