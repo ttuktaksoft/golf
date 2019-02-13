@@ -26,6 +26,7 @@ public class DataManager : MonoBehaviour
     public List<AlarmData> AlarmDataList = new List<AlarmData>();
     public List<EvaluationData> EvaluationDataList = new List<EvaluationData>();
     public List<GiftconData> GiftconDataList = new List<GiftconData>();
+    public List<PracticeData> PracticeDataList = new List<PracticeData>();
 
     public void init()
     {
@@ -85,6 +86,15 @@ public class DataManager : MonoBehaviour
         GiftconDataList.Add(new GiftconData("스타벅스 아메리카노", ""));
         GiftconDataList.Add(new GiftconData("스타벅스 아메리카노", ""));
         GiftconDataList.Add(new GiftconData("스타벅스 아메리카노", ""));
+
+        PracticeDataList.Add(new PracticeData(CommonData.TRAINING_TYPE.TRAINING_POSE, CommonData.TRAINING_POSE.TRAINING_ADDRESS, 10));
+        PracticeDataList[0].SetTodayPracticeCount(5);
+        PracticeDataList.Add(new PracticeData(CommonData.TRAINING_TYPE.TRAINING_POSE, CommonData.TRAINING_POSE.TRAINING_BACKSWING, 30));
+        PracticeDataList[1].SetTodayPracticeCount(15);
+        PracticeDataList.Add(new PracticeData(CommonData.TRAINING_TYPE.TRAINING_POSE, CommonData.TRAINING_POSE.TRAINING_IMPACT, 50));
+        PracticeDataList[2].SetTodayPracticeCount(10);
+        PracticeDataList.Add(new PracticeData(CommonData.TRAINING_TYPE.TRAINING_TEMPO, 80));
+        PracticeDataList[3].SetTodayPracticeCount(3);
 
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MainUI : MonoBehaviour {
 
@@ -12,7 +13,7 @@ public class MainUI : MonoBehaviour {
         REWARD,
         USER_INFO,
     }
-
+    public Button TopWebButton;
     public MainTraningUI TraningUIPage;
     public AlarmUI AlarmUIPage;
     public RewardUI RewardUIPage;
@@ -26,6 +27,7 @@ public class MainUI : MonoBehaviour {
 
     private void Awake()
     {
+        TopWebButton.onClick.AddListener(OnClickWeb);
         TraningTab.SetButtonAction(OnClickTraning);
         AlarmTab.SetButtonAction(OnClickAlarm);
         RewardTab.SetButtonAction(OnClickReward);
@@ -92,6 +94,7 @@ public class MainUI : MonoBehaviour {
             case MAIN_MENU_TYPE.REWARD:
                 RewardTab.SetSelect(true);
                 RewardUIPage.gameObject.SetActive(true);
+                RewardUIPage.Init();
                 break;
             case MAIN_MENU_TYPE.USER_INFO:
                 UserInfoTab.SetSelect(true);
@@ -103,5 +106,10 @@ public class MainUI : MonoBehaviour {
         }
 
 
+    }
+
+    public void OnClickWeb()
+    {
+        Application.OpenURL("http://mygolfbiz.kr/main");
     }
 }

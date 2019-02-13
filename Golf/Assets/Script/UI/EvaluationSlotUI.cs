@@ -19,10 +19,11 @@ public class EvaluationSlotUI : MonoBehaviour
 
         for (int i = 0; i < Starlist.Count; i++)
         {
-            if(data.StarCount > i)
-                Starlist[i].sprite = (Sprite)Resources.Load("star", typeof(Sprite));
+            var img = Starlist[i];
+            if (data.StarCount > i)
+                CommonFunc.SetImageFile("star", ref img);
             else
-                Starlist[i].sprite = (Sprite)Resources.Load("star_empty", typeof(Sprite));
+                CommonFunc.SetImageFile("star_empty", ref img);
         }
 
         Msg.text = data.Msg;
