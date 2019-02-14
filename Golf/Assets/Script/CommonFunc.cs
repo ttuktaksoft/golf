@@ -98,4 +98,42 @@ public class CommonFunc : MonoBehaviour
 
         return "";
     }
+
+    static public string ConvertGradeStr(CommonData.GRADE_TYPE type)
+    {
+        switch (type)
+        {
+            case CommonData.GRADE_TYPE.BRONZE:
+                return "브론즈";
+            case CommonData.GRADE_TYPE.SILVER:
+                return "실버";
+            case CommonData.GRADE_TYPE.GOLD:
+                return "골드";
+            case CommonData.GRADE_TYPE.PLATINUM:
+                return "플래티넘";
+            default:
+                break;
+        }
+
+        return "";
+    }
+
+    static public string GetGradeColor(CommonData.GRADE_TYPE type)
+    {
+        switch (type)
+        {
+            case CommonData.GRADE_TYPE.BRONZE:
+                return "#e47911";
+            case CommonData.GRADE_TYPE.SILVER:
+                return "#c0c0c0";
+            case CommonData.GRADE_TYPE.GOLD:
+                return "#ffd700";
+            case CommonData.GRADE_TYPE.PLATINUM:
+                return "#E5E4E2";
+            default:
+                break;
+        }
+
+        return "";
+    }
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public abstract class Popup : MonoBehaviour
 {
-    public PopupMgr.POPUP_TYPE PopupType = PopupMgr.POPUP_TYPE.NONE;
+    public PopupMgr.POPUP_TYPE PopupType { get; private set; }
 
     public class PopupBaseData
     {

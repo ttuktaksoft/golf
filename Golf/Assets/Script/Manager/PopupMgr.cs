@@ -26,6 +26,10 @@ public class PopupMgr : MonoBehaviour
     {
         NONE,
         MSG,
+        GIFT_CON,
+        TUTORIAL,
+        SELF_EVALUATION,
+        USER_SETTING,
         WEB_VIEW,
     }
     
