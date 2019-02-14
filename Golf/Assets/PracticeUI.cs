@@ -8,7 +8,8 @@ using UnityEngine.SceneManagement;
 public class PracticeUI : MonoBehaviour
 {
 
-    public float degreePerSecond = 3.0f;
+    public float degreePerSecond = 100.0f;
+    private float speed;
 
     //public GameObject PoseContent;
     //public GameObject PoseModel;
@@ -131,8 +132,8 @@ public class PracticeUI : MonoBehaviour
             CheckGyroStatus();
             SuccessTraining();
 
-            float speed = degreePerSecond * Time.deltaTime;
-            PoseRotateArrowModel.transform.Rotate(0, speed, 0);
+            speed = degreePerSecond * Time.deltaTime;
+            
         }
     }
 
@@ -257,6 +258,7 @@ public class PracticeUI : MonoBehaviour
                 }
                 else
                 {
+                    PoseRotateArrowModel.transform.Rotate(0, speed, 0);
                     bTrainingSuccess_Rotate = false;
                     //txtTurn.text = "TURN : " + (int)tempStatus[2] + "(" + (CommonData.REF_MAN[nTrainMode] - LevelCover) + " to " + (CommonData.REF_MAN[nTrainMode + 1] + LevelCover) + ")";
                 }
@@ -291,6 +293,7 @@ public class PracticeUI : MonoBehaviour
                 }
                 else
                 {
+                    PoseBendArrowModel.transform.Rotate(-1 * speed, 0, 0);
                     bTrainingSuccess_Bend = false;
                   //  txtBend.text = "BEND : " + (int)tempStatus[1] + "(" + (CommonData.REF_MAN[nTrainMode + 2] - LevelCover) + " to " + (CommonData.REF_MAN[nTrainMode + 3] + LevelCover) + ")";
                 }
@@ -325,6 +328,7 @@ public class PracticeUI : MonoBehaviour
                 }
                 else
                 {
+                    PoseSideArrowModel.transform.Rotate(0, 0, speed);
                     bTrainingSuccess_Side = false;
                   //  txtSide.text = "SIDE : " + (int)tempStatus[0] + "(" + (CommonData.REF_MAN[nTrainMode + 4] - LevelCover) + " to " + (CommonData.REF_MAN[nTrainMode + 5] + LevelCover) + ")";
                 }
