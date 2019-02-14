@@ -11,6 +11,10 @@ public class PracticeUI : MonoBehaviour
     public GameObject PoseContent;
     public GameObject PoseModel;
 
+    public GameObject PoseRotateArrowModel;
+    public GameObject PoseBendArrowModel;
+    public GameObject PoseSideArrowModel;
+
     public GameObject TempoContent;
 
     public Text txtTempoTimer;
@@ -46,6 +50,10 @@ public class PracticeUI : MonoBehaviour
 
         if (TKManager.Instance.GetTrainingType() == CommonData.TRAINING_TYPE.TRAINING_TEMPO)                  
         {
+            PoseRotateArrowModel.SetActive(false);
+            PoseBendArrowModel.SetActive(false);
+            PoseSideArrowModel.SetActive(false);
+
             PoseContent.SetActive(false);
             PoseModel.SetActive(false);
 
@@ -60,6 +68,11 @@ public class PracticeUI : MonoBehaviour
         }
         else
         {
+            PoseRotateArrowModel.SetActive(true);
+            PoseBendArrowModel.SetActive(true);
+            PoseSideArrowModel.SetActive(true);
+
+
             PoseContent.SetActive(true);
             PoseModel.SetActive(true);
 
@@ -245,7 +258,7 @@ public class PracticeUI : MonoBehaviour
             }
             else
             {
-                SliderRotate.value = 12;
+              //  SliderRotate.value = 12;
                 bTrainingSuccess_Rotate = true;
                 //txtTurn.text = "ROTATION : 측정안함";
             }      
