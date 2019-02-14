@@ -440,8 +440,8 @@ public class MainTraningUI : MonoBehaviour {
             PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.MSG, new PopupMsg.PopupData("트레이닝을 시작 할 수 없습니다."));
             return;
         }
-            
 
+        TKManager.Instance.SetTrainingTimer(CommonData.TRAINING_TIME[TrainingTimeIndex]);
         TKManager.Instance.SetAngleType(TrainingModeLevel);
         TKManager.Instance.SetMode(TrainingMode);
         SceneManager.LoadScene("PracticeScene", LoadSceneMode.Single);

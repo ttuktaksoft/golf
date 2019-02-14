@@ -31,8 +31,8 @@ public class GyroScopeManager : MonoBehaviour
 
     void Start()
     {
-
-        StartCoroutine(Co_Init());
+        if (TKManager.Instance.GetTrainingType() != CommonData.TRAINING_TYPE.TRAINING_TEMPO)
+            StartCoroutine(Co_Init());
 
  
 
@@ -56,11 +56,14 @@ public class GyroScopeManager : MonoBehaviour
     IEnumerator Co_Init()
     {
         TKManager.Instance.gyro.enabled = false;
+
+
         yield return new WaitForSeconds(3f);
+        Init(true);
 
         SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_START);
+        TKManager.Instance.bPoseTraining = true;
 
-        Init(true);
 
         yield return null;
 
@@ -73,9 +76,7 @@ public class GyroScopeManager : MonoBehaviour
     {
         TKManager.Instance.gyro.enabled = bStatus;
         initialRotation = Model.transform.rotation;
-        Debug.Log("!!! gyro initialRotation : " + initialRotation);
         gyroInitialRotation = TKManager.Instance.gyro.attitude;
-        Debug.Log("!!! gyro gyroInitialRotation : " + gyroInitialRotation);
 
         Screen.orientation = ScreenOrientation.Portrait;
 
@@ -173,9 +174,9 @@ public class GyroScopeManager : MonoBehaviour
             float AngleY = Model.transform.rotation.eulerAngles.y;
             float AngleZ = Model.transform.rotation.eulerAngles.z;
 
-            Debug.Log("!@@@@@ Address x" + AngleX);
-            Debug.Log("!@@@@@ Address y" + AngleY);
-            Debug.Log("!@@@@@ Address z" + AngleZ);
+         //   Debug.Log("!@@@@@ Address x" + AngleX);
+          //  Debug.Log("!@@@@@ Address y" + AngleY);
+         //   Debug.Log("!@@@@@ Address z" + AngleZ);
 
             // transform.rotation = Input.gyro.attitude;
             /*

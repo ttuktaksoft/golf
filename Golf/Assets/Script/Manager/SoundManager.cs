@@ -46,14 +46,21 @@ public class SoundManager : MonoBehaviour
         }        
     }
 
-    public void PlayTempoTraining(float tempo)
+    public void PlayTempoTraining()
     {
-        StartCoroutine(Co_TempoTraining(tempo));
+        StartCoroutine(Co_TempoTraining());
     }
 
-    IEnumerator Co_TempoTraining(float tempo)
+    IEnumerator Co_TempoTraining()
     {
-  
+        while (true)
+        {
+            if (TKManager.Instance.bTempoTraining == false)
+                break;
+
+            yield return new WaitForSeconds(7.0f);
+            SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_TEMPO);            
+        }
 
         yield return null;
     }
