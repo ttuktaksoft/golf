@@ -8,16 +8,18 @@ using UnityEngine.SceneManagement;
 public class PracticeUI : MonoBehaviour
 {
 
-    public GameObject PoseContent;
-    public GameObject PoseModel;
+    public float degreePerSecond = 3.0f;
+
+    //public GameObject PoseContent;
+    //public GameObject PoseModel;
 
     public GameObject PoseRotateArrowModel;
     public GameObject PoseBendArrowModel;
     public GameObject PoseSideArrowModel;
 
-    public GameObject TempoContent;
+    //public GameObject TempoContent;
 
-    public Text txtTempoTimer;
+ //   public Text txtTempoTimer;
 
     public Slider SliderRotate;
     public Slider SliderBend;
@@ -25,8 +27,8 @@ public class PracticeUI : MonoBehaviour
 
     public Text txtMode;
 
-    public Text txtTimer;
-    public Text txtCount;
+  //  public Text txtTimer;
+ //   public Text txtCount;
     public int nTrainingCount = 0;
     public int nTrainingTimer = 0;
 
@@ -54,13 +56,13 @@ public class PracticeUI : MonoBehaviour
             PoseBendArrowModel.SetActive(false);
             PoseSideArrowModel.SetActive(false);
 
-            PoseContent.SetActive(false);
-            PoseModel.SetActive(false);
+         //   PoseContent.SetActive(false);
+          //  PoseModel.SetActive(false);
 
-            TempoContent.SetActive(true);
+          //  TempoContent.SetActive(true);
 
             txtMode.enabled = false;
-            txtTimer.enabled = false;
+          //  txtTimer.enabled = false;
             TKManager.Instance.bTempoTraining = true;
             SoundManager.Instance.PlayTempoTraining();
             SetTrainingCount();
@@ -73,17 +75,17 @@ public class PracticeUI : MonoBehaviour
             PoseSideArrowModel.SetActive(true);
 
 
-            PoseContent.SetActive(true);
-            PoseModel.SetActive(true);
+        //    PoseContent.SetActive(true);
+       //     PoseModel.SetActive(true);
 
-            TempoContent.SetActive(false);
+        //    TempoContent.SetActive(false);
 
-            txtTimer.enabled = true;
+       //     txtTimer.enabled = true;
             txtMode.text = tempString;
         }
 
         btnBack.onClick.AddListener(OnClickBack);
-        txtTimer.text = TKManager.Instance.GetTrainingTimer().ToString() + "초";
+   //     txtTimer.text = TKManager.Instance.GetTrainingTimer().ToString() + "초";
 
 
         //     
@@ -128,6 +130,9 @@ public class PracticeUI : MonoBehaviour
          //   Debug.Log("tempStatus : " + tempStatus[0]);
             CheckGyroStatus();
             SuccessTraining();
+
+            float speed = degreePerSecond * Time.deltaTime;
+            PoseRotateArrowModel.transform.Rotate(0, speed, 0);
         }
     }
 
@@ -142,7 +147,7 @@ public class PracticeUI : MonoBehaviour
         {
             yield return new WaitForSeconds(7.5f);
             nTrainingCount++;
-            txtCount.text = nTrainingCount.ToString() + "회";
+       //     txtCount.text = nTrainingCount.ToString() + "회";
         }
         yield return null;
     }
@@ -167,7 +172,7 @@ public class PracticeUI : MonoBehaviour
                 if (tempTimer > 7)
                 {
                     tempTimer = 0;
-                    txtTempoTimer.text = tempTimer.ToString();
+            //        txtTempoTimer.text = tempTimer.ToString();
                 }
 
             }
@@ -186,12 +191,12 @@ public class PracticeUI : MonoBehaviour
                 if (tempTimer < 0)
                 {
                     nTrainingCount++;
-                    txtCount.text = nTrainingCount.ToString() + "회";
+               //     txtCount.text = nTrainingCount.ToString() + "회";
                     tempTimer = TKManager.Instance.GetTrainingTimer();
                 }
 
-
-                txtTimer.text = tempTimer.ToString() + "초";
+//
+     //           txtTimer.text = tempTimer.ToString() + "초";
             }
         }
 

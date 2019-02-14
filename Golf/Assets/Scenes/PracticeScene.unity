@@ -2423,22 +2423,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ae4595ea1cb51c479e9c00a4568bab6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  degreePerSecond: 3
   PoseContent: {fileID: 0}
   PoseModel: {fileID: 2107429012}
-  PoseRotateArrowModel: {fileID: 0}
-  PoseBendArrowModel: {fileID: 0}
-  PoseSideArrowModel: {fileID: 0}
+  PoseRotateArrowModel: {fileID: 430174716}
+  PoseBendArrowModel: {fileID: 151811328}
+  PoseSideArrowModel: {fileID: 1472682460}
   TempoContent: {fileID: 0}
   txtTempoTimer: {fileID: 0}
-  SliderRotate: {fileID: 0}
-  SliderBend: {fileID: 0}
-  SliderSide: {fileID: 0}
-  txtMode: {fileID: 0}
+  SliderRotate: {fileID: 1734821459}
+  SliderBend: {fileID: 2050813694}
+  SliderSide: {fileID: 2053904374}
+  txtMode: {fileID: 1529782451}
   txtTimer: {fileID: 0}
   txtCount: {fileID: 0}
   nTrainingCount: 0
   nTrainingTimer: 0
-  btnBack: {fileID: 0}
+  btnBack: {fileID: 439533672}
   bTraining: 0
 --- !u!4 &1428361394
 Transform:
