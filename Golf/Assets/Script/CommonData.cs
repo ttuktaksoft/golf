@@ -55,6 +55,14 @@ public class CommonData : MonoBehaviour
         TRAINING_TEMPO
     }
 
+    public enum GRADE_TYPE
+    {
+        BRONZE,
+        SILVER,
+        GOLD,
+        PLATINUM,
+    }
+
     public static int ANGLE_MAX_LEVEL = 3;
 
     public static int[] TRAINING_TIME = { 5, 10, 15, 20 };

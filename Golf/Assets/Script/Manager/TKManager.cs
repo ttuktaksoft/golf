@@ -18,7 +18,10 @@ public class TKManager : MonoBehaviour
         }
     }
 
-    public CommonData.GENDER Gender;
+    private CommonData.GENDER Gender;
+    public string Name { get; private set; }
+    private CommonData.GRADE_TYPE Grade = CommonData.GRADE_TYPE.BRONZE;
+    public string PhoneNumber { get; private set; }
     public CommonData.TRAINING_TYPE TrainingType;
     public CommonData.TRAINING_POSE PoseType;
     public Dictionary<CommonData.TRAINING_ANGLE, int> AngleTypeList = new Dictionary<CommonData.TRAINING_ANGLE, int>();
@@ -120,5 +123,30 @@ public class TKManager : MonoBehaviour
     public int GetTrainingTimer()
     {
         return TrainingTimer;
+    }
+
+    public void SetName(string name)
+    {
+        Name = name;
+    }
+
+    public void SetPhoneNumber(string num)
+    {
+        PhoneNumber = num;
+    }
+
+    public CommonData.GRADE_TYPE GetGrade()
+    {
+        return Grade;
+    }
+
+    public void SetGrade(CommonData.GRADE_TYPE type)
+    {
+        Grade = type;
+    }
+
+    public string GetGradeStr()
+    {
+        return CommonFunc.ConvertGradeStr(Grade);
     }
 }

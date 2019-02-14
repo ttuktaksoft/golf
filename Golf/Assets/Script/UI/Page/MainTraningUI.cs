@@ -296,12 +296,15 @@ public class MainTraningUI : MonoBehaviour {
     {
         if (MenuAction)
             return;
+
+        Application.OpenURL("http://mygolfbiz.kr/about-us");
     }
 
     public void OnClickTutorial()
     {
         if (MenuAction)
             return;
+        PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.TUTORIAL, new PopupTutorial.PopupData());
     }
 
     public void OnClickImpact()
