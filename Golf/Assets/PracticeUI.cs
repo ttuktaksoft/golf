@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 public class PracticeUI : MonoBehaviour
 {
 
-    public float degreePerSecond = 100.0f;
+    private float degreePerSecond = 100.0f;
     private float speed;
 
     //public GameObject PoseContent;
@@ -20,16 +20,32 @@ public class PracticeUI : MonoBehaviour
 
     //public GameObject TempoContent;
 
- //   public Text txtTempoTimer;
-
+    //   public Text txtTempoTimer;
+    public Text txtRotateLevel;
+    public Text txtRotateMin;
+    public Text txtRotateMax;
+    public Transform InnerSliderRotate;
     public Slider SliderRotate;
+
+    public Text txtBendLevel;
+    public Text txtBendMin;
+    public Text txtBendMax;
+    public Transform InnerSliderBend;
     public Slider SliderBend;
+
+    public Text txtSideLevel;
+    public Text txtSideMin;
+    public Text txtSideMax;
+    public Transform InnerSliderSide;
     public Slider SliderSide;
 
+    
     public Text txtMode;
+    public Text txtCount;
+    public Text txtLevel;
 
-  //  public Text txtTimer;
- //   public Text txtCount;
+    //  public Text txtTimer;
+    //   public Text txtCount;
     public int nTrainingCount = 0;
     public int nTrainingTimer = 0;
 
@@ -252,6 +268,10 @@ public class PracticeUI : MonoBehaviour
 
                 SliderRotate.value = tempStatus[2];
 
+                txtRotateLevel.text = "ROTATION";
+                txtRotateMin.text = (CommonData.REF_MAN[nTrainMode] - LevelCover).ToString();
+                txtRotateMax.text = (CommonData.REF_MAN[nTrainMode +1] + LevelCover).ToString();
+
                 if (CommonData.REF_MAN[nTrainMode] - LevelCover <= tempStatus[2] && tempStatus[2] <= CommonData.REF_MAN[nTrainMode + 1] + LevelCover)
                 {
                     bTrainingSuccess_Rotate = true;
@@ -267,7 +287,7 @@ public class PracticeUI : MonoBehaviour
             {
               //  SliderRotate.value = 12;
                 bTrainingSuccess_Rotate = true;
-                //txtTurn.text = "ROTATION : 측정안함";
+                txtRotateLevel.text = "ROTATION 측정안함";
             }      
         }
             
@@ -286,6 +306,10 @@ public class PracticeUI : MonoBehaviour
 
                 SliderBend.value = tempStatus[1];
 
+                txtBendLevel.text = "BEND";
+                txtBendMin.text = (CommonData.REF_MAN[nTrainMode + 2] - LevelCover).ToString();
+                txtBendMax.text = (CommonData.REF_MAN[nTrainMode + 3] + LevelCover).ToString();
+
                 if (CommonData.REF_MAN[nTrainMode + 2] - LevelCover <= tempStatus[1] && tempStatus[1] <= CommonData.REF_MAN[nTrainMode + 3] + LevelCover)
                 {
                    // txtBend.text = "BEND OK";
@@ -302,7 +326,7 @@ public class PracticeUI : MonoBehaviour
             {
                 SliderBend.value = 40;
                 bTrainingSuccess_Bend = true;
-              //  txtBend.text = "BEND : 측정안함";
+                txtBendLevel.text = "BEND 측정안함";
             } 
         }
          
@@ -315,11 +339,13 @@ public class PracticeUI : MonoBehaviour
 
             if (angleLevel > 0)
             {
-                float LevelCover = CommonData.LEVEL_COVER[angleLevel];
-
-   
+                float LevelCover = CommonData.LEVEL_COVER[angleLevel];  
 
                 SliderSide.value = tempStatus[0];
+
+                txtSideLevel.text = "SIDE BEND";
+                txtSideMin.text = (CommonData.REF_MAN[nTrainMode + 4] - LevelCover).ToString();
+                txtSideMax.text = (CommonData.REF_MAN[nTrainMode + 5] + LevelCover).ToString();
 
                 if (CommonData.REF_MAN[nTrainMode + 4] - LevelCover <= tempStatus[0] && tempStatus[0] <= CommonData.REF_MAN[nTrainMode + 5] + LevelCover)
                 {
@@ -337,7 +363,7 @@ public class PracticeUI : MonoBehaviour
             {                
                 SliderSide.value = 14;
                 bTrainingSuccess_Side = true;
-               // txtSide.text = "SIDE : 측정안함";
+                txtSideLevel.text = "SIDE BEND 측정안함";
             }
         }        
     }
