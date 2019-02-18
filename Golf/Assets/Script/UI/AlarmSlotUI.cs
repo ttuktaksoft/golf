@@ -51,15 +51,6 @@ public class AlarmSlotUI : MonoBehaviour
     public void RefreshSlot()
     {
         BigSlotObj.gameObject.SetActive(!MiniMode);
-        StartCoroutine(Co_Test());
-    }
-
-    public IEnumerator Co_Test()
-    {
-
-        yield return null;
-        //yield return null;
-        //yield return null;
         if (MiniMode)
         {
             SlotRect.sizeDelta = new Vector2(SlotRect.sizeDelta.x, MiniSlotRect.sizeDelta.y);

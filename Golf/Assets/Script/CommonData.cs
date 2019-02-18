@@ -63,7 +63,7 @@ public class CommonData : MonoBehaviour
         PLATINUM,
     }
 
-    public static int ANGLE_MAX_LEVEL = 3;
+    public static int ANGLE_MAX_LEVEL = 4;
 
     public static int[] TRAINING_TIME = { 5, 10, 15, 20 };
 

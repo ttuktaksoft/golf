@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PopupWebView : Popup
 {
-    private WebViewObject webViewObject;
+  
 
     public PopupWebView()
         : base(PopupMgr.POPUP_TYPE.WEB_VIEW)
@@ -39,17 +39,6 @@ public class PopupWebView : Popup
 
     public void StartWebView()
     {
-        string strUrl = "http://www.naver.com";
-
-        webViewObject =
-            (new GameObject("WebViewObject")).AddComponent<WebViewObject>();
-        webViewObject.Init((msg) =>
-        {
-            Debug.Log(string.Format("CallFromJS[{0}]", msg));
-        });
-
-        webViewObject.LoadURL(strUrl);
-        webViewObject.SetVisibility(true);
-        webViewObject.SetMargins(50, 50, 50, 50);
+        
     }
 }

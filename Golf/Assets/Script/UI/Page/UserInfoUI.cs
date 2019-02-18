@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class UserInfoUI : MonoBehaviour {
 
+    public Button ThumbnailEdit;
+    public Image Thumbnail;
     public Text Name;
     public Text Grade;
     public Image Gender;
@@ -15,6 +17,7 @@ public class UserInfoUI : MonoBehaviour {
     public void Awake()
     {
         Edit.onClick.AddListener(OnClickEdit);
+        ThumbnailEdit.onClick.AddListener(OnClickThumbnailEdit);
     }
 
     public void Init()
@@ -51,5 +54,43 @@ public class UserInfoUI : MonoBehaviour {
     public void OnClickEdit()
     {
         PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.USER_SETTING, new PopupUserSetting.PopupData(RefreshUI));
+    }
+
+    public void OnClickThumbnailEdit()
+    {
+        NativeGallery.Permission permission = NativeGallery.GetImageFromGallery((path) =>
+        {
+            Debug.Log("Image path: " + path);
+            if (path != null)
+            {
+                // Create Texture from selected image
+                Texture2D texture = NativeGallery.LoadImageAtPath(path);
+                if (texture == null)
+                {
+                    Debug.Log("Couldn't load texture from " + path);
+                    return;
+                }
+
+                // Assign texture to a temporary quad and destroy it after 5 seconds
+                GameObject quad = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                quad.transform.position = Camera.main.transform.position + Camera.main.transform.forward * 2.5f;
+                quad.transform.forward = Camera.main.transform.forward;
+                quad.transform.localScale = new Vector3(1f, texture.height / (float)texture.width, 1f);
+
+                Thumbnail.sprite = Sprite.Create(texture, Thumbnail.rectTransform.rect, Thumbnail.rectTransform.pivot);
+
+                //Material material = quad.GetComponent<Renderer>().material;
+                //if (!material.shader.isSupported) // happens when Standard shader is not included in the build
+                //    material.shader = Shader.Find("Legacy Shaders/Diffuse");
+
+                //material.mainTexture = texture;
+
+                Destroy(quad, 5f);
+
+                // If a procedural texture is not destroyed manually, 
+                // it will only be freed after a scene change
+                Destroy(texture, 5f);
+            }
+        }, "Select a PNG image", "image/png");
     }
 }

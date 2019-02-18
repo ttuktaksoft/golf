@@ -113,7 +113,7 @@ public class MainTraningUI : MonoBehaviour {
         if (TrainingSetStep == TRAINING_SET_STEP.MAIN)
         {
             TraningTypeText.text = "";
-            CenterButton.Init("", "logo", CommonFunc.HexToColor(HexagonCenterColor, 0.5f), null);
+            CenterButton.Init("", "logo", CommonFunc.HexToColor(HexagonCenterColor, 0f), null);
             CenterButton.SetImageSize(new Vector2(227.3f, 262.3f));
 
             for (int i = 0; i < HexagonMenu.Count; i++)
@@ -135,7 +135,7 @@ public class MainTraningUI : MonoBehaviour {
         else if(TrainingSetStep == TRAINING_SET_STEP.POSE)
         {
             TraningTypeText.text = "";
-            CenterButton.Init("", "logo", CommonFunc.HexToColor(HexagonCenterColor, 0.5f), null);
+            CenterButton.Init("", "logo", CommonFunc.HexToColor(HexagonCenterColor, 0f), null);
             CenterButton.SetImageSize(new Vector2(227.3f, 262.3f));
 
             for (int i = 0; i < HexagonMenu.Count; i++)
@@ -176,19 +176,19 @@ public class MainTraningUI : MonoBehaviour {
                 else if (i == 1)
                 {
                     HexagonMenu[i].Init(CommonFunc.ConvertPoseAngleTypeStr(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_BEND), "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickLevelBend);
-                    TrainingModeLevel.Add(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_BEND, 0);
+                    TrainingModeLevel.Add(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_BEND, 1);
                     TrainingModeLevelBtnIndex.Add(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_BEND, i);
                 }
                 else if (i == 2)
                 {
                     HexagonMenu[i].Init(CommonFunc.ConvertPoseAngleTypeStr(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_TURN), "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickLevelTurn);
-                    TrainingModeLevel.Add(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_TURN, 0);
+                    TrainingModeLevel.Add(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_TURN, 1);
                     TrainingModeLevelBtnIndex.Add(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_TURN, i);
                 }
                 else if (i == 3)
                 {
                     HexagonMenu[i].Init(CommonFunc.ConvertPoseAngleTypeStr(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_SIDE), "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickLevelSide);
-                    TrainingModeLevel.Add(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_SIDE, 0);
+                    TrainingModeLevel.Add(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_SIDE, 1);
                     TrainingModeLevelBtnIndex.Add(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_SIDE, i);
                 }
                 else if (i == 4)
