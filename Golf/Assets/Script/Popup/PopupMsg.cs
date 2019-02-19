@@ -58,17 +58,17 @@ public class PopupMsg : Popup
 
     public void OnClickOK()
     {
+        PopupMgr.Instance.DismissPopup();
+
         if (OkAction != null)
             OkAction();
-
-        PopupMgr.Instance.DismissPopup();
     }
 
     public void OnClickCancel()
     {
+        PopupMgr.Instance.DismissPopup();
+
         if (CancelAction != null)
             CancelAction();
-
-        PopupMgr.Instance.DismissPopup();
     }
 }

@@ -27,10 +27,6 @@ public class TKManager : MonoBehaviour
     public Dictionary<CommonData.TRAINING_ANGLE, int> AngleTypeList = new Dictionary<CommonData.TRAINING_ANGLE, int>();
     public Gyroscope gyro;
     public int TempoTrainingLevel = 3;
-    
-    public bool bTrainingSuccess = false;
-    public bool bTempoTraining = false;
-    public bool bPoseTraining = false;
 
     private int TrainingTimer;
     // Start is called before the first frame update

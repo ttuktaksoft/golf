@@ -4,15 +4,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System.Text;
 
 public class PracticeUI : MonoBehaviour
 {
-
-    private float degreePerSecond = 100.0f;
-    private float speed;
-
-    //public GameObject PoseContent;
-    //public GameObject PoseModel;
+    public enum PRACTICE_ORDER
+    { 
+        READY,
+        START,
+        END
+    }
+    
 
     public GameObject Model;
 
@@ -24,60 +26,80 @@ public class PracticeUI : MonoBehaviour
     public GameObject Model_BendDown;
     public GameObject Model_SideRight;
 
-    //public GameObject TempoContent;
-
-    //   public Text txtTempoTimer;
-    //public Text txtRotateLevel;
-    //public Text txtRotateMin;
-    //public Text txtRotateMax;
-    //public Transform InnerSliderRotate;
-    //public Slider SliderRotate;
-
-    //public Text txtBendLevel;
-    //public Text txtBendMin;
-    //public Text txtBendMax;
-    //public Transform InnerSliderBend;
-    //public Slider SliderBend;
-
-    //public Text txtSideLevel;
-    //public Text txtSideMin;
-    //public Text txtSideMax;
-    //public Transform InnerSliderSide;
-    //public Slider SliderSide;
-
     public UITrainingAngle BendTrainingAngle;
     public UITrainingAngle RotationTrainingAngle;
     public UITrainingAngle SideBendTrainingAngle;
 
+    public GameObject ReadyUI;
+    public Text ReadyCount;
 
-    public Text txtMode;
-    public Text txtCount;
-    public Text txtLevel;
+    public Text TrainingType;
+    public Text TrainingCount;
+    public Text TrainingAngleType;
 
-    //  public Text txtTimer;
-    //   public Text txtCount;
-    public int nTrainingCount = 0;
-    public int nTrainingTimer = 0;
+    public Button PauseButton;
 
-    //public Button btnInit;
-    public Button btnBack;
+    public Slider Timer;
 
-    float[] tempStatus = new float[3];
-    bool bStatus = false;
+    private float TrainingTime = 0f;
+    private int TrainingSuccessCount = 0;
 
-    public bool bTraining = false;
+    private float ArrowDegreePerSecond = 100.0f;
+    private float ArrowSpeed;
+
+    private PRACTICE_ORDER PracticeOrderType = PRACTICE_ORDER.READY;
+    private int[] RefData = { };
+    private bool TrainingSuccess = false;
+    private bool TrainingSuccess_Rotate = false;
+    private bool TrainingSuccess_Bend = false;
+    private bool TrainingSuccess_Side = false;
+
+    private float[] GyroStatus = new float[3];
+
+    private void Awake()
+    {
+        PauseButton.onClick.AddListener(OnClickBack);
+    }
 
     // Start is called before the first frame update
     void Start()
     {
-        string tempString = TKManager.Instance.GetPoseType().ToString();
-        tempString = tempString.Substring(9);
-        txtMode.enabled = true;
+        TrainingSuccessCount = 0;
+        PracticeOrderType = PRACTICE_ORDER.READY;
 
-    
+        TrainingCount.text = "0회";
+        TrainingAngleType.text = "";
 
+        if (TKManager.Instance.GetTrainingType() == CommonData.TRAINING_TYPE.TRAINING_TEMPO)
+            TrainingType.text = CommonFunc.ConvertTrainingTypeStr(TKManager.Instance.GetTrainingType());
+        else
+        {
+            TrainingType.text = CommonFunc.ConvertPoseTypeStr(TKManager.Instance.GetPoseType());
 
-        SetTrainingTimer();
+            StringBuilder builder = new StringBuilder();
+            var angleTypeList = TKManager.Instance.GetAngleType();
+            var enumerator = angleTypeList.GetEnumerator();
+            int count = angleTypeList.Count;
+
+            while (enumerator.MoveNext())
+            {
+                count--;
+                if (enumerator.Current.Value == 0)
+                    continue;
+                builder.Append(string.Format("{0} {1}", CommonFunc.ConvertPoseAngleTypeStr(enumerator.Current.Key), CommonFunc.ConvertPoseLevelStr(enumerator.Current.Value)));
+                if (count > 0)
+                    builder.Append(",");
+            }
+
+            TrainingAngleType.text = builder.ToString();
+        }
+
+        if (TKManager.Instance.GetGender() == CommonData.GENDER.GENDER_MAN)
+            RefData = CommonData.REF_MAN;
+        else
+            RefData = CommonData.REF_WOMAN;
+
+        TrainingReady();
 
         if (TKManager.Instance.GetTrainingType() == CommonData.TRAINING_TYPE.TRAINING_TEMPO)                  
         {
@@ -91,17 +113,9 @@ public class PracticeUI : MonoBehaviour
             Model_SideRight.SetActive(false);
 
 
-         //   PoseContent.SetActive(false);
-          //  PoseModel.SetActive(false);
-
-          //  TempoContent.SetActive(true);
-
-            txtMode.enabled = false;
-          //  txtTimer.enabled = false;
-            TKManager.Instance.bTempoTraining = true;
-            SoundManager.Instance.PlayTempoTraining();
-            SetTrainingCount();
-         
+            BendTrainingAngle.gameObject.SetActive(false);
+            RotationTrainingAngle.gameObject.SetActive(false);
+            SideBendTrainingAngle.gameObject.SetActive(false);
         }
         else
         {
@@ -113,18 +127,9 @@ public class PracticeUI : MonoBehaviour
 
             Model_SideLeft.SetActive(true);
             Model_SideRight.SetActive(true);
-
-
-            //    PoseContent.SetActive(true);
-            //     PoseModel.SetActive(true);
-
-            //    TempoContent.SetActive(false);
-
-            //     txtTimer.enabled = true;
-            //txtMode.text = tempString;
         }
 
-        btnBack.onClick.AddListener(OnClickBack);
+        
 
         int nTrainMode = Convert.ToInt32(TKManager.Instance.GetPoseType());
 
@@ -136,10 +141,10 @@ public class PracticeUI : MonoBehaviour
                 RotationTrainingAngle.gameObject.SetActive(true);
                 float LevelCover = CommonData.LEVEL_COVER[angleLevel];
 
-                float minValue = CommonData.REF_MAN[nTrainMode] - 30;
-                float maxValue = CommonData.REF_MAN[nTrainMode + 1] + 30;
-                float successMinValue = CommonData.REF_MAN[nTrainMode] - LevelCover;
-                float successMaxValue = CommonData.REF_MAN[nTrainMode + 1] + LevelCover;
+                float minValue = RefData[nTrainMode] - 30;
+                float maxValue = RefData[nTrainMode + 1] + 30;
+                float successMinValue = RefData[nTrainMode] - LevelCover;
+                float successMaxValue = RefData[nTrainMode + 1] + LevelCover;
                 RotationTrainingAngle.Init("ROTATION", minValue, maxValue, successMinValue, successMaxValue);
 
             }
@@ -158,10 +163,10 @@ public class PracticeUI : MonoBehaviour
                 BendTrainingAngle.gameObject.SetActive(true);
                 float LevelCover = CommonData.LEVEL_COVER[angleLevel];
 
-                float minValue = CommonData.REF_MAN[nTrainMode + 2] - 30;
-                float maxValue = CommonData.REF_MAN[nTrainMode + 3] + 30;
-                float successMinValue = CommonData.REF_MAN[nTrainMode + 2] - LevelCover;
-                float successMaxValue = CommonData.REF_MAN[nTrainMode + 3] + LevelCover;
+                float minValue = RefData[nTrainMode + 2] - 30;
+                float maxValue = RefData[nTrainMode + 3] + 30;
+                float successMinValue = RefData[nTrainMode + 2] - LevelCover;
+                float successMaxValue = RefData[nTrainMode + 3] + LevelCover;
                 BendTrainingAngle.Init("BEND", minValue, maxValue, successMinValue, successMaxValue);
             }
             else
@@ -180,223 +185,197 @@ public class PracticeUI : MonoBehaviour
                 SideBendTrainingAngle.gameObject.SetActive(true);
                 float LevelCover = CommonData.LEVEL_COVER[angleLevel];
 
-                float minValue = CommonData.REF_MAN[nTrainMode + 4] - 30;
-                float maxValue = CommonData.REF_MAN[nTrainMode + 5] + 30;
-                float successMinValue = CommonData.REF_MAN[nTrainMode + 4] - LevelCover;
-                float successMaxValue = CommonData.REF_MAN[nTrainMode + 5] + LevelCover;
+                float minValue = RefData[nTrainMode + 4] - 30;
+                float maxValue = RefData[nTrainMode + 5] + 30;
+                float successMinValue = RefData[nTrainMode + 4] - LevelCover;
+                float successMaxValue = RefData[nTrainMode + 5] + LevelCover;
                 SideBendTrainingAngle.Init("SIDE BEND", minValue, maxValue, successMinValue, successMaxValue);
             }
             else
             {
                 SideBendTrainingAngle.gameObject.SetActive(false);
             }
-        }
-
-
-        
-   //     txtTimer.text = TKManager.Instance.GetTrainingTimer().ToString() + "초";
-
-
-        //     
+        }    
     }
 
-    public void OnClickInit()
+    public void TrainingReady()
     {
-        //isModelActive = !isModelActive;
-        if (TKManager.Instance.GetTrainingType() != CommonData.TRAINING_TYPE.TRAINING_TEMPO)
-            GyroScopeManager.Instance.Init(true);
-        else
-        {
-            TKManager.Instance.bTempoTraining = true;
-            SoundManager.Instance.PlayTempoTraining();
-        }
-
-
-
-        //PracticeManager.Instance.SetCalibration();
+        if (TKManager.Instance.GetTrainingType() == CommonData.TRAINING_TYPE.TRAINING_POSE)
+            StartCoroutine(Co_PoseTrainingReady());
+        if (TKManager.Instance.GetTrainingType() == CommonData.TRAINING_TYPE.TRAINING_TEMPO)
+            StartCoroutine(Co_TempoTrainingReady());
     }
-
-    public void OnClickBack()
+    IEnumerator Co_PoseTrainingReady()
     {
-        PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.MSG, new PopupMsg.PopupData("훈련을 종료 하시겠습니까?", () =>
-         {
-             TKManager.Instance.bPoseTraining = false;
-             TKManager.Instance.bTempoTraining = false;
+        GyroScopeManager.Instance.TrainingReadyStart();
 
-             GyroScopeManager.Instance.DestroyGyro();
-             StopCoroutine(Co_TrainingCount());
-             StopCoroutine(Co_TrainingTimer());
-             SceneManager.LoadScene("MainScene", LoadSceneMode.Single);
-         }));
+        yield return Co_TrainingReady();
+
+        SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_START);
+        GyroScopeManager.Instance.TrainingReadyEnd();
+        PracticeOrderType = PRACTICE_ORDER.START;
+        TrainingStart();
     }
 
-
-    // Update is called once per frame
-    void Update()
-    {        
-        if (TKManager.Instance.GetTrainingType() != CommonData.TRAINING_TYPE.TRAINING_TEMPO)
-        {
-            tempStatus = PracticeManager.Instance.GetGyroStatus();
-            //txtTurn.text = "tempStatus : " + tempStatus[0];
-         //   Debug.Log("tempStatus : " + tempStatus[0]);
-            CheckGyroStatus();
-            SuccessTraining();
-
-            speed = degreePerSecond * Time.deltaTime;
-            
-        }
-    }
-
-    public void SetTrainingCount()
+    IEnumerator Co_TempoTrainingReady()
     {
-        StartCoroutine(Co_TrainingCount());
+        yield return Co_TrainingReady();
+        PracticeOrderType = PRACTICE_ORDER.START;
+        TrainingStart();
     }
 
-    IEnumerator Co_TrainingCount()
+    IEnumerator Co_TrainingReady()
     {
+        ReadyUI.gameObject.SetActive(true);
+        int readyTime = CommonData.TRAINING_READY_TIME;
         while (true)
         {
-            yield return new WaitForSeconds(7.5f);
-            nTrainingCount++;
-       //     txtCount.text = nTrainingCount.ToString() + "회";
+            ReadyCount.text = string.Format("{0}", readyTime);
+            yield return new WaitForSeconds(1.0f);
+            readyTime -= 1;
+
+            if (readyTime <= 0)
+                break;
         }
-        yield return null;
+        ReadyUI.gameObject.SetActive(false);
     }
 
-    public void SetTrainingTimer()
+    public void TrainingStart()
     {
-        StartCoroutine(Co_TrainingTimer());
+        if (TKManager.Instance.GetTrainingType() == CommonData.TRAINING_TYPE.TRAINING_POSE)
+            StartCoroutine(Co_PoseTrainingStart());
+        else if (TKManager.Instance.GetTrainingType() == CommonData.TRAINING_TYPE.TRAINING_TEMPO)
+            StartCoroutine(Co_TempoTrainingStart());
     }
 
-    IEnumerator Co_TrainingTimer()
+    IEnumerator Co_PoseTrainingStart()
     {
-        int tempTimer = 0;
-        if (TKManager.Instance.bTempoTraining)
+        TrainingTime = TKManager.Instance.GetTrainingTimer();
+        float soundTime = 1f;
+        float waitTime = CommonData.TRAINING_READY_TIME;
+
+        while (true)
         {
-         
-            while (true)
+            if(waitTime > 0)
             {
-                yield return new WaitForSeconds(1.0f);
-
-                tempTimer++;
-
-                if (tempTimer > 7)
+                waitTime -= Time.deltaTime;
+            }
+            else
+            {
+                if (TrainingSuccess)
                 {
-                    tempTimer = 0;
-            //        txtTempoTimer.text = tempTimer.ToString();
-                }
+                    TrainingTime -= Time.deltaTime;
+                    soundTime -= Time.deltaTime;
+                    if (soundTime < 0)
+                    {
+                        SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_START);
+                        soundTime = 1f;
+                    }
 
+
+                    if (TrainingTime < 0)
+                    {
+                        TrainingSuccessCount++;
+                        TrainingTime = TKManager.Instance.GetTrainingTimer();
+                        SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_SUCCESS);
+
+                        TrainingCount.text = string.Format("{0}회", TrainingSuccessCount);
+
+                        waitTime = CommonData.TRAINING_READY_TIME;
+                    }
+                }
+                else
+                    TrainingTime = TKManager.Instance.GetTrainingTimer();
+            }
+            
+
+            yield return null;
+        }
+    }
+
+    IEnumerator Co_TempoTrainingStart()
+    {
+        TrainingTime = CommonData.TEMPO_TRAINING_WAIT_TIME;
+
+        while (true)
+        {
+            TrainingTime -= Time.deltaTime;
+            yield return null;
+
+            if(TrainingTime < 0)
+            {
+                SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_TEMPO);
+                TrainingSuccessCount++;
+                TrainingTime = CommonData.TEMPO_TRAINING_WAIT_TIME;
             }
         }
-        else
-        {
-            yield return new WaitForSeconds(3.0f);
-            tempTimer = TKManager.Instance.GetTrainingTimer();
-
-            while (true)
-            {
-                yield return new WaitForSeconds(1.0f);
-
-                tempTimer--;
-
-                if (tempTimer < 0)
-                {
-                    nTrainingCount++;
-               //     txtCount.text = nTrainingCount.ToString() + "회";
-                    tempTimer = TKManager.Instance.GetTrainingTimer();
-                }
-
-//
-     //           txtTimer.text = tempTimer.ToString() + "초";
-            }
-        }
-
-  
-        yield return null;
     }
 
-    public void CheckGyroStatus()
+    void Update()
     {
-        if(TKManager.Instance.GetGender() == CommonData.GENDER.GENDER_MAN)
+        if (PracticeOrderType != PRACTICE_ORDER.START)
+            return;
+
+        if (TKManager.Instance.GetTrainingType() == CommonData.TRAINING_TYPE.TRAINING_POSE)
         {
-            CheckGyroStatus_Man();
-            txtMode.text = "(" + Model.transform.rotation.x.ToString() + " , " + Model.transform.rotation.y.ToString() + " , " + Model.transform.rotation.z.ToString() + " ) ";
+            GyroStatus = PracticeManager.Instance.GetGyroStatus();
+            ArrowSpeed = ArrowDegreePerSecond * Time.deltaTime;
+
+            UpdateGyroStatus();
         }
-        else
-        {
-            CheckGyroStatus_Woman();
-        }
-        
+
+        if (TKManager.Instance.GetTrainingType() == CommonData.TRAINING_TYPE.TRAINING_POSE)
+            Timer.value = TrainingTime / TKManager.Instance.GetTrainingTimer();
+        else if (TKManager.Instance.GetTrainingType() == CommonData.TRAINING_TYPE.TRAINING_TEMPO)
+            Timer.value = CommonData.TEMPO_TRAINING_WAIT_TIME;
     }
 
-    int nTrainingSuccess = 0;
-    bool bTrainingSuccess_Rotate = false;
-    bool bTrainingSuccess_Bend = false;
-    bool bTrainingSuccess_Side = false;
-
-
-    public void SuccessTraining()
-    {        
-        if(TKManager.Instance.bTrainingSuccess == false)
-        {
-            if (bTrainingSuccess_Rotate && bTrainingSuccess_Bend && bTrainingSuccess_Side)
-            {
-                TKManager.Instance.bTrainingSuccess = true;
-                SoundManager.Instance.PlaySuccessSound();             
-            }       
-        }
-    }
-
-    public void CheckGyroStatus_Man()
+    public void UpdateGyroStatus()
     {
         int nTrainMode = Convert.ToInt32(TKManager.Instance.GetPoseType());
 
         if (TKManager.Instance.IsAngleType(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_TURN))
         {
-            
             int angleLevel = TKManager.Instance.GetAngleLevel(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_TURN);
-            if(angleLevel > 0)
+            if (angleLevel > 0)
             {
                 float LevelCover = CommonData.LEVEL_COVER[angleLevel];
 
-                if (CommonData.REF_MAN[nTrainMode] - LevelCover <= tempStatus[2] && tempStatus[2] <= CommonData.REF_MAN[nTrainMode + 1] + LevelCover)
+                if (RefData[nTrainMode] - LevelCover <= GyroStatus[2] && GyroStatus[2] <= RefData[nTrainMode + 1] + LevelCover)
                 {
                     Model_RotateLeft.SetActive(false);
                     Model_RotateRight.SetActive(false);
 
-                    bTrainingSuccess_Rotate = true;
+                    TrainingSuccess_Rotate = true;
                 }
-                else if(CommonData.REF_MAN[nTrainMode] - LevelCover < tempStatus[2] )
+                else if (RefData[nTrainMode] - LevelCover < GyroStatus[2])
                 {
                     Model_RotateRight.SetActive(true);
                     Model_RotateLeft.SetActive(false);
 
-                    Model_RotateRight.transform.Rotate(0, 0, -1 * speed);
-                    bTrainingSuccess_Rotate = false;
-                    //txtTurn.text = "TURN : " + (int)tempStatus[2] + "(" + (CommonData.REF_MAN[nTrainMode] - LevelCover) + " to " + (CommonData.REF_MAN[nTrainMode + 1] + LevelCover) + ")";
+                    Model_RotateRight.transform.Rotate(0, 0, -1 * ArrowSpeed);
+                    TrainingSuccess_Rotate = false;
                 }
 
-                else if (CommonData.REF_MAN[nTrainMode] - LevelCover > tempStatus[2])
+                else if (RefData[nTrainMode] - LevelCover > GyroStatus[2])
                 {
                     Model_RotateLeft.SetActive(true);
                     Model_RotateRight.SetActive(false);
-                    Model_RotateLeft.transform.Rotate(0, 0, speed);
-                    bTrainingSuccess_Rotate = false;
-                    //txtTurn.text = "TURN : " + (int)tempStatus[2] + "(" + (CommonData.REF_MAN[nTrainMode] - LevelCover) + " to " + (CommonData.REF_MAN[nTrainMode + 1] + LevelCover) + ")";
+                    Model_RotateLeft.transform.Rotate(0, 0, ArrowSpeed);
+                    TrainingSuccess_Rotate = false;
                 }
 
-                RotationTrainingAngle.SetAngle(tempStatus[2]);
+                RotationTrainingAngle.SetAngle(GyroStatus[2]);
             }
             else
             {
-                //  SliderRotate.value = 12;
                 Model_RotateLeft.SetActive(false);
                 Model_RotateRight.SetActive(false);
 
-                bTrainingSuccess_Rotate = true;
-            }      
+                TrainingSuccess_Rotate = true;
+            }
         }
-            
+
 
         if (TKManager.Instance.IsAngleType(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_BEND))
         {
@@ -404,44 +383,41 @@ public class PracticeUI : MonoBehaviour
             if (angleLevel > 0)
             {
                 float LevelCover = CommonData.LEVEL_COVER[angleLevel];
-                if (CommonData.REF_MAN[nTrainMode + 2] - LevelCover <= tempStatus[1] && tempStatus[1] <= CommonData.REF_MAN[nTrainMode + 3] + LevelCover)
+                if (RefData[nTrainMode + 2] - LevelCover <= GyroStatus[1] && GyroStatus[1] <= RefData[nTrainMode + 3] + LevelCover)
                 {
                     Model_BendDown.SetActive(false);
                     Model_BendUp.SetActive(false);
 
-                    // txtBend.text = "BEND OK";
-                    bTrainingSuccess_Bend = true;
+                    TrainingSuccess_Bend = true;
                 }
-                else if (CommonData.REF_MAN[nTrainMode + 2] - LevelCover < tempStatus[1])
+                else if (RefData[nTrainMode + 2] - LevelCover < GyroStatus[1])
                 {
                     Model_BendDown.SetActive(true);
                     Model_BendUp.SetActive(false);
 
-                    Model_BendDown.transform.Rotate(speed, 0, 0);
-                    bTrainingSuccess_Bend = false;
-                    //txtTurn.text = "TURN : " + (int)tempStatus[2] + "(" + (CommonData.REF_MAN[nTrainMode] - LevelCover) + " to " + (CommonData.REF_MAN[nTrainMode + 1] + LevelCover) + ")";
+                    Model_BendDown.transform.Rotate(ArrowSpeed, 0, 0);
+                    TrainingSuccess_Bend = false;
                 }
 
-                else if (CommonData.REF_MAN[nTrainMode + 3] - LevelCover > tempStatus[1])
+                else if (RefData[nTrainMode + 3] - LevelCover > GyroStatus[1])
                 {
                     Model_BendUp.SetActive(true);
                     Model_BendDown.SetActive(false);
-                    Model_BendUp.transform.Rotate(speed,  0, 0);
-                    bTrainingSuccess_Bend = false;
-                    //txtTurn.text = "TURN : " + (int)tempStatus[2] + "(" + (CommonData.REF_MAN[nTrainMode] - LevelCover) + " to " + (CommonData.REF_MAN[nTrainMode + 1] + LevelCover) + ")";
+                    Model_BendUp.transform.Rotate(ArrowSpeed, 0, 0);
+                    TrainingSuccess_Bend = false;
                 }
 
-                BendTrainingAngle.SetAngle(tempStatus[1]);
+                BendTrainingAngle.SetAngle(GyroStatus[1]);
             }
             else
             {
-                bTrainingSuccess_Bend = true;
+                TrainingSuccess_Bend = true;
 
                 Model_BendDown.SetActive(false);
                 Model_BendUp.SetActive(false);
-            } 
+            }
         }
-         
+
 
         if (TKManager.Instance.IsAngleType(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_SIDE))
         {
@@ -450,101 +426,155 @@ public class PracticeUI : MonoBehaviour
             if (angleLevel > 0)
             {
                 float LevelCover = CommonData.LEVEL_COVER[angleLevel];
-                if (CommonData.REF_MAN[nTrainMode + 4] - LevelCover <= tempStatus[0] && tempStatus[0] <= CommonData.REF_MAN[nTrainMode + 5] + LevelCover)
+                if (RefData[nTrainMode + 4] - LevelCover <= GyroStatus[0] && GyroStatus[0] <= RefData[nTrainMode + 5] + LevelCover)
                 {
 
                     Model_SideLeft.SetActive(false);
                     Model_SideRight.SetActive(false);
-                    bTrainingSuccess_Side = true;
-                  //  txtSide.text = "SIDE OK";
+                    TrainingSuccess_Side = true;
                 }
-                else if (CommonData.REF_MAN[nTrainMode + 4] - LevelCover < tempStatus[0])
+                else if (RefData[nTrainMode + 4] - LevelCover < GyroStatus[0])
                 {
                     Model_SideRight.SetActive(true);
                     Model_SideLeft.SetActive(false);
 
-                    Model_SideRight.transform.Rotate(0, 0, -1 * speed);
-                    bTrainingSuccess_Side = false;
-                    //txtTurn.text = "TURN : " + (int)tempStatus[2] + "(" + (CommonData.REF_MAN[nTrainMode] - LevelCover) + " to " + (CommonData.REF_MAN[nTrainMode + 1] + LevelCover) + ")";
+                    Model_SideRight.transform.Rotate(0, 0, -1 * ArrowSpeed);
+                    TrainingSuccess_Side = false;
                 }
 
-                else if (CommonData.REF_MAN[nTrainMode + 5] - LevelCover > tempStatus[0])
+                else if (RefData[nTrainMode + 5] - LevelCover > GyroStatus[0])
                 {
                     Model_SideLeft.SetActive(true);
                     Model_SideRight.SetActive(false);
-                    Model_SideLeft.transform.Rotate(0, 0, speed);
-                    bTrainingSuccess_Side = false;
-                    //txtTurn.text = "TURN : " + (int)tempStatus[2] + "(" + (CommonData.REF_MAN[nTrainMode] - LevelCover) + " to " + (CommonData.REF_MAN[nTrainMode + 1] + LevelCover) + ")";
+                    Model_SideLeft.transform.Rotate(0, 0, ArrowSpeed);
+                    TrainingSuccess_Side = false;
                 }
 
-                SideBendTrainingAngle.SetAngle(tempStatus[0]);
+                SideBendTrainingAngle.SetAngle(GyroStatus[0]);
             }
             else
-            {                
-                bTrainingSuccess_Side = true;
+            {
+                TrainingSuccess_Side = true;
                 Model_SideLeft.SetActive(false);
                 Model_SideRight.SetActive(false);
             }
-        }        
+        }
+
+        TrainingSuccess = TrainingSuccess_Side && TrainingSuccess_Bend && TrainingSuccess_Rotate;
     }
 
-    public void CheckGyroStatus_Woman()
+    public void OnClickBack()
     {
-        int nTrainMode = Convert.ToInt32(TKManager.Instance.GetPoseType());
-
-        //Debug.Log("!@@@@@ UserStatus" + UserStatus);
-        if (TKManager.Instance.IsAngleType(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_TURN))
-        {
-            int angleLevel = TKManager.Instance.GetAngleLevel(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_TURN);
-
-            if (CommonData.REF_WOMAN[nTrainMode] <= tempStatus[2] && tempStatus[2] <= CommonData.REF_WOMAN[nTrainMode + 1])
-            {
-               // txtTurn.text = "TURN OK";
-            }
-            else
-            {
-               // txtTurn.text = "TURN : " + (int)tempStatus[2];
-            }
-        }
-       // else
-       //     txtTurn.text = "TURN 측정안함";
-
-
-        if (TKManager.Instance.IsAngleType(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_BEND))
-        {
-            int angleLevel = TKManager.Instance.GetAngleLevel(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_BEND);
-
-            if (CommonData.REF_WOMAN[nTrainMode + 2] <= tempStatus[1] && tempStatus[1] <= CommonData.REF_WOMAN[nTrainMode + 3])
-            {
-           //     txtBend.text = "BEND OK";
-            }
-            else
-            {
-         //       txtBend.text = "BEND : " + (int)tempStatus[1];
-            }
-        }
-      //  else
-      //      txtBend.text = "TURN 측정안함";
-
-        if (TKManager.Instance.IsAngleType(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_SIDE))
-        {
-            int angleLevel = TKManager.Instance.GetAngleLevel(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_SIDE);
-
-            if (CommonData.REF_WOMAN[nTrainMode + 4] <= tempStatus[0] && tempStatus[0] <= CommonData.REF_WOMAN[nTrainMode + 5])
-            {
-        //        txtSide.text = "SIDE OK";
-            }
-            else
-            {
-        //        txtSide.text = "SIDE : " + (int)tempStatus[0];
-            }
-        }
-       // else
-      //      txtSide.text = "SIDE 측정안함";
+        PracticeOrderType = PRACTICE_ORDER.END;
+        PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.MSG, new PopupMsg.PopupData("훈련을 종료 하시겠습니까?", () =>
+         {
+             PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.SELF_EVALUATION, new PopupSelfEvaluation.PopupData(TrainingSuccessCount, () =>
+             {
+                 GyroScopeManager.Instance.DestroyGyro();
+                 StopAllCoroutines();
+                 SceneManager.LoadScene("MainScene", LoadSceneMode.Single);
+             }));
+         }));
     }
 
-    public void EndTraining()
-    {
-        PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.SELF_EVALUATION, new PopupSelfEvaluation.PopupData());
-    }
+
+//    // Update is called once per frame
+    
+
+//    public void SetTrainingCount()
+//    {
+//        StartCoroutine(Co_TrainingCount());
+//    }
+
+//    IEnumerator Co_TrainingCount()
+//    {
+//        while (true)
+//        {
+//            yield return new WaitForSeconds(7.5f);
+//            nTrainingCount++;
+//       //     txtCount.text = nTrainingCount.ToString() + "회";
+//        }
+//        yield return null;
+//    }
+
+//    public void SetTrainingTimer()
+//    {
+//        StartCoroutine(Co_TrainingTimer());
+//    }
+
+//    IEnumerator Co_TrainingTimer()
+//    {
+//        int tempTimer = 0;
+//        if (TKManager.Instance.bTempoTraining)
+//        {
+         
+//            while (true)
+//            {
+//                yield return new WaitForSeconds(1.0f);
+
+//                tempTimer++;
+
+//                if (tempTimer > 7)
+//                {
+//                    tempTimer = 0;
+//            //        txtTempoTimer.text = tempTimer.ToString();
+//                }
+
+//            }
+//        }
+//        else
+//        {
+//            yield return new WaitForSeconds(3.0f);
+//            tempTimer = TKManager.Instance.GetTrainingTimer();
+
+//            while (true)
+//            {
+//                yield return new WaitForSeconds(1.0f);
+
+//                tempTimer--;
+
+//                if (tempTimer < 0)
+//                {
+//                    nTrainingCount++;
+//               //     txtCount.text = nTrainingCount.ToString() + "회";
+//                    tempTimer = TKManager.Instance.GetTrainingTimer();
+//                }
+
+////
+//     //           txtTimer.text = tempTimer.ToString() + "초";
+//            }
+//        }
+
+  
+//        yield return null;
+//    }
+
+//    public void CheckGyroStatus()
+//    {
+//        if(TKManager.Instance.GetGender() == CommonData.GENDER.GENDER_MAN)
+//        {
+//            CheckGyroStatus_Man();
+//            txtMode.text = "(" + Model.transform.rotation.x.ToString() + " , " + Model.transform.rotation.y.ToString() + " , " + Model.transform.rotation.z.ToString() + " ) ";
+//        }
+//        else
+//        {
+//            CheckGyroStatus_Woman();
+//        }
+        
+//    }
+
+    
+
+
+//    public void SuccessTraining()
+//    {        
+//        if(TKManager.Instance.bTrainingSuccess == false)
+//        {
+//            if (TrainingSuccess_Rotate && TrainingSuccess_Bend && TrainingSuccess_Side)
+//            {
+//                TKManager.Instance.bTrainingSuccess = true;
+//                SoundManager.Instance.PlaySuccessSound();             
+//            }       
+//        }
+//    }
 }

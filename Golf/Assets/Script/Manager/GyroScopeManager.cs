@@ -34,10 +34,10 @@ public class GyroScopeManager : MonoBehaviour
 
     void Start()
     {
-        if (TKManager.Instance.GetTrainingType() != CommonData.TRAINING_TYPE.TRAINING_TEMPO)
-        {  
-            StartCoroutine(Co_Init());
-        }
+        //if (TKManager.Instance.GetTrainingType() != CommonData.TRAINING_TYPE.TRAINING_TEMPO)
+        //{  
+        //    StartCoroutine(Co_Init());
+        //}
             
 
  
@@ -59,24 +59,30 @@ public class GyroScopeManager : MonoBehaviour
         */
     }
 
-    IEnumerator Co_Init()
+    //IEnumerator Co_Init()
+    //{
+    //    TKManager.Instance.gyro.enabled = false;
+
+
+    //    yield return new WaitForSeconds(3f);
+        
+
+    //    SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_START);
+    //    TKManager.Instance.bPoseTraining = true;
+
+
+    //    yield return null;
+
+    //}
+    public void TrainingReadyStart()
     {
         TKManager.Instance.gyro.enabled = false;
-
-
-        yield return new WaitForSeconds(3f);
+    }
+    public void TrainingReadyEnd()
+    {
         offset = transform.rotation * Quaternion.Inverse(GyroToUnity(Input.gyro.attitude));
         Init(true);
-
-        SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_START);
-        TKManager.Instance.bPoseTraining = true;
-
-
-        yield return null;
-
     }
-
-
 
 
     public void Init(bool bStatus)

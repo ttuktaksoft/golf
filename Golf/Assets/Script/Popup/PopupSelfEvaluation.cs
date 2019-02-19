@@ -20,7 +20,7 @@ public class PopupSelfEvaluation : Popup
     private int TrainingCount = 0;
     private CommonData.TRAINING_POSE PoseType = CommonData.TRAINING_POSE.TRAINING_ADDRESS;
     private Dictionary<CommonData.TRAINING_ANGLE, int> AngleTypeList = new Dictionary<CommonData.TRAINING_ANGLE, int>();
-
+    private Action EndAction = null;
 
     public PopupSelfEvaluation()
         : base(PopupMgr.POPUP_TYPE.SELF_EVALUATION)
@@ -30,15 +30,25 @@ public class PopupSelfEvaluation : Popup
 
     public class PopupData : PopupBaseData
     {
-        public PopupData()
+        public int Count = 0;
+        public Action EndAction = null;
+        public PopupData(int count, Action endAction = null)
         {
+            Count = count;
+            EndAction = endAction;
         }
     }
 
     public override void SetData(PopupBaseData data)
     {
+        var popupData = data as PopupData;
+        if (popupData == null)
+            return;
+
+        TrainingCount = popupData.Count;
+        EndAction = popupData.EndAction;
+
         TrainingType = TKManager.Instance.GetTrainingType();
-        TrainingCount = 12;
         PoseType = TKManager.Instance.GetPoseType();
         AngleTypeList = TKManager.Instance.GetAngleType();
 
@@ -115,6 +125,9 @@ public class PopupSelfEvaluation : Popup
         }
         
         PopupMgr.Instance.DismissPopup();
+
+        if (EndAction != null)
+            EndAction();
     }
 
     public void RefreshStar()
