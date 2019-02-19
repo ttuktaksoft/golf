@@ -126,14 +126,16 @@ public class PracticeUI : MonoBehaviour
 
     public void OnClickBack()
     {
-        TKManager.Instance.bPoseTraining = false;
-        TKManager.Instance.bTempoTraining = false;
+        PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.MSG, new PopupMsg.PopupData("훈련을 종료 하시겠습니까?", () =>
+         {
+             TKManager.Instance.bPoseTraining = false;
+             TKManager.Instance.bTempoTraining = false;
 
-        GyroScopeManager.Instance.DestroyGyro();
-        StopCoroutine(Co_TrainingCount());
-        StopCoroutine(Co_TrainingTimer());
-        SceneManager.LoadScene("MainScene", LoadSceneMode.Single);
-
+             GyroScopeManager.Instance.DestroyGyro();
+             StopCoroutine(Co_TrainingCount());
+             StopCoroutine(Co_TrainingTimer());
+             SceneManager.LoadScene("MainScene", LoadSceneMode.Single);
+         }));
     }
 
 
@@ -421,5 +423,10 @@ public class PracticeUI : MonoBehaviour
         }
        // else
       //      txtSide.text = "SIDE 측정안함";
+    }
+
+    public void EndTraining()
+    {
+        PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.SELF_EVALUATION, new PopupSelfEvaluation.PopupData());
     }
 }
