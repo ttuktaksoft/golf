@@ -1879,7 +1879,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &599898193
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1914,7 +1914,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ThumbnailEdit: {fileID: 769555968}
-  Thumbnail: {fileID: 503250023}
+  Thumbnail: {fileID: 1333101973}
   Name: {fileID: 1084548595}
   Grade: {fileID: 1810985766}
   Gender: {fileID: 67973296}
@@ -3785,7 +3785,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 353.54, y: -185.59}
-  m_SizeDelta: {x: 210, y: 92.11}
+  m_SizeDelta: {x: 0, y: 92.11}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &1084548595
 MonoBehaviour:
