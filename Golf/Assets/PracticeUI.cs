@@ -348,7 +348,7 @@ public class PracticeUI : MonoBehaviour
 
                     TrainingSuccess_Rotate = true;
                 }
-                else if (RefData[nTrainMode] - LevelCover < GyroStatus[2])
+                else if (GyroStatus[2] < RefData[nTrainMode] - LevelCover)
                 {
                     Model_RotateRight.SetActive(true);
                     Model_RotateLeft.SetActive(false);
@@ -357,7 +357,7 @@ public class PracticeUI : MonoBehaviour
                     TrainingSuccess_Rotate = false;
                 }
 
-                else if (RefData[nTrainMode] - LevelCover > GyroStatus[2])
+                else if (RefData[nTrainMode] - LevelCover < GyroStatus[2])
                 {
                     Model_RotateLeft.SetActive(true);
                     Model_RotateRight.SetActive(false);
@@ -390,7 +390,7 @@ public class PracticeUI : MonoBehaviour
 
                     TrainingSuccess_Bend = true;
                 }
-                else if (RefData[nTrainMode + 2] - LevelCover < GyroStatus[1])
+                else if (GyroStatus[1] < RefData[nTrainMode + 2] - LevelCover)
                 {
                     Model_BendDown.SetActive(true);
                     Model_BendUp.SetActive(false);
@@ -399,11 +399,11 @@ public class PracticeUI : MonoBehaviour
                     TrainingSuccess_Bend = false;
                 }
 
-                else if (RefData[nTrainMode + 3] - LevelCover > GyroStatus[1])
+                else if (RefData[nTrainMode + 3] - LevelCover < GyroStatus[1])
                 {
                     Model_BendUp.SetActive(true);
                     Model_BendDown.SetActive(false);
-                    Model_BendUp.transform.Rotate(ArrowSpeed, 0, 0);
+                    Model_BendUp.transform.Rotate(-1 * ArrowSpeed, 0, 0);
                     TrainingSuccess_Bend = false;
                 }
 
@@ -433,7 +433,7 @@ public class PracticeUI : MonoBehaviour
                     Model_SideRight.SetActive(false);
                     TrainingSuccess_Side = true;
                 }
-                else if (RefData[nTrainMode + 4] - LevelCover < GyroStatus[0])
+                else if (GyroStatus[0] < RefData[nTrainMode + 4] - LevelCover)
                 {
                     Model_SideRight.SetActive(true);
                     Model_SideLeft.SetActive(false);
@@ -442,7 +442,7 @@ public class PracticeUI : MonoBehaviour
                     TrainingSuccess_Side = false;
                 }
 
-                else if (RefData[nTrainMode + 5] - LevelCover > GyroStatus[0])
+                else if (RefData[nTrainMode + 5] - LevelCover < GyroStatus[0])
                 {
                     Model_SideLeft.SetActive(true);
                     Model_SideRight.SetActive(false);
