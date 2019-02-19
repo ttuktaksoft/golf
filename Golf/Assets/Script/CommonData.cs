@@ -19,7 +19,7 @@ public class CommonData : MonoBehaviour
     };
 
     public static float[] LEVEL_COVER = {
-        6.0f, 3.0f, 0.0f
+        0.0f, 6.0f, 3.0f, 0.0f
     };
 
     public enum TRAINING_TYPE

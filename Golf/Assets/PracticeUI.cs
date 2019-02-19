@@ -27,25 +27,29 @@ public class PracticeUI : MonoBehaviour
     //public GameObject TempoContent;
 
     //   public Text txtTempoTimer;
-    public Text txtRotateLevel;
-    public Text txtRotateMin;
-    public Text txtRotateMax;
-    public Transform InnerSliderRotate;
-    public Slider SliderRotate;
+    //public Text txtRotateLevel;
+    //public Text txtRotateMin;
+    //public Text txtRotateMax;
+    //public Transform InnerSliderRotate;
+    //public Slider SliderRotate;
 
-    public Text txtBendLevel;
-    public Text txtBendMin;
-    public Text txtBendMax;
-    public Transform InnerSliderBend;
-    public Slider SliderBend;
+    //public Text txtBendLevel;
+    //public Text txtBendMin;
+    //public Text txtBendMax;
+    //public Transform InnerSliderBend;
+    //public Slider SliderBend;
 
-    public Text txtSideLevel;
-    public Text txtSideMin;
-    public Text txtSideMax;
-    public Transform InnerSliderSide;
-    public Slider SliderSide;
+    //public Text txtSideLevel;
+    //public Text txtSideMin;
+    //public Text txtSideMax;
+    //public Transform InnerSliderSide;
+    //public Slider SliderSide;
 
-    
+    public UITrainingAngle BendTrainingAngle;
+    public UITrainingAngle RotationTrainingAngle;
+    public UITrainingAngle SideBendTrainingAngle;
+
+
     public Text txtMode;
     public Text txtCount;
     public Text txtLevel;
@@ -121,6 +125,75 @@ public class PracticeUI : MonoBehaviour
         }
 
         btnBack.onClick.AddListener(OnClickBack);
+
+        int nTrainMode = Convert.ToInt32(TKManager.Instance.GetPoseType());
+
+        if (TKManager.Instance.IsAngleType(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_TURN))
+        {
+            int angleLevel = TKManager.Instance.GetAngleLevel(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_TURN);
+            if (angleLevel > 0)
+            {
+                RotationTrainingAngle.gameObject.SetActive(true);
+                float LevelCover = CommonData.LEVEL_COVER[angleLevel];
+
+                float minValue = CommonData.REF_MAN[nTrainMode] - 30;
+                float maxValue = CommonData.REF_MAN[nTrainMode + 1] + 30;
+                float successMinValue = CommonData.REF_MAN[nTrainMode] - LevelCover;
+                float successMaxValue = CommonData.REF_MAN[nTrainMode + 1] + LevelCover;
+                RotationTrainingAngle.Init("ROTATION", minValue, maxValue, successMinValue, successMaxValue);
+
+            }
+            else
+            {
+                RotationTrainingAngle.gameObject.SetActive(false);
+            }
+        }
+
+
+        if (TKManager.Instance.IsAngleType(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_BEND))
+        {
+            int angleLevel = TKManager.Instance.GetAngleLevel(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_BEND);
+            if (angleLevel > 0)
+            {
+                BendTrainingAngle.gameObject.SetActive(true);
+                float LevelCover = CommonData.LEVEL_COVER[angleLevel];
+
+                float minValue = CommonData.REF_MAN[nTrainMode + 2] - 30;
+                float maxValue = CommonData.REF_MAN[nTrainMode + 3] + 30;
+                float successMinValue = CommonData.REF_MAN[nTrainMode + 2] - LevelCover;
+                float successMaxValue = CommonData.REF_MAN[nTrainMode + 3] + LevelCover;
+                BendTrainingAngle.Init("BEND", minValue, maxValue, successMinValue, successMaxValue);
+            }
+            else
+            {
+                BendTrainingAngle.gameObject.SetActive(false);
+            }
+        }
+
+
+        if (TKManager.Instance.IsAngleType(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_SIDE))
+        {
+            int angleLevel = TKManager.Instance.GetAngleLevel(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_SIDE);
+
+            if (angleLevel > 0)
+            {
+                SideBendTrainingAngle.gameObject.SetActive(true);
+                float LevelCover = CommonData.LEVEL_COVER[angleLevel];
+
+                float minValue = CommonData.REF_MAN[nTrainMode + 4] - 30;
+                float maxValue = CommonData.REF_MAN[nTrainMode + 5] + 30;
+                float successMinValue = CommonData.REF_MAN[nTrainMode + 4] - LevelCover;
+                float successMaxValue = CommonData.REF_MAN[nTrainMode + 5] + LevelCover;
+                SideBendTrainingAngle.Init("SIDE BEND", minValue, maxValue, successMinValue, successMaxValue);
+            }
+            else
+            {
+                SideBendTrainingAngle.gameObject.SetActive(false);
+            }
+        }
+
+
+        
    //     txtTimer.text = TKManager.Instance.GetTrainingTimer().ToString() + "초";
 
 
@@ -278,25 +351,14 @@ public class PracticeUI : MonoBehaviour
     {
         int nTrainMode = Convert.ToInt32(TKManager.Instance.GetPoseType());
 
-        SliderRotate.minValue = CommonData.REF_MAN[nTrainMode] - 30;
-        SliderRotate.maxValue = CommonData.REF_MAN[nTrainMode + 1] + 30;
-
         if (TKManager.Instance.IsAngleType(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_TURN))
         {
+            
             int angleLevel = TKManager.Instance.GetAngleLevel(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_TURN);
             if(angleLevel > 0)
             {
                 float LevelCover = CommonData.LEVEL_COVER[angleLevel];
 
-                tempStatus[2] *= -1.0f;
-                SliderRotate.value = tempStatus[2];
-
-                txtRotateLevel.text = "ROTATION";
-                txtRotateMin.text = (CommonData.REF_MAN[nTrainMode] - LevelCover).ToString();
-                txtRotateMax.text = (CommonData.REF_MAN[nTrainMode +1] + LevelCover).ToString();
-
-
-                txtRotateLevel.text = "ROTATION" + tempStatus[2];
                 if (CommonData.REF_MAN[nTrainMode] - LevelCover <= tempStatus[2] && tempStatus[2] <= CommonData.REF_MAN[nTrainMode + 1] + LevelCover)
                 {
                     Model_RotateLeft.SetActive(false);
@@ -304,7 +366,7 @@ public class PracticeUI : MonoBehaviour
 
                     bTrainingSuccess_Rotate = true;
                 }
-                else if( tempStatus[2] < CommonData.REF_MAN[nTrainMode] - LevelCover)
+                else if(CommonData.REF_MAN[nTrainMode] - LevelCover < tempStatus[2] )
                 {
                     Model_RotateRight.SetActive(true);
                     Model_RotateLeft.SetActive(false);
@@ -314,7 +376,7 @@ public class PracticeUI : MonoBehaviour
                     //txtTurn.text = "TURN : " + (int)tempStatus[2] + "(" + (CommonData.REF_MAN[nTrainMode] - LevelCover) + " to " + (CommonData.REF_MAN[nTrainMode + 1] + LevelCover) + ")";
                 }
 
-                else if ( tempStatus[2] > CommonData.REF_MAN[nTrainMode] - LevelCover )
+                else if (CommonData.REF_MAN[nTrainMode] - LevelCover > tempStatus[2])
                 {
                     Model_RotateLeft.SetActive(true);
                     Model_RotateRight.SetActive(false);
@@ -322,6 +384,8 @@ public class PracticeUI : MonoBehaviour
                     bTrainingSuccess_Rotate = false;
                     //txtTurn.text = "TURN : " + (int)tempStatus[2] + "(" + (CommonData.REF_MAN[nTrainMode] - LevelCover) + " to " + (CommonData.REF_MAN[nTrainMode + 1] + LevelCover) + ")";
                 }
+
+                RotationTrainingAngle.SetAngle(tempStatus[2]);
             }
             else
             {
@@ -330,7 +394,6 @@ public class PracticeUI : MonoBehaviour
                 Model_RotateRight.SetActive(false);
 
                 bTrainingSuccess_Rotate = true;
-                txtRotateLevel.text = "ROTATION 측정안함";
             }      
         }
             
@@ -338,23 +401,9 @@ public class PracticeUI : MonoBehaviour
         if (TKManager.Instance.IsAngleType(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_BEND))
         {
             int angleLevel = TKManager.Instance.GetAngleLevel(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_BEND);
-
-            SliderBend.minValue = CommonData.REF_MAN[nTrainMode + 2] - 30;
-            SliderBend.maxValue = CommonData.REF_MAN[nTrainMode + 3] + 30;
-
             if (angleLevel > 0)
             {
                 float LevelCover = CommonData.LEVEL_COVER[angleLevel];
-
-                tempStatus[1] *= -1.0f;
-                SliderBend.value = tempStatus[1];
-
-                txtBendLevel.text = "BEND";
-                txtBendMin.text = (CommonData.REF_MAN[nTrainMode + 2] - LevelCover).ToString();
-                txtBendMax.text = (CommonData.REF_MAN[nTrainMode + 3] + LevelCover).ToString();
-
-
-                txtBendLevel.text = "BEND" + tempStatus[1];
                 if (CommonData.REF_MAN[nTrainMode + 2] - LevelCover <= tempStatus[1] && tempStatus[1] <= CommonData.REF_MAN[nTrainMode + 3] + LevelCover)
                 {
                     Model_BendDown.SetActive(false);
@@ -363,33 +412,33 @@ public class PracticeUI : MonoBehaviour
                     // txtBend.text = "BEND OK";
                     bTrainingSuccess_Bend = true;
                 }
-                else if ( tempStatus[1] < CommonData.REF_MAN[nTrainMode + 2] - LevelCover)
-                {
-                    Model_BendUp.SetActive(true);
-                    Model_BendDown.SetActive(false);
-
-                    Model_BendUp.transform.Rotate(-1 + speed, 0, 0);
-                    bTrainingSuccess_Bend = false;
-                    //txtTurn.text = "TURN : " + (int)tempStatus[2] + "(" + (CommonData.REF_MAN[nTrainMode] - LevelCover) + " to " + (CommonData.REF_MAN[nTrainMode + 1] + LevelCover) + ")";
-                }
-
-                else if ( tempStatus[1] > CommonData.REF_MAN[nTrainMode + 3] - LevelCover)
+                else if (CommonData.REF_MAN[nTrainMode + 2] - LevelCover < tempStatus[1])
                 {
                     Model_BendDown.SetActive(true);
                     Model_BendUp.SetActive(false);
-                    Model_BendDown.transform.Rotate( speed,  0, 0);
+
+                    Model_BendDown.transform.Rotate(speed, 0, 0);
                     bTrainingSuccess_Bend = false;
                     //txtTurn.text = "TURN : " + (int)tempStatus[2] + "(" + (CommonData.REF_MAN[nTrainMode] - LevelCover) + " to " + (CommonData.REF_MAN[nTrainMode + 1] + LevelCover) + ")";
                 }
+
+                else if (CommonData.REF_MAN[nTrainMode + 3] - LevelCover > tempStatus[1])
+                {
+                    Model_BendUp.SetActive(true);
+                    Model_BendDown.SetActive(false);
+                    Model_BendUp.transform.Rotate(speed,  0, 0);
+                    bTrainingSuccess_Bend = false;
+                    //txtTurn.text = "TURN : " + (int)tempStatus[2] + "(" + (CommonData.REF_MAN[nTrainMode] - LevelCover) + " to " + (CommonData.REF_MAN[nTrainMode + 1] + LevelCover) + ")";
+                }
+
+                BendTrainingAngle.SetAngle(tempStatus[1]);
             }
             else
             {
-                SliderBend.value = 40;
                 bTrainingSuccess_Bend = true;
 
                 Model_BendDown.SetActive(false);
                 Model_BendUp.SetActive(false);
-                txtBendLevel.text = "BEND 측정안함";
             } 
         }
          
@@ -397,19 +446,10 @@ public class PracticeUI : MonoBehaviour
         if (TKManager.Instance.IsAngleType(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_SIDE))
         {
             int angleLevel = TKManager.Instance.GetAngleLevel(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_SIDE);
-            SliderSide.minValue = CommonData.REF_MAN[nTrainMode + 4] - 30;
-            SliderSide.maxValue = CommonData.REF_MAN[nTrainMode + 5] + 30;
 
             if (angleLevel > 0)
             {
-                float LevelCover = CommonData.LEVEL_COVER[angleLevel];  
-
-                SliderSide.value = tempStatus[0];
-
-                txtSideLevel.text = "SIDE BEND";
-                txtSideMin.text = (CommonData.REF_MAN[nTrainMode + 4] - LevelCover).ToString();
-                txtSideMax.text = (CommonData.REF_MAN[nTrainMode + 5] + LevelCover).ToString();
-                txtSideLevel.text = "SIDE BEND" + tempStatus[0];
+                float LevelCover = CommonData.LEVEL_COVER[angleLevel];
                 if (CommonData.REF_MAN[nTrainMode + 4] - LevelCover <= tempStatus[0] && tempStatus[0] <= CommonData.REF_MAN[nTrainMode + 5] + LevelCover)
                 {
 
@@ -418,7 +458,7 @@ public class PracticeUI : MonoBehaviour
                     bTrainingSuccess_Side = true;
                   //  txtSide.text = "SIDE OK";
                 }
-                else if ( tempStatus[0] < CommonData.REF_MAN[nTrainMode + 4] - LevelCover)
+                else if (CommonData.REF_MAN[nTrainMode + 4] - LevelCover < tempStatus[0])
                 {
                     Model_SideRight.SetActive(true);
                     Model_SideLeft.SetActive(false);
@@ -428,7 +468,7 @@ public class PracticeUI : MonoBehaviour
                     //txtTurn.text = "TURN : " + (int)tempStatus[2] + "(" + (CommonData.REF_MAN[nTrainMode] - LevelCover) + " to " + (CommonData.REF_MAN[nTrainMode + 1] + LevelCover) + ")";
                 }
 
-                else if (CommonData.REF_MAN[nTrainMode + 5] - LevelCover < tempStatus[0])
+                else if (CommonData.REF_MAN[nTrainMode + 5] - LevelCover > tempStatus[0])
                 {
                     Model_SideLeft.SetActive(true);
                     Model_SideRight.SetActive(false);
@@ -436,14 +476,14 @@ public class PracticeUI : MonoBehaviour
                     bTrainingSuccess_Side = false;
                     //txtTurn.text = "TURN : " + (int)tempStatus[2] + "(" + (CommonData.REF_MAN[nTrainMode] - LevelCover) + " to " + (CommonData.REF_MAN[nTrainMode + 1] + LevelCover) + ")";
                 }
+
+                SideBendTrainingAngle.SetAngle(tempStatus[0]);
             }
             else
             {                
-                SliderSide.value = 14;
                 bTrainingSuccess_Side = true;
                 Model_SideLeft.SetActive(false);
                 Model_SideRight.SetActive(false);
-                txtSideLevel.text = "SIDE BEND 측정안함";
             }
         }        
     }
