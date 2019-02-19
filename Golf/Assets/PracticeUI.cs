@@ -288,6 +288,7 @@ public class PracticeUI : MonoBehaviour
             {
                 float LevelCover = CommonData.LEVEL_COVER[angleLevel];
 
+                tempStatus[2] *= -1.0f;
                 SliderRotate.value = tempStatus[2];
 
                 txtRotateLevel.text = "ROTATION";
@@ -303,7 +304,7 @@ public class PracticeUI : MonoBehaviour
 
                     bTrainingSuccess_Rotate = true;
                 }
-                else if(CommonData.REF_MAN[nTrainMode] - LevelCover < tempStatus[2] )
+                else if( tempStatus[2] < CommonData.REF_MAN[nTrainMode] - LevelCover)
                 {
                     Model_RotateRight.SetActive(true);
                     Model_RotateLeft.SetActive(false);
@@ -313,7 +314,7 @@ public class PracticeUI : MonoBehaviour
                     //txtTurn.text = "TURN : " + (int)tempStatus[2] + "(" + (CommonData.REF_MAN[nTrainMode] - LevelCover) + " to " + (CommonData.REF_MAN[nTrainMode + 1] + LevelCover) + ")";
                 }
 
-                else if (CommonData.REF_MAN[nTrainMode] - LevelCover > tempStatus[2])
+                else if ( tempStatus[2] > CommonData.REF_MAN[nTrainMode] - LevelCover )
                 {
                     Model_RotateLeft.SetActive(true);
                     Model_RotateRight.SetActive(false);
@@ -345,7 +346,7 @@ public class PracticeUI : MonoBehaviour
             {
                 float LevelCover = CommonData.LEVEL_COVER[angleLevel];
 
-
+                tempStatus[1] *= -1.0f;
                 SliderBend.value = tempStatus[1];
 
                 txtBendLevel.text = "BEND";
@@ -362,21 +363,21 @@ public class PracticeUI : MonoBehaviour
                     // txtBend.text = "BEND OK";
                     bTrainingSuccess_Bend = true;
                 }
-                else if (CommonData.REF_MAN[nTrainMode + 2] - LevelCover < tempStatus[1])
+                else if ( tempStatus[1] < CommonData.REF_MAN[nTrainMode + 2] - LevelCover)
                 {
-                    Model_BendDown.SetActive(true);
-                    Model_BendUp.SetActive(false);
+                    Model_BendUp.SetActive(true);
+                    Model_BendDown.SetActive(false);
 
-                    Model_BendDown.transform.Rotate(speed, 0, 0);
+                    Model_BendUp.transform.Rotate(-1 + speed, 0, 0);
                     bTrainingSuccess_Bend = false;
                     //txtTurn.text = "TURN : " + (int)tempStatus[2] + "(" + (CommonData.REF_MAN[nTrainMode] - LevelCover) + " to " + (CommonData.REF_MAN[nTrainMode + 1] + LevelCover) + ")";
                 }
 
-                else if (CommonData.REF_MAN[nTrainMode + 3] - LevelCover > tempStatus[1])
+                else if ( tempStatus[1] > CommonData.REF_MAN[nTrainMode + 3] - LevelCover)
                 {
-                    Model_BendUp.SetActive(true);
-                    Model_BendDown.SetActive(false);
-                    Model_BendUp.transform.Rotate(speed,  0, 0);
+                    Model_BendDown.SetActive(true);
+                    Model_BendUp.SetActive(false);
+                    Model_BendDown.transform.Rotate( speed,  0, 0);
                     bTrainingSuccess_Bend = false;
                     //txtTurn.text = "TURN : " + (int)tempStatus[2] + "(" + (CommonData.REF_MAN[nTrainMode] - LevelCover) + " to " + (CommonData.REF_MAN[nTrainMode + 1] + LevelCover) + ")";
                 }
@@ -417,7 +418,7 @@ public class PracticeUI : MonoBehaviour
                     bTrainingSuccess_Side = true;
                   //  txtSide.text = "SIDE OK";
                 }
-                else if (CommonData.REF_MAN[nTrainMode + 4] - LevelCover < tempStatus[0])
+                else if ( tempStatus[0] < CommonData.REF_MAN[nTrainMode + 4] - LevelCover)
                 {
                     Model_SideRight.SetActive(true);
                     Model_SideLeft.SetActive(false);
@@ -427,7 +428,7 @@ public class PracticeUI : MonoBehaviour
                     //txtTurn.text = "TURN : " + (int)tempStatus[2] + "(" + (CommonData.REF_MAN[nTrainMode] - LevelCover) + " to " + (CommonData.REF_MAN[nTrainMode + 1] + LevelCover) + ")";
                 }
 
-                else if (CommonData.REF_MAN[nTrainMode + 5] - LevelCover > tempStatus[0])
+                else if (CommonData.REF_MAN[nTrainMode + 5] - LevelCover < tempStatus[0])
                 {
                     Model_SideLeft.SetActive(true);
                     Model_SideRight.SetActive(false);
