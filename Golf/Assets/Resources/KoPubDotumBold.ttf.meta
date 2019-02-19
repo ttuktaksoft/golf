@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: a48b5c85e003b67469ea9e5209e13c0a
+guid: 4a95aa57242c1544ab9b14242b9dd2e3
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
@@ -8,9 +8,9 @@ TrueTypeFontImporter:
   characterSpacing: 0
   characterPadding: 1
   includeFontData: 1
-  fontName: NanumBarunGothic
+  fontName: KoPubDotum Bold
   fontNames:
-  - NanumBarunGothic
+  - KoPubDotum Bold
   fallbackFontReferences: []
   customCharacters: 
   fontRenderingMode: 0
