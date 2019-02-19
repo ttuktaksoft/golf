@@ -14,9 +14,15 @@ public class PracticeUI : MonoBehaviour
     //public GameObject PoseContent;
     //public GameObject PoseModel;
 
-    public GameObject PoseRotateArrowModel;
-    public GameObject PoseBendArrowModel;
-    public GameObject PoseSideArrowModel;
+    public GameObject Model;
+
+    public GameObject Model_RotateLeft;
+    public GameObject Model_BendUp;
+    public GameObject Model_SideLeft;
+
+    public GameObject Model_RotateRight;
+    public GameObject Model_BendDown;
+    public GameObject Model_SideRight;
 
     //public GameObject TempoContent;
 
@@ -64,14 +70,22 @@ public class PracticeUI : MonoBehaviour
         tempString = tempString.Substring(9);
         txtMode.enabled = true;
 
+    
+
 
         SetTrainingTimer();
 
         if (TKManager.Instance.GetTrainingType() == CommonData.TRAINING_TYPE.TRAINING_TEMPO)                  
         {
-            PoseRotateArrowModel.SetActive(false);
-            PoseBendArrowModel.SetActive(false);
-            PoseSideArrowModel.SetActive(false);
+            Model_BendDown.SetActive(false);
+            Model_BendUp.SetActive(false);
+
+            Model_RotateLeft.SetActive(false);
+            Model_RotateRight.SetActive(false);
+
+            Model_SideLeft.SetActive(false);
+            Model_SideRight.SetActive(false);
+
 
          //   PoseContent.SetActive(false);
           //  PoseModel.SetActive(false);
@@ -87,18 +101,23 @@ public class PracticeUI : MonoBehaviour
         }
         else
         {
-            PoseRotateArrowModel.SetActive(true);
-            PoseBendArrowModel.SetActive(true);
-            PoseSideArrowModel.SetActive(true);
+            Model_BendDown.SetActive(true);
+            Model_BendUp.SetActive(true);
+
+            Model_RotateLeft.SetActive(true);
+            Model_RotateRight.SetActive(true);
+
+            Model_SideLeft.SetActive(true);
+            Model_SideRight.SetActive(true);
 
 
-        //    PoseContent.SetActive(true);
-       //     PoseModel.SetActive(true);
+            //    PoseContent.SetActive(true);
+            //     PoseModel.SetActive(true);
 
-        //    TempoContent.SetActive(false);
+            //    TempoContent.SetActive(false);
 
-       //     txtTimer.enabled = true;
-            txtMode.text = tempString;
+            //     txtTimer.enabled = true;
+            //txtMode.text = tempString;
         }
 
         btnBack.onClick.AddListener(OnClickBack);
@@ -228,6 +247,7 @@ public class PracticeUI : MonoBehaviour
         if(TKManager.Instance.GetGender() == CommonData.GENDER.GENDER_MAN)
         {
             CheckGyroStatus_Man();
+            txtMode.text = "(" + Model.transform.rotation.x.ToString() + " , " + Model.transform.rotation.y.ToString() + " , " + Model.transform.rotation.z.ToString() + " ) ";
         }
         else
         {
@@ -274,20 +294,40 @@ public class PracticeUI : MonoBehaviour
                 txtRotateMin.text = (CommonData.REF_MAN[nTrainMode] - LevelCover).ToString();
                 txtRotateMax.text = (CommonData.REF_MAN[nTrainMode +1] + LevelCover).ToString();
 
+
+                txtRotateLevel.text = "ROTATION" + tempStatus[2];
                 if (CommonData.REF_MAN[nTrainMode] - LevelCover <= tempStatus[2] && tempStatus[2] <= CommonData.REF_MAN[nTrainMode + 1] + LevelCover)
                 {
+                    Model_RotateLeft.SetActive(false);
+                    Model_RotateRight.SetActive(false);
+
                     bTrainingSuccess_Rotate = true;
                 }
-                else
+                else if(CommonData.REF_MAN[nTrainMode] - LevelCover < tempStatus[2] )
                 {
-                    PoseRotateArrowModel.transform.Rotate(0, speed, 0);
+                    Model_RotateRight.SetActive(true);
+                    Model_RotateLeft.SetActive(false);
+
+                    Model_RotateRight.transform.Rotate(0, 0, -1 * speed);
+                    bTrainingSuccess_Rotate = false;
+                    //txtTurn.text = "TURN : " + (int)tempStatus[2] + "(" + (CommonData.REF_MAN[nTrainMode] - LevelCover) + " to " + (CommonData.REF_MAN[nTrainMode + 1] + LevelCover) + ")";
+                }
+
+                else if (CommonData.REF_MAN[nTrainMode] - LevelCover > tempStatus[2])
+                {
+                    Model_RotateLeft.SetActive(true);
+                    Model_RotateRight.SetActive(false);
+                    Model_RotateLeft.transform.Rotate(0, 0, speed);
                     bTrainingSuccess_Rotate = false;
                     //txtTurn.text = "TURN : " + (int)tempStatus[2] + "(" + (CommonData.REF_MAN[nTrainMode] - LevelCover) + " to " + (CommonData.REF_MAN[nTrainMode + 1] + LevelCover) + ")";
                 }
             }
             else
             {
-              //  SliderRotate.value = 12;
+                //  SliderRotate.value = 12;
+                Model_RotateLeft.SetActive(false);
+                Model_RotateRight.SetActive(false);
+
                 bTrainingSuccess_Rotate = true;
                 txtRotateLevel.text = "ROTATION 측정안함";
             }      
@@ -312,22 +352,42 @@ public class PracticeUI : MonoBehaviour
                 txtBendMin.text = (CommonData.REF_MAN[nTrainMode + 2] - LevelCover).ToString();
                 txtBendMax.text = (CommonData.REF_MAN[nTrainMode + 3] + LevelCover).ToString();
 
+
+                txtBendLevel.text = "BEND" + tempStatus[1];
                 if (CommonData.REF_MAN[nTrainMode + 2] - LevelCover <= tempStatus[1] && tempStatus[1] <= CommonData.REF_MAN[nTrainMode + 3] + LevelCover)
                 {
-                   // txtBend.text = "BEND OK";
+                    Model_BendDown.SetActive(false);
+                    Model_BendUp.SetActive(false);
+
+                    // txtBend.text = "BEND OK";
                     bTrainingSuccess_Bend = true;
                 }
-                else
+                else if (CommonData.REF_MAN[nTrainMode + 2] - LevelCover < tempStatus[1])
                 {
-                    PoseBendArrowModel.transform.Rotate(-1 * speed, 0, 0);
+                    Model_BendDown.SetActive(true);
+                    Model_BendUp.SetActive(false);
+
+                    Model_BendDown.transform.Rotate(speed, 0, 0);
                     bTrainingSuccess_Bend = false;
-                  //  txtBend.text = "BEND : " + (int)tempStatus[1] + "(" + (CommonData.REF_MAN[nTrainMode + 2] - LevelCover) + " to " + (CommonData.REF_MAN[nTrainMode + 3] + LevelCover) + ")";
+                    //txtTurn.text = "TURN : " + (int)tempStatus[2] + "(" + (CommonData.REF_MAN[nTrainMode] - LevelCover) + " to " + (CommonData.REF_MAN[nTrainMode + 1] + LevelCover) + ")";
+                }
+
+                else if (CommonData.REF_MAN[nTrainMode + 3] - LevelCover > tempStatus[1])
+                {
+                    Model_BendUp.SetActive(true);
+                    Model_BendDown.SetActive(false);
+                    Model_BendUp.transform.Rotate(speed,  0, 0);
+                    bTrainingSuccess_Bend = false;
+                    //txtTurn.text = "TURN : " + (int)tempStatus[2] + "(" + (CommonData.REF_MAN[nTrainMode] - LevelCover) + " to " + (CommonData.REF_MAN[nTrainMode + 1] + LevelCover) + ")";
                 }
             }
             else
             {
                 SliderBend.value = 40;
                 bTrainingSuccess_Bend = true;
+
+                Model_BendDown.SetActive(false);
+                Model_BendUp.SetActive(false);
                 txtBendLevel.text = "BEND 측정안함";
             } 
         }
@@ -348,23 +408,40 @@ public class PracticeUI : MonoBehaviour
                 txtSideLevel.text = "SIDE BEND";
                 txtSideMin.text = (CommonData.REF_MAN[nTrainMode + 4] - LevelCover).ToString();
                 txtSideMax.text = (CommonData.REF_MAN[nTrainMode + 5] + LevelCover).ToString();
-
+                txtSideLevel.text = "SIDE BEND" + tempStatus[0];
                 if (CommonData.REF_MAN[nTrainMode + 4] - LevelCover <= tempStatus[0] && tempStatus[0] <= CommonData.REF_MAN[nTrainMode + 5] + LevelCover)
                 {
+
+                    Model_SideLeft.SetActive(false);
+                    Model_SideRight.SetActive(false);
                     bTrainingSuccess_Side = true;
                   //  txtSide.text = "SIDE OK";
                 }
-                else
+                else if (CommonData.REF_MAN[nTrainMode + 4] - LevelCover < tempStatus[0])
                 {
-                    PoseSideArrowModel.transform.Rotate(0, 0, speed);
+                    Model_SideRight.SetActive(true);
+                    Model_SideLeft.SetActive(false);
+
+                    Model_SideRight.transform.Rotate(0, 0, -1 * speed);
                     bTrainingSuccess_Side = false;
-                  //  txtSide.text = "SIDE : " + (int)tempStatus[0] + "(" + (CommonData.REF_MAN[nTrainMode + 4] - LevelCover) + " to " + (CommonData.REF_MAN[nTrainMode + 5] + LevelCover) + ")";
+                    //txtTurn.text = "TURN : " + (int)tempStatus[2] + "(" + (CommonData.REF_MAN[nTrainMode] - LevelCover) + " to " + (CommonData.REF_MAN[nTrainMode + 1] + LevelCover) + ")";
+                }
+
+                else if (CommonData.REF_MAN[nTrainMode + 5] - LevelCover > tempStatus[0])
+                {
+                    Model_SideLeft.SetActive(true);
+                    Model_SideRight.SetActive(false);
+                    Model_SideLeft.transform.Rotate(0, 0, speed);
+                    bTrainingSuccess_Side = false;
+                    //txtTurn.text = "TURN : " + (int)tempStatus[2] + "(" + (CommonData.REF_MAN[nTrainMode] - LevelCover) + " to " + (CommonData.REF_MAN[nTrainMode + 1] + LevelCover) + ")";
                 }
             }
             else
             {                
                 SliderSide.value = 14;
                 bTrainingSuccess_Side = true;
+                Model_SideLeft.SetActive(false);
+                Model_SideRight.SetActive(false);
                 txtSideLevel.text = "SIDE BEND 측정안함";
             }
         }        
