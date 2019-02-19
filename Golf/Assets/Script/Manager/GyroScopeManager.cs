@@ -35,7 +35,8 @@ public class GyroScopeManager : MonoBehaviour
     void Start()
     {
         if (TKManager.Instance.GetTrainingType() != CommonData.TRAINING_TYPE.TRAINING_TEMPO)
-        {  
+        {
+            //initialRotation = new Quaternion(0.0f, 180.0f, 0.0f, 1.0f);
             StartCoroutine(Co_Init());
         }
             
@@ -65,7 +66,7 @@ public class GyroScopeManager : MonoBehaviour
 
 
         yield return new WaitForSeconds(3f);
-        offset = transform.rotation * Quaternion.Inverse(GyroToUnity(Input.gyro.attitude));
+        offset = Model.transform.rotation * Quaternion.Inverse(GyroToUnity(Input.gyro.attitude));
         Init(true);
 
         SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_START);
@@ -82,7 +83,7 @@ public class GyroScopeManager : MonoBehaviour
     public void Init(bool bStatus)
     {
         TKManager.Instance.gyro.enabled = bStatus;
-        initialRotation = Model.transform.rotation;
+        //initialRotation = Model.transform.rotation;
         gyroInitialRotation = TKManager.Instance.gyro.attitude;
 
         Screen.orientation = ScreenOrientation.Portrait;
@@ -158,13 +159,13 @@ public class GyroScopeManager : MonoBehaviour
     }
     private static Quaternion GyroToUnity(Quaternion q)
     {
-        GetAngle(q);
+        //GetAngle(q);
 
-        //Quaternion rtQt = new Quaternion(q.x, q.y, -q.z, -q.w);
-        //GetAngle(rtQt);
+        Quaternion rtQt = new Quaternion(q.x, q.y, -q.z, -q.w);
+        GetAngle(rtQt);
         //GetAngle(q.eulerAngles);
 
-        return q;
+        return rtQt;
     }
 
     float _BaseAngle = -90f;
@@ -173,13 +174,19 @@ public class GyroScopeManager : MonoBehaviour
     {
         if (TKManager.Instance.gyro.enabled)
         {
-           // Model.transform.rotation =  offset * GyroToUnity(Input.gyro.attitude);
+            // Model.transform.rotation =  offset * GyroToUnity(Input.gyro.attitude);
 
-            
-            Quaternion offsetRotation = Quaternion.Inverse(gyroInitialRotation) * TKManager.Instance.gyro.attitude;
-             
-            Model.transform.rotation = initialRotation * offsetRotation;
-            GyroToUnity(initialRotation * offsetRotation);
+#if UNITY_EDITOR
+            //Quaternion offsetRotation = /*Inverse(gyroInitialRotation) * */TKManager.Instance.gyro.attitude;
+
+            // GyroToUnity(Model.transform.rotation);
+
+            // Quaternion offsetRotation = Quaternion.Inverse(gyroInitialRotation) * TKManager.Instance.gyro.attitude;
+
+        
+
+            Model.transform.rotation = GyroToUnity(Model.transform.rotation);
+
 
             float AngleX = Model.transform.rotation.eulerAngles.x;
             float AngleY = Model.transform.rotation.eulerAngles.y;
@@ -188,7 +195,25 @@ public class GyroScopeManager : MonoBehaviour
             Debug.Log("!@@@@@ Address x" + AngleX);
             Debug.Log("!@@@@@ Address y" + AngleY);
             Debug.Log("!@@@@@ Address z" + AngleZ);
-            
+
+
+#else
+ 
+            Quaternion offsetRotation = Quaternion.Inverse(gyroInitialRotation) * TKManager.Instance.gyro.attitude;
+
+            Model.transform.rotation = GyroToUnity(offsetRotation);
+
+
+            float AngleX = Model.transform.rotation.eulerAngles.x;
+            float AngleY = Model.transform.rotation.eulerAngles.y;
+            float AngleZ = Model.transform.rotation.eulerAngles.z;
+
+            Debug.Log("!@@@@@ Address x" + AngleX);
+            Debug.Log("!@@@@@ Address y" + AngleY);
+            Debug.Log("!@@@@@ Address z" + AngleZ);
+#endif
+
+
 
             // transform.rotation = Input.gyro.attitude;
             /*

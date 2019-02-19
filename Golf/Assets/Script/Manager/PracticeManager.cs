@@ -50,10 +50,10 @@ public class PracticeManager : MonoBehaviour
     public void SetGyroStatus(float yaw, float pitch, float roll)
     {
         // yaw :  turn
-        UserStatus[0] = Mathf.Rad2Deg * yaw;// - InitUserStatus_x;
+        UserStatus[0] = -1.0f * (Mathf.Rad2Deg * yaw);// - InitUserStatus_x;
 
         // pitch :band
-        UserStatus[1] = Mathf.Rad2Deg * pitch;// - InitUserStatus_y;
+        UserStatus[1] = -1.0f * (Mathf.Rad2Deg * pitch);// - InitUserStatus_y;
 
         //roll : side
         UserStatus[2] = Mathf.Rad2Deg * roll;// - InitUserStatus_z;
