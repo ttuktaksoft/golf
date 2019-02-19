@@ -10,14 +10,7 @@ public class MainTraningUI : MonoBehaviour {
     {
         MAIN,
         POSE,
-        ANGLE
-    }
-
-    public enum TRANING_TYPE
-    {
-        NONE,
-        POSE,
-        TEMPO,
+        ANGLE,
     }
 
     //public enum TRANING_POSE_STEP
@@ -56,13 +49,14 @@ public class MainTraningUI : MonoBehaviour {
     private List<string> HexagonMenuColor = new List<string>();
     private List<Vector3> HexagonMenuPos = new List<Vector3>();
 
+    private CommonData.TRAINING_TYPE TrainingType = CommonData.TRAINING_TYPE.TRAINING_POSE;
     private TRAINING_SET_STEP TrainingSetStep = TRAINING_SET_STEP.MAIN;
     //private TRANING_TYPE TraningType = TRANING_TYPE.NONE;
     private CommonData.TRAINING_POSE TrainingMode = CommonData.TRAINING_POSE.TRAINING_ADDRESS;
 
     private Dictionary<CommonData.TRAINING_ANGLE, int> TrainingModeLevel = new Dictionary<CommonData.TRAINING_ANGLE, int>();
     private Dictionary<CommonData.TRAINING_ANGLE, int> TrainingModeLevelBtnIndex = new Dictionary<CommonData.TRAINING_ANGLE, int>();
-
+    private Dictionary<int, int> TempoTrainingModeLevelBtnIndex = new Dictionary<int, int>();
     private int TrainingTimeIndex = 0;
     private int TrainingTimeBtnIndex = 0;
 
@@ -110,97 +104,137 @@ public class MainTraningUI : MonoBehaviour {
     {
         AngleSelectInfoText.gameObject.SetActive(false);
 
-        if (TrainingSetStep == TRAINING_SET_STEP.MAIN)
+        if(TrainingType == CommonData.TRAINING_TYPE.TRAINING_POSE)
         {
-            TraningTypeText.text = "";
-            CenterButton.Init("", "logo", CommonFunc.HexToColor(HexagonCenterColor, 0f), null);
-            CenterButton.SetImageSize(new Vector2(227.3f, 262.3f));
+            if(TrainingSetStep == TRAINING_SET_STEP.MAIN)
+            {
+                TraningTypeText.text = "";
+                CenterButton.Init("", "logo", CommonFunc.HexToColor(HexagonCenterColor, 0f), null);
+                CenterButton.SetImageSize(new Vector2(227.3f, 262.3f));
+
+                for (int i = 0; i < HexagonMenu.Count; i++)
+                {
+                    if (i == 0)
+                        HexagonMenu[i].Init("자세\n트레이닝", "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickPoseTraning);
+                    else if (i == 1)
+                        HexagonMenu[i].Init("트레이닝\n리워드", "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickTraningReward);
+                    else if (i == 2)
+                        HexagonMenu[i].Init("기타 알림", "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickAlarm);
+                    else if (i == 3)
+                        HexagonMenu[i].Init("사운드\n트레이닝", "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickSoundTraning);
+                    else if (i == 4)
+                        HexagonMenu[i].Init("아카데미\n소개", "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickAcademyInfo);
+                    else if (i == 5)
+                        HexagonMenu[i].Init("튜토리얼\n영상", "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickTutorial);
+                }
+            }
+            else if (TrainingSetStep == TRAINING_SET_STEP.POSE)
+            {
+                TraningTypeText.text = "";
+                CenterButton.Init("", "logo", CommonFunc.HexToColor(HexagonCenterColor, 0f), null);
+                CenterButton.SetImageSize(new Vector2(227.3f, 262.3f));
+
+                for (int i = 0; i < HexagonMenu.Count; i++)
+                {
+                    if (i == 0)
+                    {
+                        HexagonMenu[i].Init("", "icon_back", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickBack);
+                        HexagonMenu[i].SetImageSize(new Vector2(227.3f, 168.1f));
+                    }
+                    else if (i == 1)
+                        HexagonMenu[i].Init(CommonFunc.ConvertPoseTypeStr(CommonData.TRAINING_POSE.TRAINING_ADDRESS), "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickAddress);
+                    else if (i == 2)
+                        HexagonMenu[i].Init(CommonFunc.ConvertPoseTypeStr(CommonData.TRAINING_POSE.TRAINING_BACKSWING), "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickBackSwingTop);
+                    else if (i == 3)
+                        HexagonMenu[i].Init(CommonFunc.ConvertPoseTypeStr(CommonData.TRAINING_POSE.TRAINING_IMPACT), "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickImpact);
+                    else if (i == 4)
+                        HexagonMenu[i].Init(CommonFunc.ConvertTrainingTypeStr(CommonData.TRAINING_TYPE.TRAINING_TEMPO, true), "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickSoundTraning);
+                    else if (i == 5)
+                        HexagonMenu[i].Init("튜토리얼\n영상", "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickTutorial);
+                }
+            }
+            else if (TrainingSetStep == TRAINING_SET_STEP.ANGLE)
+            {
+                CenterButton.Init("트레이닝\n시작", "", CommonFunc.HexToColor(HexagonCenterColor, 0.5f), OnClickTraningStart);
+
+                TrainingModeLevel.Clear();
+                TrainingModeLevelBtnIndex.Clear();
+
+                AngleSelectInfoText.gameObject.SetActive(true);
+
+                for (int i = 0; i < HexagonMenu.Count; i++)
+                {
+                    if (i == 0)
+                    {
+                        HexagonMenu[i].Init("", "icon_back", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickBack);
+                        HexagonMenu[i].SetImageSize(new Vector2(227.3f, 168.1f));
+                    }
+                    else if (i == 1)
+                    {
+                        HexagonMenu[i].Init(CommonFunc.ConvertPoseAngleTypeStr(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_BEND), "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickLevelBend);
+                        TrainingModeLevel.Add(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_BEND, 1);
+                        TrainingModeLevelBtnIndex.Add(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_BEND, i);
+                    }
+                    else if (i == 2)
+                    {
+                        HexagonMenu[i].Init(CommonFunc.ConvertPoseAngleTypeStr(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_TURN), "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickLevelTurn);
+                        TrainingModeLevel.Add(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_TURN, 1);
+                        TrainingModeLevelBtnIndex.Add(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_TURN, i);
+                    }
+                    else if (i == 3)
+                    {
+                        HexagonMenu[i].Init(CommonFunc.ConvertPoseAngleTypeStr(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_SIDE), "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickLevelSide);
+                        TrainingModeLevel.Add(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_SIDE, 1);
+                        TrainingModeLevelBtnIndex.Add(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_SIDE, i);
+                    }
+                    else if (i == 4)
+                    {
+                        HexagonMenu[i].Init("트레이닝 시간\n5초", "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickTrainingTime);
+                        TrainingTimeBtnIndex = i;
+                    }
+                    else if (i == 5)
+                        HexagonMenu[i].Init("튜토리얼\n영상", "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickTutorial);
+                }
+
+                ChangeTraningPosLevel();
+            }
+        }
+        else
+        {
+            TraningTypeText.text = "사운드 트레이닝";
+            CenterButton.Init("트레이닝\n시작", "", CommonFunc.HexToColor(HexagonCenterColor, 0.5f), OnClickTraningStart);
+
+            TempoTrainingModeLevelBtnIndex.Clear();
 
             for (int i = 0; i < HexagonMenu.Count; i++)
             {
                 if (i == 0)
-                    HexagonMenu[i].Init("자세\n트레이닝", "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickPoseTraning);
+                {
+                    HexagonMenu[i].Init("", "icon_back", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickBack);
+                    HexagonMenu[i].SetImageSize(new Vector2(227.3f, 168.1f));
+                }
                 else if (i == 1)
-                    HexagonMenu[i].Init("트레이닝\n리워드", "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickTraningReward);
+                {
+                    HexagonMenu[i].Init("비기너", "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickTempoLevel_1);
+                    TempoTrainingModeLevelBtnIndex.Add(1, i);
+                }
                 else if (i == 2)
-                    HexagonMenu[i].Init("기타 알림", "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickAlarm);
+                {
+                    HexagonMenu[i].Init("중급", "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickTempoLevel_2);
+                    TempoTrainingModeLevelBtnIndex.Add(2, i);
+                }
                 else if (i == 3)
-                    HexagonMenu[i].Init("사운드\n트레이닝", "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickSoundTraning);
+                {
+                    HexagonMenu[i].Init("프로", "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickTempoLevel_3);
+                    TempoTrainingModeLevelBtnIndex.Add(3, i);
+                }
                 else if (i == 4)
                     HexagonMenu[i].Init("아카데미\n소개", "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickAcademyInfo);
                 else if (i == 5)
                     HexagonMenu[i].Init("튜토리얼\n영상", "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickTutorial);
             }
-        }
-        else if(TrainingSetStep == TRAINING_SET_STEP.POSE)
-        {
-            TraningTypeText.text = "";
-            CenterButton.Init("", "logo", CommonFunc.HexToColor(HexagonCenterColor, 0f), null);
-            CenterButton.SetImageSize(new Vector2(227.3f, 262.3f));
 
-            for (int i = 0; i < HexagonMenu.Count; i++)
-            {
-                if (i == 0)
-                {
-                    HexagonMenu[i].Init("", "icon_back", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickBack);
-                    HexagonMenu[i].SetImageSize(new Vector2(227.3f, 168.1f));
-                }
-                else if (i == 1)
-                    HexagonMenu[i].Init(CommonFunc.ConvertPoseTypeStr(CommonData.TRAINING_POSE.TRAINING_ADDRESS), "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickAddress);
-                else if (i == 2)
-                    HexagonMenu[i].Init(CommonFunc.ConvertPoseTypeStr(CommonData.TRAINING_POSE.TRAINING_BACKSWING), "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickBackSwingTop);
-                else if (i == 3)
-                    HexagonMenu[i].Init(CommonFunc.ConvertPoseTypeStr(CommonData.TRAINING_POSE.TRAINING_IMPACT), "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickImpact);
-                else if (i == 4)
-                    HexagonMenu[i].Init(CommonFunc.ConvertTrainingTypeStr(CommonData.TRAINING_TYPE.TRAINING_TEMPO, true), "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickSoundTraning);
-                else if (i == 5)
-                    HexagonMenu[i].Init("튜토리얼\n영상", "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickTutorial);
-            }
-        }
-        else if (TrainingSetStep == TRAINING_SET_STEP.ANGLE)
-        {
-            CenterButton.Init("트레이닝\n시작", "", CommonFunc.HexToColor(HexagonCenterColor, 0.5f), OnClickTraningStart);
-
-            TrainingModeLevel.Clear();
-            TrainingModeLevelBtnIndex.Clear();
-
-            AngleSelectInfoText.gameObject.SetActive(true);
-
-            for (int i = 0; i < HexagonMenu.Count; i++)
-            {
-                if (i == 0)
-                {
-                    HexagonMenu[i].Init("", "icon_back", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickBack);
-                    HexagonMenu[i].SetImageSize(new Vector2(227.3f, 168.1f));
-                }
-                else if (i == 1)
-                {
-                    HexagonMenu[i].Init(CommonFunc.ConvertPoseAngleTypeStr(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_BEND), "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickLevelBend);
-                    TrainingModeLevel.Add(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_BEND, 1);
-                    TrainingModeLevelBtnIndex.Add(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_BEND, i);
-                }
-                else if (i == 2)
-                {
-                    HexagonMenu[i].Init(CommonFunc.ConvertPoseAngleTypeStr(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_TURN), "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickLevelTurn);
-                    TrainingModeLevel.Add(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_TURN, 1);
-                    TrainingModeLevelBtnIndex.Add(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_TURN, i);
-                }
-                else if (i == 3)
-                {
-                    HexagonMenu[i].Init(CommonFunc.ConvertPoseAngleTypeStr(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_SIDE), "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickLevelSide);
-                    TrainingModeLevel.Add(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_SIDE, 1);
-                    TrainingModeLevelBtnIndex.Add(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_SIDE, i);
-                }
-                else if (i == 4)
-                {
-                    HexagonMenu[i].Init("트레이닝 시간\n5초", "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickTrainingTime);
-                    TrainingTimeBtnIndex = i;
-                }
-                else if (i == 5)
-                    HexagonMenu[i].Init("튜토리얼\n영상", "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickTutorial);
-            }
-
-            ChangeTraningPosLevel();
+            ChangeTempoTraningPosLevel();
         }
     }
 
@@ -263,6 +297,7 @@ public class MainTraningUI : MonoBehaviour {
         if (MenuAction)
             return;
 
+        TrainingType = CommonData.TRAINING_TYPE.TRAINING_POSE;
         TrainingSetStep = TRAINING_SET_STEP.POSE;
 
         StartMenuAction();
@@ -288,8 +323,8 @@ public class MainTraningUI : MonoBehaviour {
         if (MenuAction)
             return;
 
-        TKManager.Instance.SetTrainingType(CommonData.TRAINING_TYPE.TRAINING_TEMPO);
-        SceneManager.LoadScene("PracticeScene", LoadSceneMode.Single);
+        TrainingType = CommonData.TRAINING_TYPE.TRAINING_TEMPO;
+        StartMenuAction();
     }
 
     public void OnClickAcademyInfo()
@@ -311,10 +346,10 @@ public class MainTraningUI : MonoBehaviour {
     {
         if (MenuAction)
             return;
-
-        TraningTypeText.text = CommonFunc.ConvertPoseTypeStr(CommonData.TRAINING_POSE.TRAINING_IMPACT);
+        
         TrainingSetStep = TRAINING_SET_STEP.ANGLE;
         TrainingMode = CommonData.TRAINING_POSE.TRAINING_IMPACT;
+        TraningTypeText.text = CommonFunc.ConvertPoseTypeStr(TrainingMode);
 
         StartMenuAction();
     }
@@ -324,9 +359,9 @@ public class MainTraningUI : MonoBehaviour {
         if (MenuAction)
             return;
 
-        TraningTypeText.text = CommonFunc.ConvertPoseTypeStr(CommonData.TRAINING_POSE.TRAINING_BACKSWING);
         TrainingSetStep = TRAINING_SET_STEP.ANGLE;
         TrainingMode = CommonData.TRAINING_POSE.TRAINING_BACKSWING;
+        TraningTypeText.text = CommonFunc.ConvertPoseTypeStr(TrainingMode);
 
         StartMenuAction();
     }
@@ -336,9 +371,9 @@ public class MainTraningUI : MonoBehaviour {
         if (MenuAction)
             return;
 
-        TraningTypeText.text = CommonFunc.ConvertPoseTypeStr(CommonData.TRAINING_POSE.TRAINING_ADDRESS);
         TrainingSetStep = TRAINING_SET_STEP.ANGLE;
         TrainingMode = CommonData.TRAINING_POSE.TRAINING_ADDRESS;
+        TraningTypeText.text = CommonFunc.ConvertPoseTypeStr(TrainingMode);
 
         StartMenuAction();
     }
@@ -361,6 +396,23 @@ public class MainTraningUI : MonoBehaviour {
                 HexagonMenu[btnIndex].SetText(string.Format("{0}",CommonFunc.ConvertPoseAngleTypeStr(type)));
             else
                 HexagonMenu[btnIndex].SetText(string.Format("{0}\n{1}", CommonFunc.ConvertPoseAngleTypeStr(type), CommonFunc.ConvertPoseLevelStr(level)));
+        }
+    }
+
+    public void ChangeTempoTraningPosLevel()
+    {
+        var enumerator = TempoTrainingModeLevelBtnIndex.GetEnumerator();
+
+        while (enumerator.MoveNext())
+        {
+            var type = enumerator.Current.Key;
+            var btnIndex = enumerator.Current.Value;
+            var level = TKManager.Instance.TempoTrainingLevel;
+
+            if (level == enumerator.Current.Key)
+                HexagonMenu[btnIndex].SetButtonColor(CommonFunc.HexToColor(HexagonMenuColor[btnIndex], 1f));
+            else
+                HexagonMenu[btnIndex].SetButtonColor(CommonFunc.HexToColor(HexagonMenuColor[btnIndex], 0.5f));
         }
     }
 
@@ -409,14 +461,40 @@ public class MainTraningUI : MonoBehaviour {
         HexagonMenu[TrainingTimeBtnIndex].SetText(string.Format("트레이닝 시간\n{0}초", CommonData.TRAINING_TIME[TrainingTimeIndex]));
     }
 
+    public void OnClickTempoLevel_1()
+    {
+        TKManager.Instance.TempoTrainingLevel = 1;
+        ChangeTempoTraningPosLevel();
+    }
+
+    public void OnClickTempoLevel_2()
+    {
+        TKManager.Instance.TempoTrainingLevel = 2;
+        ChangeTempoTraningPosLevel();
+    }
+
+    public void OnClickTempoLevel_3()
+    {
+        TKManager.Instance.TempoTrainingLevel = 3;
+        ChangeTempoTraningPosLevel();
+    }
+
     public void OnClickBack()
     {
         if (MenuAction)
             return;
 
-        TrainingSetStep--;
-        if (TrainingSetStep < 0)
+        if (TrainingType == CommonData.TRAINING_TYPE.TRAINING_POSE)
+        {
+            TrainingSetStep--;
+            if (TrainingSetStep < 0)
+                TrainingSetStep = TRAINING_SET_STEP.MAIN;
+        }
+        else
+        {
+            TrainingType = CommonData.TRAINING_TYPE.TRAINING_POSE;
             TrainingSetStep = TRAINING_SET_STEP.MAIN;
+        }
 
         StartMenuAction();
     }
@@ -426,27 +504,35 @@ public class MainTraningUI : MonoBehaviour {
         if (MenuAction)
             return;
 
-        bool startEnable = false;
-        var enumerator = TrainingModeLevel.GetEnumerator();
-        while(enumerator.MoveNext())
+        if(TrainingType == CommonData.TRAINING_TYPE.TRAINING_POSE)
         {
-            if (enumerator.Current.Value > 0)
+            bool startEnable = false;
+            var enumerator = TrainingModeLevel.GetEnumerator();
+            while (enumerator.MoveNext())
             {
-                startEnable = true;
-                break;
+                if (enumerator.Current.Value > 0)
+                {
+                    startEnable = true;
+                    break;
+                }
             }
-        }
 
-        if (startEnable == false)
+            if (startEnable == false)
+            {
+                // TODO 팝업
+                PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.MSG, new PopupMsg.PopupData("트레이닝을 시작 할 수 없습니다."));
+                return;
+            }
+
+            TKManager.Instance.SetTrainingTimer(CommonData.TRAINING_TIME[TrainingTimeIndex]);
+            TKManager.Instance.SetAngleType(TrainingModeLevel);
+            TKManager.Instance.SetMode(TrainingMode);
+            SceneManager.LoadScene("PracticeScene", LoadSceneMode.Single);
+        }
+        else
         {
-            // TODO 팝업
-            PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.MSG, new PopupMsg.PopupData("트레이닝을 시작 할 수 없습니다."));
-            return;
+            TKManager.Instance.SetTrainingType(CommonData.TRAINING_TYPE.TRAINING_TEMPO);
+            SceneManager.LoadScene("PracticeScene", LoadSceneMode.Single);
         }
-
-        TKManager.Instance.SetTrainingTimer(CommonData.TRAINING_TIME[TrainingTimeIndex]);
-        TKManager.Instance.SetAngleType(TrainingModeLevel);
-        TKManager.Instance.SetMode(TrainingMode);
-        SceneManager.LoadScene("PracticeScene", LoadSceneMode.Single);
     }
 }
