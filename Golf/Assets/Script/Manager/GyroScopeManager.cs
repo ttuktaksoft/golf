@@ -34,11 +34,11 @@ public class GyroScopeManager : MonoBehaviour
 
     void Start()
     {
-        if (TKManager.Instance.GetTrainingType() != CommonData.TRAINING_TYPE.TRAINING_TEMPO)
-        {
-            //initialRotation = new Quaternion(0.0f, 180.0f, 0.0f, 1.0f);
-            StartCoroutine(Co_Init());
-        }
+
+        //if (TKManager.Instance.GetTrainingType() != CommonData.TRAINING_TYPE.TRAINING_TEMPO)
+        //{  
+        //    StartCoroutine(Co_Init());
+        //}
             
 
  
@@ -60,24 +60,15 @@ public class GyroScopeManager : MonoBehaviour
         */
     }
 
-    IEnumerator Co_Init()
+    public void TrainingReadyStart()
     {
         TKManager.Instance.gyro.enabled = false;
-
-
-        yield return new WaitForSeconds(3f);
-        offset = Model.transform.rotation * Quaternion.Inverse(GyroToUnity(Input.gyro.attitude));
-        Init(true);
-
-        SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_START);
-        TKManager.Instance.bPoseTraining = true;
-
-
-        yield return null;
-
     }
-
-
+    public void TrainingReadyEnd()
+    {
+        offset = transform.rotation * Quaternion.Inverse(GyroToUnity(Input.gyro.attitude));
+        Init(true);
+    }
 
 
     public void Init(bool bStatus)

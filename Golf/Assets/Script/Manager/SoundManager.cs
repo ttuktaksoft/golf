@@ -46,25 +46,6 @@ public class SoundManager : MonoBehaviour
         }        
     }
 
-    public void PlayTempoTraining()
-    {
-        StartCoroutine(Co_TempoTraining());
-    }
-
-    IEnumerator Co_TempoTraining()
-    {
-        while (true)
-        {
-            if (TKManager.Instance.bTempoTraining == false)
-                break;
-
-            yield return new WaitForSeconds(7.0f);
-            SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_TEMPO);            
-        }
-
-        yield return null;
-    }
-
 
     public void PlaySuccessSound()
     {
@@ -90,8 +71,6 @@ public class SoundManager : MonoBehaviour
 
         SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_SUCCESS);
         yield return new WaitForSeconds(2f);
-
-        TKManager.Instance.bTrainingSuccess = false;
 
         yield return null;
 
