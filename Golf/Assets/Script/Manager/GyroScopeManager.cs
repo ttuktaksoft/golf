@@ -13,6 +13,9 @@ public class GyroScopeManager : MonoBehaviour
     private Quaternion initialRotation;
     private Quaternion baseRotation;
     private Quaternion gyroInitialRotation;
+
+    private Quaternion offset;
+
     public GameObject Model;
 
 
@@ -32,7 +35,10 @@ public class GyroScopeManager : MonoBehaviour
     void Start()
     {
         if (TKManager.Instance.GetTrainingType() != CommonData.TRAINING_TYPE.TRAINING_TEMPO)
+        {  
             StartCoroutine(Co_Init());
+        }
+            
 
  
 
@@ -59,6 +65,7 @@ public class GyroScopeManager : MonoBehaviour
 
 
         yield return new WaitForSeconds(3f);
+        offset = transform.rotation * Quaternion.Inverse(GyroToUnity(Input.gyro.attitude));
         Init(true);
 
         SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_START);
@@ -119,7 +126,7 @@ public class GyroScopeManager : MonoBehaviour
 
          */
 
-            float x = q.x;
+          float x = q.x;
           float y = q.y;
           float z = q.z;
           float w = q.w;
@@ -150,9 +157,11 @@ public class GyroScopeManager : MonoBehaviour
         PracticeManager.Instance.SetGyroStatus(roll, pitch, yaw);
     }
     private static Quaternion GyroToUnity(Quaternion q)
-    {        
-        //Quaternion rtQt = new Quaternion(q.x, q.y, -q.z, -q.w);
+    {
         GetAngle(q);
+
+        //Quaternion rtQt = new Quaternion(q.x, q.y, -q.z, -q.w);
+        //GetAngle(rtQt);
         //GetAngle(q.eulerAngles);
 
         return q;
@@ -164,9 +173,11 @@ public class GyroScopeManager : MonoBehaviour
     {
         if (TKManager.Instance.gyro.enabled)
         {
+           // Model.transform.rotation =  offset * GyroToUnity(Input.gyro.attitude);
 
+            
             Quaternion offsetRotation = Quaternion.Inverse(gyroInitialRotation) * TKManager.Instance.gyro.attitude;
-
+             
             Model.transform.rotation = initialRotation * offsetRotation;
             GyroToUnity(initialRotation * offsetRotation);
 
@@ -174,9 +185,10 @@ public class GyroScopeManager : MonoBehaviour
             float AngleY = Model.transform.rotation.eulerAngles.y;
             float AngleZ = Model.transform.rotation.eulerAngles.z;
 
-         //   Debug.Log("!@@@@@ Address x" + AngleX);
-          //  Debug.Log("!@@@@@ Address y" + AngleY);
-         //   Debug.Log("!@@@@@ Address z" + AngleZ);
+            Debug.Log("!@@@@@ Address x" + AngleX);
+            Debug.Log("!@@@@@ Address y" + AngleY);
+            Debug.Log("!@@@@@ Address z" + AngleZ);
+            
 
             // transform.rotation = Input.gyro.attitude;
             /*
