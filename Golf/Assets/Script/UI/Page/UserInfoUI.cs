@@ -11,6 +11,8 @@ public class UserInfoUI : MonoBehaviour {
     public Text Grade;
     public Image Gender;
     public Button Edit;
+    public GameObject EmptyText;
+    public GameObject EvaluationList;
     public GameObject ListObj;
     private List<EvaluationSlotUI> EvaluationSlotList = new List<EvaluationSlotUI>();
 
@@ -27,6 +29,17 @@ public class UserInfoUI : MonoBehaviour {
             DestroyImmediate(EvaluationSlotList[i].gameObject);
         }
         EvaluationSlotList.Clear();
+
+        if (DataManager.Instance.EvaluationDataList.Count > 0)
+        {
+            EvaluationList.SetActive(true);
+            EmptyText.SetActive(false);
+        }
+        else
+        {
+            EvaluationList.SetActive(false);
+            EmptyText.SetActive(true);
+        }
 
         for (int i = 0; i < DataManager.Instance.EvaluationDataList.Count; i++)
         {

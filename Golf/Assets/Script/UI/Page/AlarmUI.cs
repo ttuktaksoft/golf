@@ -5,11 +5,23 @@ using UnityEngine.UI;
 
 public class AlarmUI : MonoBehaviour {
 
+    public GameObject EmptyText;
+    public GameObject AlarmList;
     public GameObject ListObj;
     private List<AlarmSlotUI> AlarmSlotList = new List<AlarmSlotUI>();
 
     public void Init()
     {
+        if(DataManager.Instance.AlarmDataList.Count > 0)
+        {
+            AlarmList.SetActive(true);
+            EmptyText.SetActive(false);
+        }
+        else
+        {
+            AlarmList.SetActive(false);
+            EmptyText.SetActive(true);
+        }
         if (AlarmSlotList.Count <= 0)
         {
             for (int i = 0; i < DataManager.Instance.AlarmDataList.Count; i++)
