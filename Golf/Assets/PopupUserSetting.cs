@@ -105,6 +105,7 @@ public class PopupUserSetting : Popup
         if (OkAction != null)
             OkAction();
 
+        TKManager.Instance.SaveFile();
         PopupMgr.Instance.DismissPopup();
     }
 
@@ -153,6 +154,7 @@ public class PopupUserSetting : Popup
                     Debug.Log("!!!!!!Couldn't load texture from " + path);
                     return;
                 }
+                TKManager.Instance.ThumbnailSpritePath = path;
                 TKManager.Instance.ThumbnailSprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Thumbnail.rectTransform.pivot);
                 Thumbnail.sprite = TKManager.Instance.ThumbnailSprite;
 

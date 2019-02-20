@@ -59,14 +59,19 @@ public class LoadingUI : MonoBehaviour
         SceneManager.LoadScene("PopupScene", LoadSceneMode.Additive);
 
         TKManager.Instance.gyro.enabled = false;
+        TKManager.Instance.LoadFile();
         DataManager.Instance.init();
 
         yield return new WaitForSeconds(2f);
-
-        PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.USER_SETTING, new PopupUserSetting.PopupData(() =>
+        if(TKManager.Instance.MyLoadData == false)
         {
+            PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.USER_SETTING, new PopupUserSetting.PopupData(() =>
+            {
+                Login = true;
+            }, true));
+        }
+        else
             Login = true;
-        }, true));
 
         while (true)
         {

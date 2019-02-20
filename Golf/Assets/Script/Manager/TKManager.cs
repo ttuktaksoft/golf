@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 
 public class TKManager : MonoBehaviour
@@ -28,7 +30,11 @@ public class TKManager : MonoBehaviour
     public Gyroscope gyro;
     public int TempoTrainingLevel = 3;
     public Sprite ThumbnailSprite = null;
+    public string ThumbnailSpritePath = "";
 
+
+    private SaveData MySaveData = new SaveData();
+    public bool MyLoadData = false;
     private int TrainingTimer;
     // Start is called before the first frame update
     void Start()
@@ -145,5 +151,114 @@ public class TKManager : MonoBehaviour
     public string GetGradeStr()
     {
         return CommonFunc.ConvertGradeStr(Grade);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    [System.Serializable]
+    public class SaveData
+    {
+        public CommonData.GENDER Gender = CommonData.GENDER.GENDER_MAN;
+        public string Name = "";
+        public CommonData.GRADE_TYPE Grade = CommonData.GRADE_TYPE.BRONZE;
+        public string PhoneNumber = "";
+        public List<EvaluationData> EvaluationDataList = new List<EvaluationData>();
+        public string ThumbnailSpritePath = "";
+
+        public void Save()
+        {
+            Gender = TKManager.Instance.GetGender();
+            Name = TKManager.Instance.Name;
+            Grade = TKManager.Instance.GetGrade();
+            PhoneNumber = TKManager.Instance.PhoneNumber;
+            EvaluationDataList = DataManager.Instance.EvaluationDataList;
+            ThumbnailSpritePath = TKManager.Instance.ThumbnailSpritePath;
+        }
+
+        public void Load()
+        {
+            TKManager.Instance.SetGender(Gender);
+            TKManager.Instance.Name = Name;
+            TKManager.Instance.SetGrade(Grade);
+            TKManager.Instance.PhoneNumber = PhoneNumber;
+
+            if (EvaluationDataList == null)
+                DataManager.Instance.EvaluationDataList = new List<EvaluationData>();
+            else
+                DataManager.Instance.EvaluationDataList = EvaluationDataList;
+
+            if (ThumbnailSpritePath != "")
+            {
+                Texture2D texture = NativeGallery.LoadImageAtPath(ThumbnailSpritePath);
+                if (texture == null)
+                {
+                    Debug.Log("!!!!!!Couldn't load texture from " + ThumbnailSpritePath);
+                    return;
+                }
+                TKManager.Instance.ThumbnailSprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f,0.5f));
+            }
+            else
+                TKManager.Instance.ThumbnailSprite = null;
+        }
+    }
+
+
+
+    public void SaveFile()
+    {
+        MySaveData.Save();
+        BinaryFormatter formatter = new BinaryFormatter();
+        string path = pathForDocumentsFile("PlayerData.ini");
+        FileStream stream = new FileStream(path, FileMode.Create);
+        formatter.Serialize(stream, MySaveData);
+        stream.Close();
+    }
+
+    public void LoadFile()
+    {
+        string path = pathForDocumentsFile("PlayerData.ini");
+        FileInfo fileInfo = new FileInfo(path);
+        if (fileInfo.Exists)
+        {
+            BinaryFormatter formatter = new BinaryFormatter();
+            FileStream stream = new FileStream(path, FileMode.Open);
+            MySaveData = (SaveData)formatter.Deserialize(stream);
+            stream.Close();
+            MySaveData.Load();
+            MyLoadData = true;
+        }
+        else
+        {
+            SaveFile();
+        }
+    }
+
+    public string pathForDocumentsFile(string filename)
+    {
+#if UNITY_EDITOR
+        string path_pc = Application.dataPath;
+        path_pc = path_pc.Substring(0, path_pc.LastIndexOf('/'));
+        return Path.Combine(path_pc, filename);
+#elif UNITY_ANDROID
+        string path = Application.persistentDataPath;
+        path = path.Substring(0, path.LastIndexOf('/'));
+        return Path.Combine(path, filename);
+#elif UNITY_IOS
+        return Application.persistentDataPath + "/" + filename;
+        //string path = Application.dataPath.Substring(0, Application.dataPath.Length);
+        //path = path.Substring(0, path.LastIndexOf('/'));
+        //return Path.Combine(Path.Combine(path, "Documents"), filename);
+#endif
     }
 }

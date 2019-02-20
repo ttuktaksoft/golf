@@ -40,52 +40,52 @@ public class DataManager : MonoBehaviour
         AlarmDataList.Add(new AlarmData("2월 아카데미 특강안내", DateTime.Now.Ticks, CommonData.TEMP_ALARM_MSG[1]));
         AlarmDataList.Add(new AlarmData("3월 아카데미 특강안내", DateTime.Now.Ticks, CommonData.TEMP_ALARM_MSG[2]));
 
-        Dictionary<CommonData.TRAINING_ANGLE, int> angleList = new Dictionary<CommonData.TRAINING_ANGLE, int>();
-        angleList.Add(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_BEND, 1);
-        angleList.Add(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_SIDE, 2);
-        angleList.Add(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_TURN, 3);
+        //Dictionary<CommonData.TRAINING_ANGLE, int> angleList = new Dictionary<CommonData.TRAINING_ANGLE, int>();
+        //angleList.Add(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_BEND, 1);
+        //angleList.Add(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_SIDE, 2);
+        //angleList.Add(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_TURN, 3);
 
-        EvaluationDataList.Add(
-            new EvaluationData(
-                DateTime.Now.Ticks,
-                CommonData.TRAINING_TYPE.TRAINING_POSE,
-                20,
-                CommonData.TRAINING_POSE.TRAINING_ADDRESS,
-                angleList,
-                3,
-                "최고의 홈 트레이닝 앱 입니다.!")
-            );
+        //EvaluationDataList.Add(
+        //    new EvaluationData(
+        //        DateTime.Now.Ticks,
+        //        CommonData.TRAINING_TYPE.TRAINING_POSE,
+        //        20,
+        //        CommonData.TRAINING_POSE.TRAINING_ADDRESS,
+        //        angleList,
+        //        3,
+        //        "최고의 홈 트레이닝 앱 입니다.!")
+        //    );
 
-        EvaluationDataList.Add(
-            new EvaluationData(
-                DateTime.Now.Ticks,
-                CommonData.TRAINING_TYPE.TRAINING_POSE,
-                20,
-                CommonData.TRAINING_POSE.TRAINING_BACKSWING,
-                angleList,
-                3,
-                "매우 좋아요!!")
-            );
+        //EvaluationDataList.Add(
+        //    new EvaluationData(
+        //        DateTime.Now.Ticks,
+        //        CommonData.TRAINING_TYPE.TRAINING_POSE,
+        //        20,
+        //        CommonData.TRAINING_POSE.TRAINING_BACKSWING,
+        //        angleList,
+        //        3,
+        //        "매우 좋아요!!")
+        //    );
 
-        EvaluationDataList.Add(
-            new EvaluationData(
-                DateTime.Now.Ticks,
-                CommonData.TRAINING_TYPE.TRAINING_POSE,
-                20,
-                CommonData.TRAINING_POSE.TRAINING_IMPACT,
-                angleList,
-                3,
-                "힘들다!")
-            );
+        //EvaluationDataList.Add(
+        //    new EvaluationData(
+        //        DateTime.Now.Ticks,
+        //        CommonData.TRAINING_TYPE.TRAINING_POSE,
+        //        20,
+        //        CommonData.TRAINING_POSE.TRAINING_IMPACT,
+        //        angleList,
+        //        3,
+        //        "힘들다!")
+        //    );
 
-        EvaluationDataList.Add(
-            new EvaluationData(
-                DateTime.Now.Ticks,
-                CommonData.TRAINING_TYPE.TRAINING_TEMPO,
-                20,
-                3,
-                "힘들다!")
-            );
+        //EvaluationDataList.Add(
+        //    new EvaluationData(
+        //        DateTime.Now.Ticks,
+        //        CommonData.TRAINING_TYPE.TRAINING_TEMPO,
+        //        20,
+        //        3,
+        //        "힘들다!")
+        //    );
 
         GiftconDataList.Add(new GiftconData(1,"스타벅스 아메리카노", ""));
         GiftconDataList.Add(new GiftconData(2,"스타벅스 아메리카노", ""));
@@ -121,5 +121,6 @@ public class DataManager : MonoBehaviour
     public void AddEvaluationData(EvaluationData data)
     {
         EvaluationDataList.Insert(0, data);
+        TKManager.Instance.SaveFile();
     }
 }
