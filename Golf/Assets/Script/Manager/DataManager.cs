@@ -31,8 +31,8 @@ public class DataManager : MonoBehaviour
 
     public void init()
     {
-        TKManager.Instance.SetName("이민영");
-        TKManager.Instance.SetPhoneNumber("010-1234-1234");
+        //TKManager.Instance.SetName("이민영");
+        //TKManager.Instance.SetPhoneNumber("010-1234-1234");
         TKManager.Instance.SetGender(CommonData.GENDER.GENDER_MAN);
         TKManager.Instance.SetGrade(CommonData.GRADE_TYPE.BRONZE);
 

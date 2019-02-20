@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class RewardUI : MonoBehaviour
 {
+    public Image Thumbnail;
     public Text Name;
     public Text Grade;
     public Image Gender;
@@ -36,6 +37,8 @@ public class RewardUI : MonoBehaviour
             var data = DataManager.Instance.PracticeDataList[i];
             PracticeList[i].SetData(data);
         }
+
+        CommonFunc.RefreshThumbnail(ref Thumbnail);
     }
 
     public void RefreshGiftconList()

@@ -10,6 +10,7 @@ public class LoadingUI : MonoBehaviour
     // Start is called before the first frame update
 
     public bool Permissions = false;
+    public bool Login = false;
 
     void Start()
     {
@@ -55,10 +56,28 @@ public class LoadingUI : MonoBehaviour
         yield return null;
         yield return null;
         yield return null;
+        SceneManager.LoadScene("PopupScene", LoadSceneMode.Additive);
 
         TKManager.Instance.gyro.enabled = false;
         DataManager.Instance.init();
-        SceneManager.LoadScene("PopupScene", LoadSceneMode.Additive);
+
+        yield return new WaitForSeconds(2f);
+
+        PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.USER_SETTING, new PopupUserSetting.PopupData(() =>
+        {
+            Login = true;
+        }, true));
+
+        while (true)
+        {
+            if (Login)
+                break;
+
+            yield return null;
+        }
+
+
+        
         yield return null;
         SceneManager.LoadScene("MainScene", LoadSceneMode.Single);
     }

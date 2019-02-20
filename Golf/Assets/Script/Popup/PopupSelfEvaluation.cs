@@ -77,7 +77,7 @@ public class PopupSelfEvaluation : Popup
         }
 
         SubTitle.text = builder.ToString();
-
+        Msg.text = "";
         RefreshStar();
     }
 
@@ -107,7 +107,7 @@ public class PopupSelfEvaluation : Popup
                 CommonData.TRAINING_TYPE.TRAINING_POSE,
                 TrainingCount,
                 PoseType,
-                AngleTypeList,
+                new Dictionary<CommonData.TRAINING_ANGLE, int>(AngleTypeList),
                 StarCount,
                 Msg.text.ToString())
             );

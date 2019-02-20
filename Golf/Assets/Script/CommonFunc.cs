@@ -136,4 +136,12 @@ public class CommonFunc : MonoBehaviour
 
         return "";
     }
+
+    static public void RefreshThumbnail(ref Image img)
+    {
+        if (TKManager.Instance.ThumbnailSprite == null)
+            SetImageFile("logo_2", ref img);
+        else
+            img.sprite = TKManager.Instance.ThumbnailSprite;
+    }
 }

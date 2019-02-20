@@ -49,6 +49,8 @@ public class UserInfoUI : MonoBehaviour {
             CommonFunc.SetImageFile("icon_man", ref Gender);
         else
             CommonFunc.SetImageFile("icon_woman", ref Gender);
+
+        CommonFunc.RefreshThumbnail(ref Thumbnail);
     }
 
     public void OnClickEdit()
@@ -58,22 +60,6 @@ public class UserInfoUI : MonoBehaviour {
 
     public void OnClickThumbnailEdit()
     {
-        NativeGallery.Permission permission = NativeGallery.GetImageFromGallery((path) =>
-        {
-            Debug.Log("!!!!!!Image path: " + path);
-            if (path != null)
-            {
-                // Create Texture from selected image
-                Texture2D texture = NativeGallery.LoadImageAtPath(path);
-                if (texture == null)
-                {
-                    Debug.Log("!!!!!!Couldn't load texture from " + path);
-                    return;
-                }
-                Sprite tempSprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Thumbnail.rectTransform.pivot);
-                Thumbnail.sprite = tempSprite;
-
-            }
-        }, "Select a PNG image", "image/png");
+        PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.USER_SETTING, new PopupUserSetting.PopupData(RefreshUI));
     }
 }
