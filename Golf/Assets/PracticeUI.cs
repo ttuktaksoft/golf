@@ -401,19 +401,19 @@ public class PracticeUI : MonoBehaviour
                 }
                 else if (GyroStatus[2] < RefData[nTrainMode] - LevelCover)
                 {
-                    Model_RotateRight.SetActive(true);
-                    Model_RotateLeft.SetActive(false);
-
-                    Model_RotateRight.transform.Rotate(0, 0, -1 * ArrowSpeed);
+                    Model_RotateLeft.SetActive(true);
+                    Model_RotateRight.SetActive(false);
+                    Model_RotateLeft.transform.Rotate(0, 0, ArrowSpeed);
                     TrainingSuccess_Rotate = false;
                 }
 
                 else if (RefData[nTrainMode] - LevelCover < GyroStatus[2])
                 {
-                    Model_RotateLeft.SetActive(true);
-                    Model_RotateRight.SetActive(false);
-                    Model_RotateLeft.transform.Rotate(0, 0, ArrowSpeed);
-                    TrainingSuccess_Rotate = false;
+                    Model_RotateRight.SetActive(true);
+                    Model_RotateLeft.SetActive(false);
+
+                    Model_RotateRight.transform.Rotate(0, 0, -1 * ArrowSpeed);
+                    TrainingSuccess_Rotate = false;     
                 }
 
                 RotationTrainingAngle.SetAngle(GyroStatus[2]);
@@ -454,7 +454,7 @@ public class PracticeUI : MonoBehaviour
                 {
                     Model_BendUp.SetActive(true);
                     Model_BendDown.SetActive(false);
-                    Model_BendUp.transform.Rotate(-1 * ArrowSpeed, 0, 0);
+                    Model_BendUp.transform.Rotate(ArrowSpeed, 0, 0);
                     TrainingSuccess_Bend = false;
                 }
 
@@ -486,18 +486,18 @@ public class PracticeUI : MonoBehaviour
                 }
                 else if (GyroStatus[0] < RefData[nTrainMode + 4] - LevelCover)
                 {
-                    Model_SideRight.SetActive(true);
-                    Model_SideLeft.SetActive(false);
-
-                    Model_SideRight.transform.Rotate(0, 0, -1 * ArrowSpeed);
+                    Model_SideLeft.SetActive(true);
+                    Model_SideRight.SetActive(false);
+                    Model_SideLeft.transform.Rotate(0, 0, ArrowSpeed);
                     TrainingSuccess_Side = false;
                 }
 
                 else if (RefData[nTrainMode + 5] - LevelCover < GyroStatus[0])
                 {
-                    Model_SideLeft.SetActive(true);
-                    Model_SideRight.SetActive(false);
-                    Model_SideLeft.transform.Rotate(0, 0, ArrowSpeed);
+                    Model_SideRight.SetActive(true);
+                    Model_SideLeft.SetActive(false);
+
+                    Model_SideRight.transform.Rotate(0, 0, -1 * ArrowSpeed);
                     TrainingSuccess_Side = false;
                 }
 
