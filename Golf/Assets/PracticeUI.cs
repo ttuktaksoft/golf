@@ -15,7 +15,6 @@ public class PracticeUI : MonoBehaviour
         END
     }
     
-
     public GameObject Model;
 
     public GameObject Model_RotateLeft;
@@ -26,6 +25,12 @@ public class PracticeUI : MonoBehaviour
     public GameObject Model_BendDown;
     public GameObject Model_SideRight;
 
+    public GameObject BackgrounImg;
+    public GameObject TempoTrainingObj;
+    public Text TempoTrainingDesc;
+    public Text TempoTrainingCount;
+
+    public GameObject PoseTrainingObj;
     public UITrainingAngle BendTrainingAngle;
     public UITrainingAngle RotationTrainingAngle;
     public UITrainingAngle SideBendTrainingAngle;
@@ -101,8 +106,9 @@ public class PracticeUI : MonoBehaviour
 
         TrainingReady();
 
-        if (TKManager.Instance.GetTrainingType() == CommonData.TRAINING_TYPE.TRAINING_TEMPO)                  
+        if (TKManager.Instance.GetTrainingType() == CommonData.TRAINING_TYPE.TRAINING_TEMPO)
         {
+            Model.SetActive(false);
             Model_BendDown.SetActive(false);
             Model_BendUp.SetActive(false);
 
@@ -116,9 +122,17 @@ public class PracticeUI : MonoBehaviour
             BendTrainingAngle.gameObject.SetActive(false);
             RotationTrainingAngle.gameObject.SetActive(false);
             SideBendTrainingAngle.gameObject.SetActive(false);
+
+            BackgrounImg.gameObject.SetActive(false);
+            PoseTrainingObj.gameObject.SetActive(false);
+            TempoTrainingObj.gameObject.SetActive(true);
+
+            TempoTrainingDesc.text = "";
+            TempoTrainingCount.text = "";
         }
         else
         {
+            Model.SetActive(true);
             Model_BendDown.SetActive(true);
             Model_BendUp.SetActive(true);
 
@@ -127,9 +141,11 @@ public class PracticeUI : MonoBehaviour
 
             Model_SideLeft.SetActive(true);
             Model_SideRight.SetActive(true);
-        }
 
-        
+            BackgrounImg.gameObject.SetActive(true);
+            PoseTrainingObj.gameObject.SetActive(true);
+            TempoTrainingObj.gameObject.SetActive(false);
+        }
 
         int nTrainMode = Convert.ToInt32(TKManager.Instance.GetPoseType());
 
@@ -141,11 +157,12 @@ public class PracticeUI : MonoBehaviour
                 RotationTrainingAngle.gameObject.SetActive(true);
                 float LevelCover = CommonData.LEVEL_COVER[angleLevel];
 
-                float minValue = RefData[nTrainMode] - 30;
-                float maxValue = RefData[nTrainMode + 1] + 30;
+                float minValue = RefData[nTrainMode] - CommonData.ANGLE_OFFSET;
+                float maxValue = RefData[nTrainMode + 1] + CommonData.ANGLE_OFFSET;
                 float successMinValue = RefData[nTrainMode] - LevelCover;
                 float successMaxValue = RefData[nTrainMode + 1] + LevelCover;
                 RotationTrainingAngle.Init("ROTATION", minValue, maxValue, successMinValue, successMaxValue);
+                //RotationTrainingAngle.SetAngle((successMaxValue - successMinValue) / 2);
 
             }
             else
@@ -163,11 +180,12 @@ public class PracticeUI : MonoBehaviour
                 BendTrainingAngle.gameObject.SetActive(true);
                 float LevelCover = CommonData.LEVEL_COVER[angleLevel];
 
-                float minValue = RefData[nTrainMode + 2] - 30;
-                float maxValue = RefData[nTrainMode + 3] + 30;
+                float minValue = RefData[nTrainMode + 2] - CommonData.ANGLE_OFFSET;
+                float maxValue = RefData[nTrainMode + 3] + CommonData.ANGLE_OFFSET;
                 float successMinValue = RefData[nTrainMode + 2] - LevelCover;
                 float successMaxValue = RefData[nTrainMode + 3] + LevelCover;
                 BendTrainingAngle.Init("BEND", minValue, maxValue, successMinValue, successMaxValue);
+                //BendTrainingAngle.SetAngle((successMaxValue - successMinValue) / 2);
             }
             else
             {
@@ -185,11 +203,12 @@ public class PracticeUI : MonoBehaviour
                 SideBendTrainingAngle.gameObject.SetActive(true);
                 float LevelCover = CommonData.LEVEL_COVER[angleLevel];
 
-                float minValue = RefData[nTrainMode + 4] - 30;
-                float maxValue = RefData[nTrainMode + 5] + 30;
+                float minValue = RefData[nTrainMode + 4] - CommonData.ANGLE_OFFSET;
+                float maxValue = RefData[nTrainMode + 5] + CommonData.ANGLE_OFFSET;
                 float successMinValue = RefData[nTrainMode + 4] - LevelCover;
                 float successMaxValue = RefData[nTrainMode + 5] + LevelCover;
                 SideBendTrainingAngle.Init("SIDE BEND", minValue, maxValue, successMinValue, successMaxValue);
+                //SideBendTrainingAngle.SetAngle((successMaxValue - successMinValue) / 2);
             }
             else
             {
@@ -299,7 +318,14 @@ public class PracticeUI : MonoBehaviour
 
         while (true)
         {
+            if (PracticeOrderType != PRACTICE_ORDER.START)
+            {
+                yield return null;
+                continue;
+            }
             TrainingTime -= Time.deltaTime;
+            TempoTrainingCount.text = string.Format("{0:F1}", TrainingTime);
+            TempoTrainingDesc.text = "READY!";
             yield return null;
 
             if(TrainingTime < 0)
@@ -320,6 +346,17 @@ public class PracticeUI : MonoBehaviour
                 TrainingSuccessCount++;
                 TrainingCount.text = string.Format("{0}회", TrainingSuccessCount);
                 TrainingTime = CommonData.TEMPO_TRAINING_WAIT_TIME;
+
+                TempoTrainingDesc.text = "SHOT!";
+                TempoTrainingCount.text = "";
+
+                while(true)
+                {
+                    if (SoundManager.Instance.IsFxAudioPlay() == false)
+                        break;
+
+                    yield return null;
+                }
             }
         }
     }
@@ -487,6 +524,9 @@ public class PracticeUI : MonoBehaviour
                  StopAllCoroutines();
                  SceneManager.LoadScene("MainScene", LoadSceneMode.Single);
              }));
+         }, () =>
+         {
+             PracticeOrderType = PRACTICE_ORDER.START;
          }));
     }
 

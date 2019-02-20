@@ -8,7 +8,6 @@ public class GyroScopeManager : MonoBehaviour
     private int initialOrientationY;
     private int initialOrientationZ;
 
-    public Quaternion rotation = Quaternion.identity;
     private Quaternion initialGyroRotation;
     private Quaternion initialRotation;
     private Quaternion baseRotation;

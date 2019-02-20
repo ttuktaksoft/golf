@@ -46,6 +46,11 @@ public class SoundManager : MonoBehaviour
         }        
     }
 
+    public bool IsFxAudioPlay()
+    {
+        return mFxAudio.isPlaying;
+    }
+
 
     public void PlaySuccessSound()
     {
