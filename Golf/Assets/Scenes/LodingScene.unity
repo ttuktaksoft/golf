@@ -306,6 +306,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55f18daba30608541aef8dffa21b0aaa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Permissions: 0
 --- !u!1 &895690068
 GameObject:
   m_ObjectHideFlags: 0
@@ -799,7 +800,7 @@ MonoBehaviour:
   mFxSound:
   - {fileID: 8300000, guid: 1057de96678935941a4df2227a534b77, type: 3}
   - {fileID: 8300000, guid: 3725673e040a66a4a88c389b52944cf1, type: 3}
-  - {fileID: 8300000, guid: 18e8ff8287b3fac4fab95d3b0d00d44d, type: 3}
+  - {fileID: 8300000, guid: dcc844bea1910b343a52860b2efcddab, type: 3}
   - {fileID: 8300000, guid: b8f2f7f620f8e0a4dbf3533f14c66ecc, type: 3}
   - {fileID: 8300000, guid: e87f1a6117f8ead45afc115bf2e96df7, type: 3}
   - {fileID: 8300000, guid: 97ab7b85d3d09d346905462b8368d7cf, type: 3}
