@@ -60,6 +60,8 @@ public class PopupUserSetting : Popup
         Number.text = TKManager.Instance.PhoneNumber;
         Gender = TKManager.Instance.GetGender();
 
+        CommonFunc.RefreshThumbnail(ref Thumbnail);
+
         RefreahUI();
     }
 
@@ -82,6 +84,7 @@ public class PopupUserSetting : Popup
 
     public void OnClickOK()
     {
+        /*
         bool emptyString = true;
         string name = Name.text.ToString();
         for (int i = 0; i < name.Length; i++)
@@ -96,7 +99,7 @@ public class PopupUserSetting : Popup
             PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.MSG, new PopupMsg.PopupData("이름을 입력해주세요"));
             return;
         }
-
+        */
 
         TKManager.Instance.SetName(Name.text.ToString());
         TKManager.Instance.SetPhoneNumber(Number.text.ToString());
