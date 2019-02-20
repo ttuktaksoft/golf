@@ -304,8 +304,21 @@ public class PracticeUI : MonoBehaviour
 
             if(TrainingTime < 0)
             {
-                SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_TEMPO);
+                if (TKManager.Instance.TempoTrainingLevel == 1)
+                {
+                    SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_TEMPO_BEGINER);
+                }
+                else if (TKManager.Instance.TempoTrainingLevel == 2)
+                {
+                    SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_TEMPO_AMA);
+                }
+                else
+                {
+                    SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_TEMPO_PRO);
+                }
+                    
                 TrainingSuccessCount++;
+                TrainingCount.text = string.Format("{0}회", TrainingSuccessCount);
                 TrainingTime = CommonData.TEMPO_TRAINING_WAIT_TIME;
             }
         }
@@ -327,7 +340,7 @@ public class PracticeUI : MonoBehaviour
         if (TKManager.Instance.GetTrainingType() == CommonData.TRAINING_TYPE.TRAINING_POSE)
             Timer.value = TrainingTime / TKManager.Instance.GetTrainingTimer();
         else if (TKManager.Instance.GetTrainingType() == CommonData.TRAINING_TYPE.TRAINING_TEMPO)
-            Timer.value = CommonData.TEMPO_TRAINING_WAIT_TIME;
+            Timer.value = TrainingTime / CommonData.TEMPO_TRAINING_WAIT_TIME;
     }
 
     public void UpdateGyroStatus()

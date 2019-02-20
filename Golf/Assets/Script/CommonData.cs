@@ -52,7 +52,9 @@ public class CommonData : MonoBehaviour
         BUTTON,
         TRAINING_START,
         TRAINING_SUCCESS,
-        TRAINING_TEMPO
+        TRAINING_TEMPO_BEGINER,
+        TRAINING_TEMPO_AMA,
+        TRAINING_TEMPO_PRO
     }
 
     public enum GRADE_TYPE

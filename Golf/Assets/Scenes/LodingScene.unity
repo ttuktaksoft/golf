@@ -383,7 +383,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.000015258789, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0.000030517578, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &974259296
@@ -577,9 +577,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TrainingType: 0
   PoseType: 0
-  bTrainingSuccess: 0
-  bTempoTraining: 0
-  bPoseTraining: 0
+  TempoTrainingLevel: 3
 --- !u!1 &1457332395
 GameObject:
   m_ObjectHideFlags: 0
@@ -802,7 +800,9 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 1057de96678935941a4df2227a534b77, type: 3}
   - {fileID: 8300000, guid: 3725673e040a66a4a88c389b52944cf1, type: 3}
   - {fileID: 8300000, guid: 18e8ff8287b3fac4fab95d3b0d00d44d, type: 3}
-  - {fileID: 8300000, guid: 5485038409f98be4ea82938529258b3b, type: 3}
+  - {fileID: 8300000, guid: b8f2f7f620f8e0a4dbf3533f14c66ecc, type: 3}
+  - {fileID: 8300000, guid: e87f1a6117f8ead45afc115bf2e96df7, type: 3}
+  - {fileID: 8300000, guid: 97ab7b85d3d09d346905462b8368d7cf, type: 3}
 --- !u!82 &2112856915
 AudioSource:
   m_ObjectHideFlags: 0
