@@ -21,7 +21,7 @@ public class SoundManager : MonoBehaviour
 
     }
 
-    public AudioClip[] mFxSound = new AudioClip[6];
+    public AudioClip[] mFxSound = new AudioClip[7];
     private AudioSource mFxAudio;
 
     // Use this for initialization

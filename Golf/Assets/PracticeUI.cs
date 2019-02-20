@@ -211,7 +211,7 @@ public class PracticeUI : MonoBehaviour
 
         yield return Co_TrainingReady();
 
-        SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_START);
+  
         GyroScopeManager.Instance.TrainingReadyEnd();
         PracticeOrderType = PRACTICE_ORDER.START;
         TrainingStart();
@@ -227,6 +227,7 @@ public class PracticeUI : MonoBehaviour
     IEnumerator Co_TrainingReady()
     {
         ReadyUI.gameObject.SetActive(true);
+        SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_START);
         int readyTime = CommonData.TRAINING_READY_TIME;
         while (true)
         {
@@ -268,7 +269,7 @@ public class PracticeUI : MonoBehaviour
                     soundTime -= Time.deltaTime;
                     if (soundTime < 0)
                     {
-                        SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_START);
+                        SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_SUCCESS_START);
                         soundTime = 1f;
                     }
 
