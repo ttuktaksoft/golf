@@ -330,7 +330,11 @@ public class PracticeUI : MonoBehaviour
                     }
                 }
                 else
+                {
+                    bSuccessEnter = true;
                     TrainingTime = TKManager.Instance.GetTrainingTimer();
+                }
+                    
             }
             
 
