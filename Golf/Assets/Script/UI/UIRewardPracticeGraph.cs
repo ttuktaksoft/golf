@@ -17,8 +17,8 @@ public class UIRewardPracticeGraph : MonoBehaviour
         else
             Title.text = CommonFunc.ConvertPoseTypeStr(data.TrainingPoseType);
 
-        Desc.text = string.Format("{0} / {1}", data.PracticeCount, 100);
+        Desc.text = string.Format("{0} / {1}", data.PracticeCount, CommonData.MAX_PRACTICE_COUNT);
         Today.text = string.Format("Today : {0}", data.TodayPracticeCount);
-        Slide.value = (float)data.PracticeCount / 100;
+        Slide.value = (float)data.PracticeCount / CommonData.MAX_PRACTICE_COUNT;
     }
 }

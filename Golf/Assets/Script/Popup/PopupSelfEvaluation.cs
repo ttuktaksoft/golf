@@ -111,6 +111,8 @@ public class PopupSelfEvaluation : Popup
                 StarCount,
                 Msg.text.ToString())
             );
+
+            DataManager.Instance.AddPracticeData(CommonData.TRAINING_TYPE.TRAINING_POSE, PoseType);
         }
         else
         {
@@ -122,8 +124,12 @@ public class PopupSelfEvaluation : Popup
                 StarCount,
                 Msg.text.ToString())
             );
+
+            DataManager.Instance.AddPracticeData(CommonData.TRAINING_TYPE.TRAINING_TEMPO);
         }
-        
+
+        TKManager.Instance.UpdateGrade();
+
         PopupMgr.Instance.DismissPopup();
 
         if (EndAction != null)

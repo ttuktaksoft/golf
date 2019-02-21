@@ -148,6 +148,14 @@ public class TKManager : MonoBehaviour
         Grade = type;
     }
 
+    public void UpGrade()
+    {
+        if (Grade == CommonData.GRADE_TYPE.PLATINUM)
+            return;
+
+        SetGrade(Grade + 1);
+    }
+
     public string GetGradeStr()
     {
         return CommonFunc.ConvertGradeStr(Grade);
@@ -155,7 +163,28 @@ public class TKManager : MonoBehaviour
 
     public void UpdateGrade()
     {
+        var list = DataManager.Instance.PracticeDataList;
+        bool upgrade = true;
+        for (int i = 0; i < list.Count; i++)
+        {
+            if (list[i].PracticeCount < CommonData.MAX_PRACTICE_COUNT)
+            {
+                upgrade = false;
+                break;
+            }
+        }
 
+        if(upgrade)
+        {
+            UpGrade();
+
+            for (int i = 0; i < list.Count; i++)
+            {
+                list[i].ResetCount();
+            }
+
+            SaveFile();
+        }
     }
 
 
@@ -179,6 +208,7 @@ public class TKManager : MonoBehaviour
         public string PhoneNumber = "";
         public List<EvaluationData> EvaluationDataList = new List<EvaluationData>();
         public string ThumbnailSpritePath = "";
+        public List<PracticeData> PracticeDataList = new List<PracticeData>();
 
         public void Save()
         {
@@ -188,6 +218,7 @@ public class TKManager : MonoBehaviour
             PhoneNumber = TKManager.Instance.PhoneNumber;
             EvaluationDataList = DataManager.Instance.EvaluationDataList;
             ThumbnailSpritePath = TKManager.Instance.ThumbnailSpritePath;
+            PracticeDataList = DataManager.Instance.PracticeDataList;
         }
 
         public void Load()
@@ -214,6 +245,15 @@ public class TKManager : MonoBehaviour
             }
             else
                 TKManager.Instance.ThumbnailSprite = null;
+
+            if(PracticeDataList != null)
+            {
+                DataManager.Instance.PracticeDataList = PracticeDataList;
+                for (int i = 0; i < DataManager.Instance.PracticeDataList.Count; i++)
+                {
+                    DataManager.Instance.PracticeDataList[i].RefreshPracticeCount();
+                }
+            }
         }
     }
 

@@ -72,6 +72,7 @@ public class CommonData : MonoBehaviour
     public static int TRAINING_READY_TIME = 3;
     public static float TEMPO_TRAINING_WAIT_TIME = 7f;
     public static float ANGLE_OFFSET = 30f;
+    public static int MAX_PRACTICE_COUNT = 25;
 
     public static string[] TEMP_ALARM_MSG =
     {
