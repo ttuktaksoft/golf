@@ -41,8 +41,36 @@ public class MainUI : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
-	}
+#if UNITY_EDITOR || UNITY_ANDROID
+        if (PopupMgr.Instance.IsShowPopup(PopupMgr.POPUP_TYPE.MSG) == false && Input.GetKeyUp(KeyCode.Escape))
+        {
+            switch (CurrType)
+            {
+                case MAIN_MENU_TYPE.TRANING:
+                    if(TraningUIPage.MenuAction == false && TraningUIPage.IsQuitApp())
+                    {
+                        PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.MSG, new PopupMsg.PopupData("종료 하시겠습니까?", () =>
+                        {
+                            Application.Quit();
+                        }));
+                    }
+                    break;
+                case MAIN_MENU_TYPE.ALARM:
+                    OnClickTraning();
+                    break;
+                case MAIN_MENU_TYPE.REWARD:
+                    OnClickAlarm();
+                    break;
+                case MAIN_MENU_TYPE.USER_INFO:
+                    OnClickReward();
+                    break;
+                default:
+                    break;
+            }
+            
+        }
+#endif
+    }
 
     public void OnClickTraning()
     {

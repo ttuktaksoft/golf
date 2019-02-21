@@ -87,20 +87,16 @@ public class DataManager : MonoBehaviour
         //        "힘들다!")
         //    );
 
-        GiftconDataList.Add(new GiftconData(1,"스타벅스 아메리카노", ""));
-        GiftconDataList.Add(new GiftconData(2,"스타벅스 아메리카노", ""));
-        GiftconDataList.Add(new GiftconData(3,"스타벅스 아메리카노", ""));
-        GiftconDataList.Add(new GiftconData(4,"스타벅스 아메리카노", ""));
-        GiftconDataList.Add(new GiftconData(5, "스타벅스 아메리카노", ""));
+        //GiftconDataList.Add(new GiftconData(1,"스타벅스 아메리카노", ""));
+        //GiftconDataList.Add(new GiftconData(2,"스타벅스 아메리카노", ""));
+        //GiftconDataList.Add(new GiftconData(3,"스타벅스 아메리카노", ""));
+        //GiftconDataList.Add(new GiftconData(4,"스타벅스 아메리카노", ""));
+        //GiftconDataList.Add(new GiftconData(5, "스타벅스 아메리카노", ""));
 
-        PracticeDataList.Add(new PracticeData(CommonData.TRAINING_TYPE.TRAINING_POSE, CommonData.TRAINING_POSE.TRAINING_ADDRESS, 10));
-        PracticeDataList[0].SetTodayPracticeCount(5);
-        PracticeDataList.Add(new PracticeData(CommonData.TRAINING_TYPE.TRAINING_POSE, CommonData.TRAINING_POSE.TRAINING_BACKSWING, 30));
-        PracticeDataList[1].SetTodayPracticeCount(15);
-        PracticeDataList.Add(new PracticeData(CommonData.TRAINING_TYPE.TRAINING_POSE, CommonData.TRAINING_POSE.TRAINING_IMPACT, 50));
-        PracticeDataList[2].SetTodayPracticeCount(10);
-        PracticeDataList.Add(new PracticeData(CommonData.TRAINING_TYPE.TRAINING_TEMPO, 80));
-        PracticeDataList[3].SetTodayPracticeCount(3);
+        PracticeDataList.Add(new PracticeData(CommonData.TRAINING_TYPE.TRAINING_POSE, CommonData.TRAINING_POSE.TRAINING_ADDRESS, 0));
+        PracticeDataList.Add(new PracticeData(CommonData.TRAINING_TYPE.TRAINING_POSE, CommonData.TRAINING_POSE.TRAINING_BACKSWING, 0));
+        PracticeDataList.Add(new PracticeData(CommonData.TRAINING_TYPE.TRAINING_POSE, CommonData.TRAINING_POSE.TRAINING_IMPACT, 0));
+        PracticeDataList.Add(new PracticeData(CommonData.TRAINING_TYPE.TRAINING_TEMPO, 0));
 
         TutorialDataList.Add(new TutorialData("PGA 프로의 연습 방법", "https://blog.naver.com/golfmanager/221401601938"));
         TutorialDataList.Add(new TutorialData("드라이버 장타를 위한 연습", "https://blog.naver.com/golfmanager/221338934464"));
@@ -122,5 +118,26 @@ public class DataManager : MonoBehaviour
     {
         EvaluationDataList.Insert(0, data);
         TKManager.Instance.SaveFile();
+    }
+
+    public void AddPracticeData(CommonData.TRAINING_TYPE trainingType, CommonData.TRAINING_POSE poseType = CommonData.TRAINING_POSE.TRAINING_ADDRESS)
+    {
+        for (int i = 0; i < PracticeDataList.Count; i++)
+        {
+            if(PracticeDataList[i].TrainingType == CommonData.TRAINING_TYPE.TRAINING_TEMPO &&
+                trainingType == CommonData.TRAINING_TYPE.TRAINING_TEMPO)
+            {
+                PracticeDataList[i].PracticeCount++;
+                PracticeDataList[i].TodayPracticeCount++;
+                break;
+            }
+            else if(PracticeDataList[i].TrainingType == trainingType &&
+                PracticeDataList[i].TrainingPoseType == poseType)
+            {
+                PracticeDataList[i].PracticeCount++;
+                PracticeDataList[i].TodayPracticeCount++;
+                break;
+            }
+        }
     }
 }

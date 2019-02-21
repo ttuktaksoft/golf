@@ -155,7 +155,7 @@ public class MainTraningUI : MonoBehaviour {
             }
             else if (TrainingSetStep == TRAINING_SET_STEP.ANGLE)
             {
-                CenterButton.Init("트레이닝\n시작", "", CommonFunc.HexToColor(HexagonCenterColor, 0.5f), OnClickTraningStart);
+                CenterButton.Init("트레이닝\n시작", "", CommonFunc.HexToColor(HexagonCenterColor, 0f), OnClickTraningStart);
 
                 TrainingModeLevel.Clear();
                 TrainingModeLevelBtnIndex.Clear();
@@ -202,7 +202,7 @@ public class MainTraningUI : MonoBehaviour {
         else
         {
             TraningTypeText.text = "사운드 트레이닝";
-            CenterButton.Init("트레이닝\n시작", "", CommonFunc.HexToColor(HexagonCenterColor, 0.5f), OnClickTraningStart);
+            CenterButton.Init("트레이닝\n시작", "", CommonFunc.HexToColor(HexagonCenterColor, 0f), OnClickTraningStart);
 
             TempoTrainingModeLevelBtnIndex.Clear();
 
@@ -534,5 +534,25 @@ public class MainTraningUI : MonoBehaviour {
             TKManager.Instance.SetTrainingType(CommonData.TRAINING_TYPE.TRAINING_TEMPO);
             SceneManager.LoadScene("PracticeScene", LoadSceneMode.Single);
         }
+    }
+
+    public bool IsQuitApp()
+    {
+        if (TrainingType == CommonData.TRAINING_TYPE.TRAINING_POSE && 
+            TrainingSetStep == TRAINING_SET_STEP.MAIN)
+            return true;
+
+        return false;
+    }
+
+    void Update()
+    {
+#if UNITY_EDITOR || UNITY_ANDROID
+        if (PopupMgr.Instance.IsShowPopup(PopupMgr.POPUP_TYPE.MSG) == false && Input.GetKeyUp(KeyCode.Escape))
+        {
+            if(MenuAction == false && IsQuitApp() == false)
+                OnClickBack();
+        }
+#endif
     }
 }
