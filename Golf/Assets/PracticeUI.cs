@@ -405,6 +405,13 @@ public class PracticeUI : MonoBehaviour
             Timer.value = TrainingTime / TKManager.Instance.GetTrainingTimer();
         else if (TKManager.Instance.GetTrainingType() == CommonData.TRAINING_TYPE.TRAINING_TEMPO)
             Timer.value = TrainingTime / CommonData.TEMPO_TRAINING_WAIT_TIME;
+
+#if UNITY_EDITOR || UNITY_ANDROID
+        if (PopupMgr.Instance.IsShowPopup(PopupMgr.POPUP_TYPE.MSG) == false && Input.GetKeyUp(KeyCode.Escape))
+        {
+            OnClickBack();
+        }
+#endif
     }
 
     public void UpdateGyroStatus()

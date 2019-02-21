@@ -23,7 +23,7 @@ public class UITrainingAngle : MonoBehaviour
         float successPower = (successMax - successMin) / value;
         SuccessBg.fillAmount = successPower;
 
-        SuccessBg.gameObject.transform.localRotation = Quaternion.Euler(SuccessBg.gameObject.transform.localRotation.x, SuccessBg.gameObject.transform.localRotation.y, (successPower * 100) * 1.8f);
+        SuccessBg.gameObject.transform.localRotation = Quaternion.Euler(SuccessBg.gameObject.transform.localRotation.x, SuccessBg.gameObject.transform.localRotation.y, -90 + (successPower * 100) * 0.9f);
         SetAngle(value / 2);
     }
 
@@ -35,10 +35,10 @@ public class UITrainingAngle : MonoBehaviour
             angle = MaxValue;
 
         float value_1 = MaxValue - MinValue;
-        float value_2 = (angle - MinValue) * (360 / value_1);
+        float value_2 = (angle - MinValue) * (180 / value_1);
         Angle.text = string.Format("{0}", (int)angle);
 
        // Circle.transform.localRotation = Quaternion.Euler(Circle.transform.localRotation.x, Circle.transform.localRotation.y, angle * 3.6f);
-        Circle.transform.localRotation = Quaternion.Euler(Circle.transform.localRotation.x, Circle.transform.localRotation.y, 360 - (int)value_2);
+        Circle.transform.localRotation = Quaternion.Euler(Circle.transform.localRotation.x, Circle.transform.localRotation.y,-value_2);
     }
 }

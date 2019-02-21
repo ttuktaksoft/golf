@@ -153,6 +153,10 @@ public class TKManager : MonoBehaviour
         return CommonFunc.ConvertGradeStr(Grade);
     }
 
+    public void UpdateGrade()
+    {
+
+    }
 
 
 

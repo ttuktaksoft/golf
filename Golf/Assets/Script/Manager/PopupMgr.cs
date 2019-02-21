@@ -88,4 +88,10 @@ public class PopupMgr : MonoBehaviour
             popup.GetComponent<Canvas>().sortingOrder = 100 + i;
         }
     }
+
+    public bool IsShowPopup(POPUP_TYPE type)
+    {
+        return CurrentPopup == type;
+    }
+
 }
