@@ -182,9 +182,9 @@ public class GyroScopeManager : MonoBehaviour
             float AngleY = Model.transform.rotation.eulerAngles.y;
             float AngleZ = Model.transform.rotation.eulerAngles.z;
 
-            Debug.Log("!@@@@@ Address x" + AngleX);
-            Debug.Log("!@@@@@ Address y" + AngleY);
-            Debug.Log("!@@@@@ Address z" + AngleZ);
+        //    Debug.Log("!@@@@@ Address x" + AngleX);
+       //     Debug.Log("!@@@@@ Address y" + AngleY);
+       //     Debug.Log("!@@@@@ Address z" + AngleZ);
 
 
 #else

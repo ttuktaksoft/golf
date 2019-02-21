@@ -51,6 +51,7 @@ public class PracticeUI : MonoBehaviour
 
     private float ArrowDegreePerSecond = 100.0f;
     private float ArrowSpeed;
+    private float SideArrowSpeed;
 
     private PRACTICE_ORDER PracticeOrderType = PRACTICE_ORDER.READY;
     private int[] RefData = { };
@@ -371,6 +372,7 @@ public class PracticeUI : MonoBehaviour
         {
             GyroStatus = PracticeManager.Instance.GetGyroStatus();
             ArrowSpeed = ArrowDegreePerSecond * Time.deltaTime;
+            SideArrowSpeed = ArrowDegreePerSecond * Time.deltaTime;
 
             UpdateGyroStatus();
         }
@@ -488,7 +490,12 @@ public class PracticeUI : MonoBehaviour
                 {
                     Model_SideLeft.SetActive(true);
                     Model_SideRight.SetActive(false);
-                    Model_SideLeft.transform.Rotate(0, 0, ArrowSpeed);
+
+                    if (Model_SideLeft.transform.rotation.z > 0.1)
+                        Model_SideLeft.transform.rotation = new Quaternion(0, 0, -2, 1);
+                    else
+                        Model_SideLeft.transform.Rotate(0, 0, ArrowSpeed);
+
                     TrainingSuccess_Side = false;
                 }
 
@@ -497,7 +504,14 @@ public class PracticeUI : MonoBehaviour
                     Model_SideRight.SetActive(true);
                     Model_SideLeft.SetActive(false);
 
-                    Model_SideRight.transform.Rotate(0, 0, -1 * ArrowSpeed);
+                    if (Model_SideRight.transform.rotation.z < -0.1)
+                        Model_SideRight.transform.rotation = new Quaternion(0, 0, 2, 1);
+                    else
+                        Model_SideRight.transform.Rotate(0, 0, -1 * ArrowSpeed);
+
+
+   
+
                     TrainingSuccess_Side = false;
                 }
 
