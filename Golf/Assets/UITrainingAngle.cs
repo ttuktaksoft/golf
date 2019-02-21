@@ -36,9 +36,11 @@ public class UITrainingAngle : MonoBehaviour
 
         float value_1 = MaxValue - MinValue;
         float value_2 = (angle - MinValue) * (180 / value_1);
-        Angle.text = string.Format("{0}", (int)angle);
+        // TODO 테스트용
+        Angle.text = string.Format("{0} ({1} ~ {2})", (int)angle, MinValue + CommonData.ANGLE_OFFSET, MaxValue - CommonData.ANGLE_OFFSET);
+        //Angle.text = string.Format("{0}", (int)angle);
 
-       // Circle.transform.localRotation = Quaternion.Euler(Circle.transform.localRotation.x, Circle.transform.localRotation.y, angle * 3.6f);
+        // Circle.transform.localRotation = Quaternion.Euler(Circle.transform.localRotation.x, Circle.transform.localRotation.y, angle * 3.6f);
         Circle.transform.localRotation = Quaternion.Euler(Circle.transform.localRotation.x, Circle.transform.localRotation.y,-value_2);
     }
 }

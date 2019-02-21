@@ -25,6 +25,7 @@ public class PopupMgr : MonoBehaviour
     public enum POPUP_TYPE
     {
         NONE,
+        TEST,
         MSG,
         GIFT_CON,
         TUTORIAL,

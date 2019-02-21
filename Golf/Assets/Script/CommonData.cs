@@ -7,13 +7,13 @@ public class CommonData : MonoBehaviour
     // TURN, BEND, SIDE 순
     // ADDRESS, BACKSWING, IMPACT 순
     public static int[] REF_MAN = {
-        7,  17, 35, 45,  11, 18,
+        3,  8, 35, 45,  11, 18,
       -86, -74,  2, 15, -45, -39,
        26,  34, 29, 42,  24,  33
     };
 
     public static int[] REF_WOMAN = {
-        7,  10, 36, 47,  9, 12,
+        3,  5, 36, 47,  9, 12,
       -96, -83, -2, 13, -46, -40,
        25,  39, 27, 45,  21,  31
     };
