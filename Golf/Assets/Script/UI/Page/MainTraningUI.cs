@@ -161,6 +161,7 @@ public class MainTraningUI : MonoBehaviour {
                 TrainingModeLevelBtnIndex.Clear();
 
                 AngleSelectInfoText.gameObject.SetActive(true);
+                TKManager.Instance.MirrorMode = false;
 
                 for (int i = 0; i < HexagonMenu.Count; i++)
                 {
@@ -193,7 +194,7 @@ public class MainTraningUI : MonoBehaviour {
                         TrainingTimeBtnIndex = i;
                     }
                     else if (i == 5)
-                        HexagonMenu[i].Init("튜토리얼\n영상", "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickTutorial);
+                        HexagonMenu[i].Init("미러 모드", "", CommonFunc.HexToColor(HexagonMenuColor[i], 0.5f), OnClickMirrorMode);
                 }
 
                 ChangeTraningPosLevel();
@@ -340,6 +341,18 @@ public class MainTraningUI : MonoBehaviour {
         if (MenuAction)
             return;
         PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.TUTORIAL, new PopupTutorial.PopupData());
+    }
+
+    public void OnClickMirrorMode()
+    {
+        if (MenuAction)
+            return;
+        TKManager.Instance.MirrorMode = !TKManager.Instance.MirrorMode;
+
+        if(TKManager.Instance.MirrorMode)
+            HexagonMenu[5].SetButtonColor(CommonFunc.HexToColor(HexagonMenuColor[5], 1f));
+        else
+            HexagonMenu[5].SetButtonColor(CommonFunc.HexToColor(HexagonMenuColor[5], 0.5f));
     }
 
     public void OnClickImpact()

@@ -31,7 +31,7 @@ public class TKManager : MonoBehaviour
     public int TempoTrainingLevel = 3;
     public Sprite ThumbnailSprite = null;
     public string ThumbnailSpritePath = "";
-
+    public bool MirrorMode = false;
 
     private SaveData MySaveData = new SaveData();
     public bool MyLoadData = false;
