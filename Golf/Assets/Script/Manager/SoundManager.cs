@@ -21,7 +21,7 @@ public class SoundManager : MonoBehaviour
 
     }
 
-    public AudioClip[] mFxSound = new AudioClip[7];
+    public AudioClip[] mFxSound = new AudioClip[10];
     private AudioSource mFxAudio;
 
     // Use this for initialization
@@ -51,33 +51,4 @@ public class SoundManager : MonoBehaviour
         return mFxAudio.isPlaying;
     }
 
-
-    public void PlaySuccessSound()
-    {
-        StartCoroutine(Co_Success());
-    }
-
-    IEnumerator Co_Success()
-    {
-        SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_SUCCESS);
-        yield return new WaitForSeconds(1.5f);
-
-        SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_START);
-        yield return new WaitForSeconds(1f);
-
-        SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_START);
-        yield return new WaitForSeconds(1f);
-
-        SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_START);
-        yield return new WaitForSeconds(1f);
-
-        SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_START);
-        yield return new WaitForSeconds(1f);
-
-        SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_SUCCESS);
-        yield return new WaitForSeconds(2f);
-
-        yield return null;
-
-    }
 }

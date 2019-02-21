@@ -49,10 +49,13 @@ public class CommonData : MonoBehaviour
 
     public enum SOUND_TYPE
     {
-        BUTTON,
+        TRAINING_ENTER,
         TRAINING_START,
-        TRAINING_SUCCESS_START,
-        TRAINING_SUCCESS,
+        TRAINING_RETURN,
+        TRAINING_SUCCESS_5SEC,
+        TRAINING_SUCCESS_10SEC,
+        TRAINING_SUCCESS_15SEC,
+        TRAINING_SUCCESS_20SEC,
         TRAINING_TEMPO_BEGINER,
         TRAINING_TEMPO_AMA,
         TRAINING_TEMPO_PRO
