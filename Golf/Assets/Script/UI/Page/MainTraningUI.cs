@@ -62,9 +62,6 @@ public class MainTraningUI : MonoBehaviour {
 
     public bool MenuAction = false;
 
-    public Button MAN_TEST;
-    public Button WOMAN_TEST;
-
     private void Awake()
     {
         HexagonMenuColor.Clear();
@@ -82,16 +79,6 @@ public class MainTraningUI : MonoBehaviour {
         HexagonMenuPos.Add(new Vector3(350, 0, 0));
         HexagonMenuPos.Add(new Vector3(175, -300, 0));
         HexagonMenuPos.Add(new Vector3(-175, -300, 0));
-
-        MAN_TEST.onClick.AddListener(() =>
-        {
-            PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.TEST, new PopupTest.PopupData(true));
-        });
-
-        WOMAN_TEST.onClick.AddListener(() =>
-        {
-            PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.TEST, new PopupTest.PopupData(false));
-        });
     }
 
     public void Start()
