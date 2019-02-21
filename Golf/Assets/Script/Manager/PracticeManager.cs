@@ -20,7 +20,7 @@ public class PracticeManager : MonoBehaviour
 
     private bool isModelActive = false;
 
-    float[] UserStatus = new float[3];
+    int[] UserStatus = { 0, 0, 0 };
 
     float InitUserStatus_x;
     float InitUserStatus_y;
@@ -49,25 +49,26 @@ public class PracticeManager : MonoBehaviour
 
     public void SetGyroStatus(float yaw, float pitch, float roll)
     {
+     
         // yaw :  turn
         //UserStatus[0] = -1.0f * (Mathf.Rad2Deg * yaw);// - InitUserStatus_x;
-        UserStatus[0] = Mathf.Rad2Deg * yaw;// - InitUserStatus_x;
+        UserStatus[0] = (int)(Mathf.Rad2Deg * yaw);// - InitUserStatus_x;
 
         // pitch :band
-        UserStatus[1] = -1.0f * (Mathf.Rad2Deg * pitch);// - InitUserStatus_y;
+        UserStatus[1] = (int)(-1.0f * (Mathf.Rad2Deg * pitch));// - InitUserStatus_y;
 
         //roll : side
-        UserStatus[2] = -1.0f * (Mathf.Rad2Deg * roll);// - InitUserStatus_z;
-
-       
-       // Debug.Log("!@@@@@ UserStatus_x :" + UserStatus[0]);
-     //   Debug.Log("!@@@@@ UserStatus_y :" + UserStatus[1]);
-      //  Debug.Log("!@@@@@ UserStatus_z :" + UserStatus[2]);
+        UserStatus[2] = (int)(-1.0f * (Mathf.Rad2Deg * roll));// - InitUserStatus_z;
         
+
+        // Debug.Log("!@@@@@ UserStatus_x :" + UserStatus[0]);
+        //   Debug.Log("!@@@@@ UserStatus_y :" + UserStatus[1]);
+        //  Debug.Log("!@@@@@ UserStatus_z :" + UserStatus[2]);
+
 
     }
 
-    public float[] GetGyroStatus()
+    public int[] GetGyroStatus()
     {
         return UserStatus;
     }

@@ -338,6 +338,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   EvaluationDataList: []
+  PracticeDataList: []
 --- !u!4 &895690070
 Transform:
   m_ObjectHideFlags: 0
@@ -813,6 +814,16 @@ MonoBehaviour:
   - {fileID: 8300000, guid: b8f2f7f620f8e0a4dbf3533f14c66ecc, type: 3}
   - {fileID: 8300000, guid: e87f1a6117f8ead45afc115bf2e96df7, type: 3}
   - {fileID: 8300000, guid: 97ab7b85d3d09d346905462b8368d7cf, type: 3}
+  - {fileID: 8300000, guid: 1c2e9a89072dc7a4b81b3ed8611245f7, type: 3}
+  - {fileID: 8300000, guid: b5f94d4bcad7d6f4b94d998e5bb2b7d9, type: 3}
+  - {fileID: 8300000, guid: 8f6299d17e77eea4980a93e411726559, type: 3}
+  - {fileID: 8300000, guid: 489f8ea122816bd48b6defd200c38f26, type: 3}
+  - {fileID: 8300000, guid: a1ff7af9ddff03845a097527e3741941, type: 3}
+  - {fileID: 8300000, guid: 346c175c3e1529742a21d784780d61be, type: 3}
+  - {fileID: 8300000, guid: 08f5afd40c814e54692177ecc5cac387, type: 3}
+  - {fileID: 8300000, guid: a63e1f731c22f624893ca5f509548b0f, type: 3}
+  - {fileID: 8300000, guid: 87827b78c6931c64bbd972ac3e270dde, type: 3}
+  - {fileID: 8300000, guid: 0d9cf0ce50db08e4ebca6df477d8bb24, type: 3}
 --- !u!82 &2112856915
 AudioSource:
   m_ObjectHideFlags: 0

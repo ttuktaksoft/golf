@@ -4,18 +4,18 @@ using UnityEngine;
 
 public class CommonData : MonoBehaviour
 {
-    // TURN, BEND, SIDE 순
+    // ROTATE, BEND, SIDE 순
     // ADDRESS, BACKSWING, IMPACT 순
     public static int[] REF_MAN = {
-        3,  8, 35, 45,  11, 18,
-      -86, -74,  2, 15, -45, -39,
-       26,  34, 29, 42,  24,  33
+        -2,  6, 35, 45,  -1, 5,             // 어드레스
+      -46, -30,  2, 15, -13, -4,           // 백스윙
+       35,  50, 29, 42,  10,  17            // 임팩트
     };
 
     public static int[] REF_WOMAN = {
-        3,  5, 36, 47,  9, 12,
-      -96, -83, -2, 13, -46, -40,
-       25,  39, 27, 45,  21,  31
+        -1,  6, 36, 47,  -2, 3,
+      -44, -25, -2, 13, -13, -5,
+       43,  61, 27, 45,  5,  12
     };
 
     public static float[] LEVEL_COVER = {
@@ -52,13 +52,28 @@ public class CommonData : MonoBehaviour
         TRAINING_ENTER,
         TRAINING_START,
         TRAINING_RETURN,
+
         TRAINING_SUCCESS_5SEC,
         TRAINING_SUCCESS_10SEC,
         TRAINING_SUCCESS_15SEC,
         TRAINING_SUCCESS_20SEC,
+
         TRAINING_TEMPO_BEGINER,
         TRAINING_TEMPO_AMA,
-        TRAINING_TEMPO_PRO
+        TRAINING_TEMPO_PRO,   
+
+        TRAINING_ROTATION_LEFT,
+        TRAINING_ROTATION_RIGHT,
+        TRAINING_BEND_UP,
+        TRAINING_BEND_DOWN,
+        TRAINING_SIDE_RIGHT,
+        TRAINING_SIDE_LEFT,
+
+        TRAINING_COUNT,
+
+        TRAINING_ROTATION_OK,
+        TRAINING_BEND_OK,
+        TRAINING_SIDE_OK
     }
 
     public enum GRADE_TYPE
@@ -72,7 +87,7 @@ public class CommonData : MonoBehaviour
     public static int ANGLE_MAX_LEVEL = 4;
 
     public static int[] TRAINING_TIME = { 5, 10, 15, 20 };
-    public static int TRAINING_READY_TIME = 3;
+    public static int TRAINING_READY_TIME = 2;
     public static float TEMPO_TRAINING_WAIT_TIME = 7f;
     public static float ANGLE_OFFSET = 30f;
     public static int MAX_PRACTICE_COUNT = 25;

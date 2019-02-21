@@ -4,9 +4,6 @@ using UnityEngine;
 
 public class SoundManager : MonoBehaviour
 {
-
-
-
     public static SoundManager _instance = null;
     public static SoundManager Instance
     {
@@ -21,7 +18,7 @@ public class SoundManager : MonoBehaviour
 
     }
 
-    public AudioClip[] mFxSound = new AudioClip[10];
+    public AudioClip[] mFxSound = new AudioClip[20];
     private AudioSource mFxAudio;
 
     // Use this for initialization
@@ -37,13 +34,23 @@ public class SoundManager : MonoBehaviour
 
     }
 
-    public void PlayFXSound(CommonData.SOUND_TYPE type)
+    public bool PlayFXSound(CommonData.SOUND_TYPE type, bool force = false)
     {
-        mFxAudio.clip = mFxSound[(int)type];
-        if(mFxAudio.isPlaying == false)
+
+        if(mFxAudio.clip == null)
+            mFxAudio.clip = mFxSound[(int)type];
+
+        if (force || mFxAudio.isPlaying == false)
         {
+            mFxAudio.clip = mFxSound[(int)type];
             mFxAudio.Play();
-        }        
+        }
+        else
+        {
+            int a = 0;
+        }
+
+        return true;
     }
 
     public bool IsFxAudioPlay()

@@ -60,7 +60,14 @@ public class PracticeUI : MonoBehaviour
     private bool TrainingSuccess_Bend = false;
     private bool TrainingSuccess_Side = false;
 
-    private float[] GyroStatus = new float[3];
+    private int[] GyroStatus = new int[3];
+
+    bool bVoiceGuide_Bend = false;
+    bool bVoiceGuide_Rotation = false;
+    bool bVoiceGuide_Side = false;
+    bool bendPlaying = true;
+    bool rotationPlaying = true;
+    bool sidebendPlaying = true;
 
     private void Awake()
     {
@@ -233,6 +240,7 @@ public class PracticeUI : MonoBehaviour
 
   
         GyroScopeManager.Instance.TrainingReadyEnd();
+        yield return null;
         PracticeOrderType = PRACTICE_ORDER.START;
         TrainingStart();
     }
@@ -246,7 +254,15 @@ public class PracticeUI : MonoBehaviour
 
     IEnumerator Co_TrainingReady()
     {
-        ReadyUI.gameObject.SetActive(true);   
+        ReadyUI.gameObject.SetActive(true);
+        ReadyCount.text = "";
+
+        while (SoundManager.Instance.IsFxAudioPlay())
+        {
+            yield return null;
+        }
+
+        SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_START);
         int readyTime = CommonData.TRAINING_READY_TIME;
         while (true)
         {
@@ -257,7 +273,7 @@ public class PracticeUI : MonoBehaviour
             if (readyTime <= 0)
                 break;
         }
-        SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_START);
+        
         ReadyUI.gameObject.SetActive(false);
     }
 
@@ -273,7 +289,7 @@ public class PracticeUI : MonoBehaviour
     {
         TrainingTime = TKManager.Instance.GetTrainingTimer();
         float soundTime = 1f;
-        float waitTime = CommonData.TRAINING_READY_TIME;
+        float waitTime = 0;
         bool bSuccessEnter = true;
 
         while (true)
@@ -286,8 +302,18 @@ public class PracticeUI : MonoBehaviour
             {
                 if (TrainingSuccess)
                 {
+                    while (SoundManager.Instance.IsFxAudioPlay())
+                    {
+                        yield return null;
+                    }
 
-                    if(bSuccessEnter)
+                    if (TrainingSuccess == false)
+                    {
+                        bSuccessEnter = true;
+                        continue;
+                    }
+
+                    if (bSuccessEnter)
                     {
                         if (TKManager.Instance.GetTrainingTimer() == 5)
                         {
@@ -307,13 +333,24 @@ public class PracticeUI : MonoBehaviour
                         }
                         bSuccessEnter = false;
                     }
-                 
+
+                    while (SoundManager.Instance.IsFxAudioPlay())
+                    {
+                        yield return null;
+                    }
+
+                    if (TrainingSuccess == false)
+                    {
+                        bSuccessEnter = true;
+                        continue;
+                    }
+                        
 
                     TrainingTime -= Time.deltaTime;
                     soundTime -= Time.deltaTime;
                     if (soundTime < 0)
                     {
-                       // SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_SUCCESS_START);
+                        SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_COUNT);
                         soundTime = 1f;
                     }
 
@@ -322,7 +359,7 @@ public class PracticeUI : MonoBehaviour
                     {
                         TrainingSuccessCount++;
                         TrainingTime = TKManager.Instance.GetTrainingTimer();
-                        SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_RETURN);
+                        SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_RETURN, true);
                         TrainingCount.text = string.Format("{0}회", TrainingSuccessCount);
                         bSuccessEnter = true;
 
@@ -421,6 +458,9 @@ public class PracticeUI : MonoBehaviour
     public void UpdateGyroStatus()
     {
         int nTrainMode = Convert.ToInt32(TKManager.Instance.GetPoseType());
+        bool bendUpNeed = false;
+        bool rotationRightNeed = false;
+        bool sidebendRightNeed = false;
 
         if (TKManager.Instance.IsAngleType(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_TURN))
         {
@@ -430,26 +470,70 @@ public class PracticeUI : MonoBehaviour
                 float LevelCover = CommonData.LEVEL_COVER[angleLevel];
 
                 if (RefData[nTrainMode] - LevelCover <= GyroStatus[2] && GyroStatus[2] <= RefData[nTrainMode + 1] + LevelCover)
-                {
+                {                  
+
                     Model_RotateLeft.SetActive(false);
                     Model_RotateRight.SetActive(false);
+
+                    if (TrainingSuccess_Rotate == false)
+                        bVoiceGuide_Rotation = false;
 
                     TrainingSuccess_Rotate = true;
                 }
                 else if (GyroStatus[2] < RefData[nTrainMode] - LevelCover)
                 {
-                    Model_RotateLeft.SetActive(true);
-                    Model_RotateRight.SetActive(false);
-                    Model_RotateLeft.transform.Rotate(0, 0, ArrowSpeed);
+
+                    if(TKManager.Instance.MirrorMode)
+                    {
+                        Model_RotateRight.SetActive(true);
+                        Model_RotateLeft.SetActive(false);
+                        Model_RotateRight.transform.Rotate(0, 0, -1 * ArrowSpeed);
+
+                        rotationRightNeed = true;
+                    }
+                    else
+                    {
+                        Model_RotateLeft.SetActive(true);
+                        Model_RotateRight.SetActive(false);             
+                        Model_RotateLeft.transform.Rotate(0, 0, ArrowSpeed);
+
+                        rotationRightNeed = false;
+                    }
+
+
+                    rotationPlaying = true;
+
+                    if (TrainingSuccess_Rotate)
+                        bVoiceGuide_Rotation = false;
+
                     TrainingSuccess_Rotate = false;
                 }
 
                 else if (RefData[nTrainMode] - LevelCover < GyroStatus[2])
                 {
-                    Model_RotateRight.SetActive(true);
-                    Model_RotateLeft.SetActive(false);
 
-                    Model_RotateRight.transform.Rotate(0, 0, -1 * ArrowSpeed);
+                    if (TKManager.Instance.MirrorMode)
+                    {
+                        Model_RotateLeft.SetActive(true);
+                        Model_RotateRight.SetActive(false);
+                        Model_RotateLeft.transform.Rotate(0, 0, ArrowSpeed);
+
+                        rotationRightNeed = false;
+                    }
+                    else
+                    {              
+                        Model_RotateRight.SetActive(true);
+                        Model_RotateLeft.SetActive(false);
+                        Model_RotateRight.transform.Rotate(0, 0, -1 * ArrowSpeed);
+
+                        rotationRightNeed = true;
+                    }
+               
+                    rotationPlaying = true;
+
+                    if (TrainingSuccess_Rotate)
+                        bVoiceGuide_Rotation = false;
+
                     TrainingSuccess_Rotate = false;     
                 }
 
@@ -476,12 +560,21 @@ public class PracticeUI : MonoBehaviour
                     Model_BendDown.SetActive(false);
                     Model_BendUp.SetActive(false);
 
+                    if (TrainingSuccess_Bend == false)
+                        bVoiceGuide_Bend = false;
+
+
                     TrainingSuccess_Bend = true;
                 }
                 else if (GyroStatus[1] < RefData[nTrainMode + 2] - LevelCover)
                 {
                     Model_BendDown.SetActive(true);
                     Model_BendUp.SetActive(false);
+                    bendUpNeed = false;
+                    bendPlaying = true;
+
+                    if (TrainingSuccess_Bend)
+                        bVoiceGuide_Bend = false;
 
                     Model_BendDown.transform.Rotate(ArrowSpeed, 0, 0);
                     TrainingSuccess_Bend = false;
@@ -491,6 +584,12 @@ public class PracticeUI : MonoBehaviour
                 {
                     Model_BendUp.SetActive(true);
                     Model_BendDown.SetActive(false);
+                    bendUpNeed = true;
+                    bendPlaying = true;
+
+                    if (TrainingSuccess_Bend)
+                        bVoiceGuide_Bend = false;
+
                     Model_BendUp.transform.Rotate(ArrowSpeed, 0, 0);
                     TrainingSuccess_Bend = false;
                 }
@@ -519,33 +618,83 @@ public class PracticeUI : MonoBehaviour
 
                     Model_SideLeft.SetActive(false);
                     Model_SideRight.SetActive(false);
+
+                    if (TrainingSuccess_Side == false)
+                        bVoiceGuide_Side = false;                    
+
                     TrainingSuccess_Side = true;
+
                 }
                 else if (GyroStatus[0] < RefData[nTrainMode + 4] - LevelCover)
                 {
-                    Model_SideLeft.SetActive(true);
-                    Model_SideRight.SetActive(false);
 
-                    if (Model_SideLeft.transform.rotation.z > 0.1)
-                        Model_SideLeft.transform.rotation = new Quaternion(0, 0, -2, 1);
+                    if(TKManager.Instance.MirrorMode)
+                    {
+                        Model_SideRight.SetActive(true);
+                        Model_SideLeft.SetActive(false);                        
+
+                        if (Model_SideRight.transform.rotation.z < -0.1)
+                            Model_SideRight.transform.rotation = new Quaternion(0, 0, 2, 1);
+                        else
+                            Model_SideRight.transform.Rotate(0, 0, -1 * ArrowSpeed);
+
+                        sidebendRightNeed = true;
+                    }
                     else
-                        Model_SideLeft.transform.Rotate(0, 0, ArrowSpeed);
+                    {
+                        Model_SideLeft.SetActive(true);
+                        Model_SideRight.SetActive(false);
+
+                        if (Model_SideLeft.transform.rotation.z > 0.1)
+                            Model_SideLeft.transform.rotation = new Quaternion(0, 0, -2, 1);
+                        else
+                            Model_SideLeft.transform.Rotate(0, 0, ArrowSpeed);
+
+                        sidebendRightNeed = false;
+                    }               
+
+                    sidebendPlaying = true;           
+
+                    if (TrainingSuccess_Side)
+                        bVoiceGuide_Side = false;
 
                     TrainingSuccess_Side = false;
                 }
 
                 else if (RefData[nTrainMode + 5] - LevelCover < GyroStatus[0])
                 {
-                    Model_SideRight.SetActive(true);
-                    Model_SideLeft.SetActive(false);
 
-                    if (Model_SideRight.transform.rotation.z < -0.1)
-                        Model_SideRight.transform.rotation = new Quaternion(0, 0, 2, 1);
+
+                    if (TKManager.Instance.MirrorMode)
+                    {
+                        Model_SideLeft.SetActive(true);
+                        Model_SideRight.SetActive(false);
+
+                        if (Model_SideLeft.transform.rotation.z > 0.1)
+                            Model_SideLeft.transform.rotation = new Quaternion(0, 0, -2, 1);
+                        else
+                            Model_SideLeft.transform.Rotate(0, 0, ArrowSpeed);
+
+                        sidebendRightNeed = false;
+                    }
                     else
-                        Model_SideRight.transform.Rotate(0, 0, -1 * ArrowSpeed);
+                    {
+                        Model_SideRight.SetActive(true);
+                        Model_SideLeft.SetActive(false);
+                        
+                        if (Model_SideRight.transform.rotation.z < -0.1)
+                            Model_SideRight.transform.rotation = new Quaternion(0, 0, 2, 1);
+                        else
+                            Model_SideRight.transform.Rotate(0, 0, -1 * ArrowSpeed);
 
+                        sidebendRightNeed = true;
 
-   
+                    }      
+
+                    sidebendPlaying = true;
+
+                    if (TrainingSuccess_Side)
+                        bVoiceGuide_Side = false;
 
                     TrainingSuccess_Side = false;
                 }
@@ -557,6 +706,78 @@ public class PracticeUI : MonoBehaviour
                 TrainingSuccess_Side = true;
                 Model_SideLeft.SetActive(false);
                 Model_SideRight.SetActive(false);
+            }
+        }
+
+        if (bendPlaying)
+        {
+            if (bVoiceGuide_Bend == false && TrainingSuccess_Bend == false)
+            {
+                if (SoundManager.Instance.IsFxAudioPlay() == false)
+                    bVoiceGuide_Bend = true;
+
+                if (bendUpNeed)
+                    SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_BEND_UP);
+                else
+                    SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_BEND_DOWN);
+            }
+            else if (bVoiceGuide_Bend == false && TrainingSuccess_Bend)
+            {
+                if (SoundManager.Instance.IsFxAudioPlay() == false)
+                {
+                    bVoiceGuide_Bend = true;
+                    bendPlaying = false;
+                }
+
+                SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_BEND_OK);
+                
+            }
+        }
+        else if (rotationPlaying)
+        {
+            if (bVoiceGuide_Rotation == false && TrainingSuccess_Rotate == false)
+            {
+                if (SoundManager.Instance.IsFxAudioPlay() == false)
+                    bVoiceGuide_Rotation = true;
+
+                if (rotationRightNeed)
+                    SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_ROTATION_RIGHT);
+                else
+                    SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_ROTATION_LEFT);
+            }
+            else if (bVoiceGuide_Rotation == false && TrainingSuccess_Rotate)
+            {
+                if (SoundManager.Instance.IsFxAudioPlay() == false)
+                {
+                    bVoiceGuide_Rotation = true;
+                    rotationPlaying = false;
+                }
+
+                SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_ROTATION_OK);
+            }
+        }
+        else if (sidebendPlaying)
+        {
+            if (bVoiceGuide_Side == false && TrainingSuccess_Side == false)
+            {
+                if (SoundManager.Instance.IsFxAudioPlay() == false)
+                    bVoiceGuide_Side = true;
+
+                if (sidebendRightNeed)
+                    SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_SIDE_LEFT);
+                else
+                    SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_SIDE_RIGHT);
+            }
+            else if (bVoiceGuide_Side == false && TrainingSuccess_Side)
+            {
+                if (SoundManager.Instance.IsFxAudioPlay() == false)
+                {
+                    bVoiceGuide_Side = true;
+                    sidebendPlaying = true;
+                }
+                    
+
+                SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_SIDE_OK);
             }
         }
 
