@@ -16,6 +16,12 @@ public class PopupUserSetting : Popup
     public Button OK;
     public Button Cancel;
 
+    public GameObject TermsObj;
+    public Button TermsEnableButton;
+    public GameObject TermsCheckObj;
+    public Button TermsViewButton;
+
+    private bool TermsEnable = false;
     private Action OkAction = null;
     private CommonData.GENDER Gender = CommonData.GENDER.GENDER_MAN;
 
@@ -47,11 +53,13 @@ public class PopupUserSetting : Popup
         {
             Title.text = "회원가입";
             Cancel.gameObject.SetActive(false);
+            TermsObj.gameObject.SetActive(true);
         }
         else
         {
             Title.text = "정보변경";
             Cancel.gameObject.SetActive(true);
+            TermsObj.gameObject.SetActive(false);
         } 
 
         OkAction = popupData.OkAction;
@@ -63,6 +71,7 @@ public class PopupUserSetting : Popup
         CommonFunc.RefreshThumbnail(ref Thumbnail);
 
         RefreahUI();
+        RefreshTermsEnable();
     }
 
 
@@ -75,6 +84,9 @@ public class PopupUserSetting : Popup
         WomanButton.onClick.AddListener(OnClickWoman);
 
         ThumbnailEdit.onClick.AddListener(OnClickThumbnailEdit);
+
+        TermsEnableButton.onClick.AddListener(OnClickTermsEnable);
+        TermsViewButton.onClick.AddListener(OnClickTermsView);
     }
 
     public void Start()
@@ -165,5 +177,20 @@ public class PopupUserSetting : Popup
         }, "Select a PNG image", "image/png");
     }
 
+    public void OnClickTermsEnable()
+    {
+        TermsEnable = !TermsEnable;
+        RefreshTermsEnable();
+    }
+
+    public void OnClickTermsView()
+    {
+        PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.TERMS);
+    }
+
+    public void RefreshTermsEnable()
+    {
+        TermsCheckObj.gameObject.SetActive(TermsEnable);
+    }
 
 }

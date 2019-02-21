@@ -31,6 +31,7 @@ public class PopupMgr : MonoBehaviour
         SELF_EVALUATION,
         USER_SETTING,
         WEB_VIEW,
+        TERMS,
     }
     
     private Dictionary<POPUP_TYPE, Popup> PopupList = new Dictionary<POPUP_TYPE, Popup>();
