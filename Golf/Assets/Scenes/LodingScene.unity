@@ -307,6 +307,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Permissions: 0
+  Login: 0
 --- !u!1 &895690068
 GameObject:
   m_ObjectHideFlags: 0
@@ -336,6 +337,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c38da640c7a923c42843a59e1ddcbf3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  EvaluationDataList: []
 --- !u!4 &895690070
 Transform:
   m_ObjectHideFlags: 0
@@ -579,6 +581,9 @@ MonoBehaviour:
   TrainingType: 0
   PoseType: 0
   TempoTrainingLevel: 3
+  ThumbnailSprite: {fileID: 0}
+  ThumbnailSpritePath: 
+  MyLoadData: 0
 --- !u!1 &1457332395
 GameObject:
   m_ObjectHideFlags: 0
@@ -798,9 +803,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mFxSound:
-  - {fileID: 8300000, guid: 1057de96678935941a4df2227a534b77, type: 3}
-  - {fileID: 8300000, guid: 3725673e040a66a4a88c389b52944cf1, type: 3}
-  - {fileID: 8300000, guid: dcc844bea1910b343a52860b2efcddab, type: 3}
+  - {fileID: 8300000, guid: deb6e699c9a321d4d9f9ce03a3a0db29, type: 3}
+  - {fileID: 8300000, guid: f56d69bbe6f320749be2de08fa00a9e3, type: 3}
+  - {fileID: 8300000, guid: d0e60e4adb496fb468625b17131af82c, type: 3}
+  - {fileID: 8300000, guid: 21b33819277c0254ea3292bbbd92507e, type: 3}
+  - {fileID: 8300000, guid: a1971d2d5847a2e4ebd5785b3a14232b, type: 3}
+  - {fileID: 8300000, guid: 172a8afb460c3fc438569f607449356e, type: 3}
+  - {fileID: 8300000, guid: 703e00f5d02371940b8dbb31edf3cefb, type: 3}
   - {fileID: 8300000, guid: b8f2f7f620f8e0a4dbf3533f14c66ecc, type: 3}
   - {fileID: 8300000, guid: e87f1a6117f8ead45afc115bf2e96df7, type: 3}
   - {fileID: 8300000, guid: 97ab7b85d3d09d346905462b8368d7cf, type: 3}

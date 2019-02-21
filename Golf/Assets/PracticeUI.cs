@@ -228,7 +228,7 @@ public class PracticeUI : MonoBehaviour
     IEnumerator Co_PoseTrainingReady()
     {
         GyroScopeManager.Instance.TrainingReadyStart();
-
+        SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_ENTER);
         yield return Co_TrainingReady();
 
   
@@ -246,8 +246,7 @@ public class PracticeUI : MonoBehaviour
 
     IEnumerator Co_TrainingReady()
     {
-        ReadyUI.gameObject.SetActive(true);
-        SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_START);
+        ReadyUI.gameObject.SetActive(true);   
         int readyTime = CommonData.TRAINING_READY_TIME;
         while (true)
         {
@@ -258,6 +257,7 @@ public class PracticeUI : MonoBehaviour
             if (readyTime <= 0)
                 break;
         }
+        SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_START);
         ReadyUI.gameObject.SetActive(false);
     }
 
@@ -274,6 +274,7 @@ public class PracticeUI : MonoBehaviour
         TrainingTime = TKManager.Instance.GetTrainingTimer();
         float soundTime = 1f;
         float waitTime = CommonData.TRAINING_READY_TIME;
+        bool bSuccessEnter = true;
 
         while (true)
         {
@@ -285,11 +286,34 @@ public class PracticeUI : MonoBehaviour
             {
                 if (TrainingSuccess)
                 {
+
+                    if(bSuccessEnter)
+                    {
+                        if (TKManager.Instance.GetTrainingTimer() == 5)
+                        {
+                            SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_SUCCESS_5SEC);
+                        }
+                        else if (TKManager.Instance.GetTrainingTimer() == 10)
+                        {
+                            SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_SUCCESS_10SEC);
+                        }
+                        else if (TKManager.Instance.GetTrainingTimer() == 15)
+                        {
+                            SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_SUCCESS_15SEC);
+                        }
+                        else
+                        {
+                            SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_SUCCESS_20SEC);
+                        }
+                        bSuccessEnter = false;
+                    }
+                 
+
                     TrainingTime -= Time.deltaTime;
                     soundTime -= Time.deltaTime;
                     if (soundTime < 0)
                     {
-                        SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_SUCCESS_START);
+                       // SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_SUCCESS_START);
                         soundTime = 1f;
                     }
 
@@ -298,15 +322,19 @@ public class PracticeUI : MonoBehaviour
                     {
                         TrainingSuccessCount++;
                         TrainingTime = TKManager.Instance.GetTrainingTimer();
-                        SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_SUCCESS);
-
+                        SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_RETURN);
                         TrainingCount.text = string.Format("{0}회", TrainingSuccessCount);
+                        bSuccessEnter = true;
 
                         waitTime = CommonData.TRAINING_READY_TIME;
                     }
                 }
                 else
+                {
+                    bSuccessEnter = true;
                     TrainingTime = TKManager.Instance.GetTrainingTimer();
+                }
+                    
             }
             
 
