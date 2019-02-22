@@ -194,7 +194,7 @@ public class MainTraningUI : MonoBehaviour {
                         TrainingTimeBtnIndex = i;
                     }
                     else if (i == 5)
-                        HexagonMenu[i].Init("미러 모드", "", CommonFunc.HexToColor(HexagonMenuColor[i], 0.5f), OnClickMirrorMode);
+                        HexagonMenu[i].Init("셀프트레이닝\n모드", "", CommonFunc.HexToColor(HexagonMenuColor[i], 0.5f), OnClickMirrorMode);
                 }
 
                 ChangeTraningPosLevel();
