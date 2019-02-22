@@ -8,14 +8,14 @@ public class CommonData : MonoBehaviour
     // ADDRESS, BACKSWING, IMPACT 순
     public static int[] REF_MAN = {
         -2,  6, 35, 45,  -1, 5,             // 어드레스
-      -46, -30,  2, 15, -13, -4,           // 백스윙
-       35,  50, 29, 42,  10,  17            // 임팩트
+      -86, -74,  2, 15, -45, -39,           // 백스윙
+       26,  34, 29, 42,  24,  33            // 임팩트
     };
 
     public static int[] REF_WOMAN = {
         -1,  6, 36, 47,  -2, 3,
-      -44, -25, -2, 13, -13, -5,
-       43,  61, 27, 45,  5,  12
+      -96, -83, -2, 13, -46, -40,
+       25,  39, 27, 45,  21,  31
     };
 
     public static float[] LEVEL_COVER = {
