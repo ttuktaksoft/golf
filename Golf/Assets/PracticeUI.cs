@@ -16,6 +16,7 @@ public class PracticeUI : MonoBehaviour
     }
     
     public GameObject Model;
+    public GameObject Mirror_Model;
 
     public GameObject Model_RotateLeft;
     public GameObject Model_BendUp;
@@ -116,7 +117,7 @@ public class PracticeUI : MonoBehaviour
 
         if (TKManager.Instance.GetTrainingType() == CommonData.TRAINING_TYPE.TRAINING_TEMPO)
         {
-            Model.SetActive(false);
+           
             Model_BendDown.SetActive(false);
             Model_BendUp.SetActive(false);
 
@@ -125,6 +126,9 @@ public class PracticeUI : MonoBehaviour
 
             Model_SideLeft.SetActive(false);
             Model_SideRight.SetActive(false);
+
+            Model.SetActive(false);
+            Mirror_Model.SetActive(false);
 
 
             BendTrainingAngle.gameObject.SetActive(false);
@@ -140,7 +144,9 @@ public class PracticeUI : MonoBehaviour
         }
         else
         {
-            Model.SetActive(true);
+            Model.SetActive(!TKManager.Instance.MirrorMode);
+            Mirror_Model.SetActive(TKManager.Instance.MirrorMode);          
+
             Model_BendDown.SetActive(true);
             Model_BendUp.SetActive(true);
 
@@ -482,23 +488,12 @@ public class PracticeUI : MonoBehaviour
                 }
                 else if (GyroStatus[2] < RefData[nTrainMode] - LevelCover)
                 {
+   
+                    Model_RotateLeft.SetActive(true);
+                    Model_RotateRight.SetActive(false);
+                    Model_RotateLeft.transform.Rotate(0, 0, ArrowSpeed);
 
-                    if(TKManager.Instance.MirrorMode)
-                    {
-                        Model_RotateRight.SetActive(true);
-                        Model_RotateLeft.SetActive(false);
-                        Model_RotateRight.transform.Rotate(0, 0, -1 * ArrowSpeed);
-
-                        rotationRightNeed = true;
-                    }
-                    else
-                    {
-                        Model_RotateLeft.SetActive(true);
-                        Model_RotateRight.SetActive(false);             
-                        Model_RotateLeft.transform.Rotate(0, 0, ArrowSpeed);
-
-                        rotationRightNeed = false;
-                    }
+                    rotationRightNeed = false;
 
 
                     rotationPlaying = true;
@@ -511,24 +506,12 @@ public class PracticeUI : MonoBehaviour
 
                 else if (RefData[nTrainMode] - LevelCover < GyroStatus[2])
                 {
+                    Model_RotateRight.SetActive(true);
+                    Model_RotateLeft.SetActive(false);
+                    Model_RotateRight.transform.Rotate(0, 0, -1 * ArrowSpeed);
 
-                    if (TKManager.Instance.MirrorMode)
-                    {
-                        Model_RotateLeft.SetActive(true);
-                        Model_RotateRight.SetActive(false);
-                        Model_RotateLeft.transform.Rotate(0, 0, ArrowSpeed);
+                    rotationRightNeed = true;
 
-                        rotationRightNeed = false;
-                    }
-                    else
-                    {              
-                        Model_RotateRight.SetActive(true);
-                        Model_RotateLeft.SetActive(false);
-                        Model_RotateRight.transform.Rotate(0, 0, -1 * ArrowSpeed);
-
-                        rotationRightNeed = true;
-                    }
-               
                     rotationPlaying = true;
 
                     if (TrainingSuccess_Rotate)
@@ -568,29 +551,58 @@ public class PracticeUI : MonoBehaviour
                 }
                 else if (GyroStatus[1] < RefData[nTrainMode + 2] - LevelCover)
                 {
-                    Model_BendDown.SetActive(true);
-                    Model_BendUp.SetActive(false);
-                    bendUpNeed = false;
+
+                    if (TKManager.Instance.MirrorMode)
+                    {
+                        Model_BendUp.SetActive(true);
+                        Model_BendDown.SetActive(false);
+                        Model_BendUp.transform.Rotate(ArrowSpeed, 0, 0);
+
+                        bendUpNeed = false;
+                    }
+                    else
+                    {
+                        Model_BendDown.SetActive(true);
+                        Model_BendUp.SetActive(false);
+                        Model_BendDown.transform.Rotate(ArrowSpeed, 0, 0);
+
+                        bendUpNeed = false;
+                    }
+
+
                     bendPlaying = true;
 
                     if (TrainingSuccess_Bend)
                         bVoiceGuide_Bend = false;
-
-                    Model_BendDown.transform.Rotate(ArrowSpeed, 0, 0);
+                    
                     TrainingSuccess_Bend = false;
                 }
 
                 else if (RefData[nTrainMode + 3] - LevelCover < GyroStatus[1])
                 {
-                    Model_BendUp.SetActive(true);
-                    Model_BendDown.SetActive(false);
-                    bendUpNeed = true;
+
+                    if (TKManager.Instance.MirrorMode)
+                    {
+                        Model_BendDown.SetActive(true);
+                        Model_BendUp.SetActive(false);
+                        Model_BendDown.transform.Rotate(ArrowSpeed, 0, 0);
+
+                        bendUpNeed = true;
+                    }
+                    else
+                    {
+                        Model_BendUp.SetActive(true);
+                        Model_BendDown.SetActive(false);
+                        Model_BendUp.transform.Rotate(ArrowSpeed, 0, 0);
+
+                        bendUpNeed = true;
+                    }
+
                     bendPlaying = true;
 
                     if (TrainingSuccess_Bend)
                         bVoiceGuide_Bend = false;
-
-                    Model_BendUp.transform.Rotate(ArrowSpeed, 0, 0);
+                    
                     TrainingSuccess_Bend = false;
                 }
 
@@ -638,7 +650,7 @@ public class PracticeUI : MonoBehaviour
                         else
                             Model_SideRight.transform.Rotate(0, 0, -1 * ArrowSpeed);
 
-                        sidebendRightNeed = true;
+                        sidebendRightNeed = false;
                     }
                     else
                     {
@@ -675,7 +687,7 @@ public class PracticeUI : MonoBehaviour
                         else
                             Model_SideLeft.transform.Rotate(0, 0, ArrowSpeed);
 
-                        sidebendRightNeed = false;
+                        sidebendRightNeed = true;
                     }
                     else
                     {

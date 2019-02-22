@@ -16,6 +16,7 @@ public class GyroScopeManager : MonoBehaviour
     private Quaternion offset;
 
     public GameObject Model;
+    public GameObject Mirror_Model;
 
 
     public static GyroScopeManager _instance = null;
@@ -173,35 +174,32 @@ public class GyroScopeManager : MonoBehaviour
 
             // Quaternion offsetRotation = Quaternion.Inverse(gyroInitialRotation) * TKManager.Instance.gyro.attitude;
 
-        
-
+   
             Model.transform.rotation = GyroToUnity(Model.transform.rotation);
 
 
-            float AngleX = Model.transform.rotation.eulerAngles.x;
-            float AngleY = Model.transform.rotation.eulerAngles.y;
-            float AngleZ = Model.transform.rotation.eulerAngles.z;
 
-        //    Debug.Log("!@@@@@ Address x" + AngleX);
-       //     Debug.Log("!@@@@@ Address y" + AngleY);
-       //     Debug.Log("!@@@@@ Address z" + AngleZ);
+            //    Debug.Log("!@@@@@ Address x" + AngleX);
+            //     Debug.Log("!@@@@@ Address y" + AngleY);
+            //     Debug.Log("!@@@@@ Address z" + AngleZ);
+#endif
 
 
-#else
- 
+
             Quaternion offsetRotation = Quaternion.Inverse(gyroInitialRotation) * TKManager.Instance.gyro.attitude;
 
-            Model.transform.rotation = GyroToUnity(offsetRotation);
+            //
+
+            if(TKManager.Instance.MirrorMode)
+            {
+                Mirror_Model.transform.localRotation = GyroToUnity(offsetRotation);
+            }            
+            else
+            {
+                Model.transform.rotation = GyroToUnity(offsetRotation);
+            }
 
 
-            float AngleX = Model.transform.rotation.eulerAngles.x;
-            float AngleY = Model.transform.rotation.eulerAngles.y;
-            float AngleZ = Model.transform.rotation.eulerAngles.z;
-
-            Debug.Log("!@@@@@ Address x" + AngleX);
-            Debug.Log("!@@@@@ Address y" + AngleY);
-            Debug.Log("!@@@@@ Address z" + AngleZ);
-#endif
 
 
 
