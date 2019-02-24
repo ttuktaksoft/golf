@@ -80,7 +80,7 @@ public class PracticeUI : MonoBehaviour
         TrainingSuccessCount = 0;
         PracticeOrderType = PRACTICE_ORDER.READY;
 
-        TrainingGetPoint.text = "0회";
+        TrainingGetPoint.text = "0 Point";
 
         if (TKManager.Instance.GetTrainingType() == CommonData.TRAINING_TYPE.TRAINING_TEMPO)
             TrainingType.text = CommonFunc.ConvertTrainingTypeStr(TKManager.Instance.GetTrainingType());
@@ -138,6 +138,10 @@ public class PracticeUI : MonoBehaviour
             BackgrounImg.gameObject.SetActive(true);
             PoseTrainingObj.gameObject.SetActive(true);
             TempoTrainingObj.gameObject.SetActive(false);
+
+            BendTrainingAngle.gameObject.SetActive(true);
+            RotationTrainingAngle.gameObject.SetActive(true);
+            SideBendTrainingAngle.gameObject.SetActive(true);
         }
 
         int nTrainMode = Convert.ToInt32(TKManager.Instance.GetPoseType());
@@ -147,7 +151,6 @@ public class PracticeUI : MonoBehaviour
             int angleLevel = TKManager.Instance.GetAngleLevel(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_TURN);
             if (angleLevel > 0)
             {
-                RotationTrainingAngle.gameObject.SetActive(true);
                 float LevelCover = CommonData.LEVEL_COVER[angleLevel];
 
                 float minValue = RefData[nTrainMode] - CommonData.ANGLE_OFFSET;
@@ -160,7 +163,7 @@ public class PracticeUI : MonoBehaviour
             }
             else
             {
-                RotationTrainingAngle.gameObject.SetActive(false);
+                RotationTrainingAngle.Init("ROTATION");
             }
         }
 
@@ -170,7 +173,6 @@ public class PracticeUI : MonoBehaviour
             int angleLevel = TKManager.Instance.GetAngleLevel(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_BEND);
             if (angleLevel > 0)
             {
-                BendTrainingAngle.gameObject.SetActive(true);
                 float LevelCover = CommonData.LEVEL_COVER[angleLevel];
 
                 float minValue = RefData[nTrainMode + 2] - CommonData.ANGLE_OFFSET;
@@ -182,7 +184,7 @@ public class PracticeUI : MonoBehaviour
             }
             else
             {
-                BendTrainingAngle.gameObject.SetActive(false);
+                BendTrainingAngle.Init("BEND");
             }
         }
 
@@ -193,7 +195,6 @@ public class PracticeUI : MonoBehaviour
 
             if (angleLevel > 0)
             {
-                SideBendTrainingAngle.gameObject.SetActive(true);
                 float LevelCover = CommonData.LEVEL_COVER[angleLevel];
 
                 float minValue = RefData[nTrainMode + 4] - CommonData.ANGLE_OFFSET;
@@ -205,7 +206,7 @@ public class PracticeUI : MonoBehaviour
             }
             else
             {
-                SideBendTrainingAngle.gameObject.SetActive(false);
+                SideBendTrainingAngle.Init("SIDE BEND");
             }
         }    
     }
@@ -345,7 +346,7 @@ public class PracticeUI : MonoBehaviour
                         TrainingSuccessCount++;
                         TrainingTime = TKManager.Instance.GetTrainingTimer();
                         SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_RETURN, true);
-                        TrainingGetPoint.text = string.Format("{0}회", TrainingSuccessCount);
+                        TrainingGetPoint.text = string.Format("{0:n0} Point", TrainingSuccessCount * 3);
                         bSuccessEnter = true;
 
                         waitTime = CommonData.TRAINING_READY_TIME;

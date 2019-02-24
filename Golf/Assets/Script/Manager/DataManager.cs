@@ -38,7 +38,7 @@ public class DataManager : MonoBehaviour
 
         AlarmDataList.Add(new AlarmData("새해인사", DateTime.Now.Ticks, "alram_1"));
         AlarmDataList.Add(new AlarmData("아카데미 소개", DateTime.Now.Ticks, "alram_2"));
-        AlarmDataList.Add(new AlarmData("아카데미 홍보", DateTime.Now.Ticks, "alram_3"));
+        AlarmDataList.Add(new AlarmData("아카데미 안내", DateTime.Now.Ticks, "alram_3"));
         AlarmDataList.Add(new AlarmData("어플 사용방법", DateTime.Now.Ticks, "alram_4"));
         AlarmDataList.Add(new AlarmData("정식버전 출시 일정", DateTime.Now.Ticks, "alram_5"));
 

@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class UITrainingAngle : MonoBehaviour
 {
+    public GameObject GaugeOnObj;
+    public GameObject GaugeOffObj;
     public GameObject SuccessObj;
     public Image SuccessBg;
     public Image MaxLine;
@@ -15,8 +17,17 @@ public class UITrainingAngle : MonoBehaviour
     private float MinValue = 0;
     private float MaxValue = 0;
 
+    public void Init(string title)
+    {
+        GaugeOnObj.gameObject.SetActive(false);
+        GaugeOffObj.gameObject.SetActive(true);
+        Title.text = title;
+    }
+
     public void Init(string title, float min, float max, float successMin, float successMax)
     {
+        GaugeOnObj.gameObject.SetActive(true);
+        GaugeOffObj.gameObject.SetActive(false);
         Title.text = title;
         MinValue = min;
         MaxValue = max;

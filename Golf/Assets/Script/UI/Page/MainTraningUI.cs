@@ -343,7 +343,23 @@ public class MainTraningUI : MonoBehaviour {
     {
         if (MenuAction)
             return;
-        PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.TUTORIAL, new PopupTutorial.PopupData());
+        List<string> list = new List<string>();
+        if (TrainingSetStep == TRAINING_SET_STEP.MAIN)
+        {
+            list.Add("t_1");
+            list.Add("t_2");
+            list.Add("t_3");
+            PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.HELP, new PopupHelp.PopupData(list));
+        }
+        else
+        {
+            list.Add("t_1_1");
+            list.Add("t_1_2");
+            list.Add("t_1_3");
+            list.Add("t_1_4");
+            PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.HELP, new PopupHelp.PopupData(list));
+        }
+        
     }
 
     public void OnClickMirrorMode()
