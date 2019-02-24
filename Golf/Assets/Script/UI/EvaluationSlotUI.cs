@@ -13,9 +13,11 @@ public class EvaluationSlotUI : MonoBehaviour
 
     public void SetData(EvaluationData data)
     {
-        Date.text = data.GetDate();
+        if(Date != null)
+            Date.text = data.GetDate();
         Title.text = data.GetTraining();
-        SubTitle.text = data.GetAngle();
+        if(SubTitle != null)
+            SubTitle.text = data.GetAngle();
 
         for (int i = 0; i < Starlist.Count; i++)
         {

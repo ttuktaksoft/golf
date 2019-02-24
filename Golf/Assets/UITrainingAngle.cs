@@ -5,7 +5,9 @@ using UnityEngine.UI;
 
 public class UITrainingAngle : MonoBehaviour
 {
+    public GameObject SuccessObj;
     public Image SuccessBg;
+    public Image MaxLine;
     public GameObject Circle;
     public Text Angle;
     public Text Title;
@@ -23,7 +25,11 @@ public class UITrainingAngle : MonoBehaviour
         float successPower = (successMax - successMin) / value;
         SuccessBg.fillAmount = successPower;
 
-        SuccessBg.gameObject.transform.localRotation = Quaternion.Euler(SuccessBg.gameObject.transform.localRotation.x, SuccessBg.gameObject.transform.localRotation.y, -90 + (successPower * 100) * 0.9f);
+        SuccessObj.gameObject.transform.localRotation = Quaternion.Euler(SuccessBg.gameObject.transform.localRotation.x, SuccessBg.gameObject.transform.localRotation.y, -90 + (successPower * 100) * 0.9f);
+
+        float value_2 = (successMax - MinValue) * (180 / value);
+        MaxLine.transform.localRotation = Quaternion.Euler(MaxLine.transform.localRotation.x, MaxLine.transform.localRotation.y, (successPower * -180f));
+
         SetAngle(value / 2);
     }
 

@@ -9,7 +9,6 @@ public class PopupSelfEvaluation : Popup
 {
     public Text Date;
     public Text Title;
-    public Text SubTitle;
     public Button OK;
     public List<Button> StarList = new List<Button>();
     public List<Image> StarImgList = new List<Image>();
@@ -62,21 +61,6 @@ public class PopupSelfEvaluation : Popup
         else
             Title.text = string.Format("{0} {1}회", CommonFunc.ConvertTrainingTypeStr(TrainingType, false), TrainingCount);
 
-        StringBuilder builder = new StringBuilder();
-        var enumerator = AngleTypeList.GetEnumerator();
-        int count = AngleTypeList.Count;
-
-        while (enumerator.MoveNext())
-        {
-            count--;
-            if (enumerator.Current.Value == 0)
-                continue;
-            builder.Append(string.Format("{0} {1}", CommonFunc.ConvertPoseAngleTypeStr(enumerator.Current.Key), CommonFunc.ConvertPoseLevelStr(enumerator.Current.Value)));
-            if (count > 0)
-                builder.Append(",");
-        }
-
-        SubTitle.text = builder.ToString();
         Msg.text = "";
         RefreshStar();
     }
@@ -127,8 +111,6 @@ public class PopupSelfEvaluation : Popup
 
             DataManager.Instance.AddPracticeData(CommonData.TRAINING_TYPE.TRAINING_TEMPO);
         }
-
-        TKManager.Instance.UpdateGrade();
 
         PopupMgr.Instance.DismissPopup();
 

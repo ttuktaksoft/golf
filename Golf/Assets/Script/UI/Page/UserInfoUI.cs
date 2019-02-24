@@ -5,22 +5,13 @@ using UnityEngine.UI;
 
 public class UserInfoUI : MonoBehaviour {
 
-    public Button ThumbnailEdit;
-    public Image Thumbnail;
-    public Text Name;
-    public Text Grade;
-    public Image Gender;
-    public Button Edit;
+    public UIMyInfo MyInfo;
+    
     public GameObject EmptyText;
     public GameObject EvaluationList;
-    public GameObject ListObj;
     private List<EvaluationSlotUI> EvaluationSlotList = new List<EvaluationSlotUI>();
 
-    public void Awake()
-    {
-        Edit.onClick.AddListener(OnClickEdit);
-        ThumbnailEdit.onClick.AddListener(OnClickThumbnailEdit);
-    }
+    public List<UIFriendSlot> FriendSlotList = new List<UIFriendSlot>();
 
     public void Init()
     {
@@ -41,38 +32,26 @@ public class UserInfoUI : MonoBehaviour {
             EmptyText.SetActive(true);
         }
 
-        for (int i = 0; i < DataManager.Instance.EvaluationDataList.Count; i++)
+        int maxSlot = 4;
+        for (int i = DataManager.Instance.EvaluationDataList.Count - 1; i >= 0; i--)
         {
+            maxSlot--;
             var data = DataManager.Instance.EvaluationDataList[i];
-            var slotObj = Instantiate(Resources.Load("Prefab/UIEvaluationSlot"), ListObj.transform) as GameObject;
+            var slotObj = Instantiate(Resources.Load("Prefab/UIEvaluationSlotMini"), EvaluationList.transform) as GameObject;
             var slot = slotObj.GetComponent<EvaluationSlotUI>();
             slot.SetData(data);
             EvaluationSlotList.Add(slot);
+
+            if (maxSlot == 0)
+                break;
         }
 
-        RefreshUI();
-    }
+        for (int i = 0; i < FriendSlotList.Count; i++)
+        {
+            FriendSlotList[i].Init(i);
+        }
 
-    public void RefreshUI()
-    {
-        Name.text = TKManager.Instance.Name;
-        Grade.text = CommonFunc.ConvertGradeStr(TKManager.Instance.GetGrade());
-        Grade.color = CommonFunc.HexToColor(CommonFunc.GetGradeColor(TKManager.Instance.GetGrade()));
-        if (TKManager.Instance.GetGender() == CommonData.GENDER.GENDER_MAN)
-            CommonFunc.SetImageFile("icon_man", ref Gender);
-        else
-            CommonFunc.SetImageFile("icon_woman", ref Gender);
+        MyInfo.Init(true);
 
-        CommonFunc.RefreshThumbnail(ref Thumbnail);
-    }
-
-    public void OnClickEdit()
-    {
-        PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.USER_SETTING, new PopupUserSetting.PopupData(RefreshUI));
-    }
-
-    public void OnClickThumbnailEdit()
-    {
-        PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.USER_SETTING, new PopupUserSetting.PopupData(RefreshUI));
     }
 }

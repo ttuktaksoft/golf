@@ -112,16 +112,33 @@ public class PopupUserSetting : Popup
             return;
         }
         */
+        if(TermsEnable == false)
+        {
+            PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.MSG, new PopupMsg.PopupData("트레이닝 포인트에 따른 각종 혜택을 받기 위해서 개인정보 취급동의가 필요 합니다.", () =>
+            {
+                TKManager.Instance.SetName(Name.text.ToString());
+                TKManager.Instance.SetPhoneNumber(Number.text.ToString());
+                TKManager.Instance.SetGender(Gender);
 
-        TKManager.Instance.SetName(Name.text.ToString());
-        TKManager.Instance.SetPhoneNumber(Number.text.ToString());
-        TKManager.Instance.SetGender(Gender);
+                if (OkAction != null)
+                    OkAction();
 
-        if (OkAction != null)
-            OkAction();
+                TKManager.Instance.SaveFile();
+                PopupMgr.Instance.DismissPopup();
+            }));
+        }
+        else
+        {
+            TKManager.Instance.SetName(Name.text.ToString());
+            TKManager.Instance.SetPhoneNumber(Number.text.ToString());
+            TKManager.Instance.SetGender(Gender);
 
-        TKManager.Instance.SaveFile();
-        PopupMgr.Instance.DismissPopup();
+            if (OkAction != null)
+                OkAction();
+
+            TKManager.Instance.SaveFile();
+            PopupMgr.Instance.DismissPopup();
+        }
     }
 
     public void OnClickCancel()

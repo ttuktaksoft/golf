@@ -125,7 +125,7 @@ public class MainTraningUI : MonoBehaviour {
                     else if (i == 4)
                         HexagonMenu[i].Init("아카데미\n소개", "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickAcademyInfo);
                     else if (i == 5)
-                        HexagonMenu[i].Init("튜토리얼\n영상", "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickTutorial);
+                        HexagonMenu[i].Init("사용방법", "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickTutorial);
                 }
             }
             else if (TrainingSetStep == TRAINING_SET_STEP.POSE)
@@ -150,7 +150,7 @@ public class MainTraningUI : MonoBehaviour {
                     else if (i == 4)
                         HexagonMenu[i].Init(CommonFunc.ConvertTrainingTypeStr(CommonData.TRAINING_TYPE.TRAINING_TEMPO, true), "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickSoundTraning);
                     else if (i == 5)
-                        HexagonMenu[i].Init("튜토리얼\n영상", "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickTutorial);
+                        HexagonMenu[i].Init("사용방법", "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickTutorial);
                 }
             }
             else if (TrainingSetStep == TRAINING_SET_STEP.ANGLE)
@@ -194,7 +194,10 @@ public class MainTraningUI : MonoBehaviour {
                         TrainingTimeBtnIndex = i;
                     }
                     else if (i == 5)
-                        HexagonMenu[i].Init("셀프트레이닝\n모드", "", CommonFunc.HexToColor(HexagonMenuColor[i], 0.5f), OnClickMirrorMode);
+                    {
+                        TKManager.Instance.MirrorMode = true;
+                        HexagonMenu[i].Init("거울보기\nON", "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickMirrorMode);
+                    }
                 }
 
                 ChangeTraningPosLevel();
@@ -202,7 +205,7 @@ public class MainTraningUI : MonoBehaviour {
         }
         else
         {
-            TraningTypeText.text = "사운드 트레이닝";
+            TraningTypeText.text = "Sound Training";
             CenterButton.Init("트레이닝\n시작", "", CommonFunc.HexToColor(HexagonCenterColor, 0f), OnClickTraningStart);
 
             TempoTrainingModeLevelBtnIndex.Clear();
@@ -347,12 +350,19 @@ public class MainTraningUI : MonoBehaviour {
     {
         if (MenuAction)
             return;
+
         TKManager.Instance.MirrorMode = !TKManager.Instance.MirrorMode;
 
         if(TKManager.Instance.MirrorMode)
+        {
+            HexagonMenu[5].SetText("거울보기\nON");
             HexagonMenu[5].SetButtonColor(CommonFunc.HexToColor(HexagonMenuColor[5], 1f));
+        }
         else
+        {
+            HexagonMenu[5].SetText("거울보기\nOFF");
             HexagonMenu[5].SetButtonColor(CommonFunc.HexToColor(HexagonMenuColor[5], 0.5f));
+        }
     }
 
     public void OnClickImpact()
@@ -362,7 +372,7 @@ public class MainTraningUI : MonoBehaviour {
         
         TrainingSetStep = TRAINING_SET_STEP.ANGLE;
         TrainingMode = CommonData.TRAINING_POSE.TRAINING_IMPACT;
-        TraningTypeText.text = CommonFunc.ConvertPoseTypeStr(TrainingMode);
+        TraningTypeText.text = "Impact";// CommonFunc.ConvertPoseTypeStr(TrainingMode);
 
         StartMenuAction();
     }
@@ -374,7 +384,7 @@ public class MainTraningUI : MonoBehaviour {
 
         TrainingSetStep = TRAINING_SET_STEP.ANGLE;
         TrainingMode = CommonData.TRAINING_POSE.TRAINING_BACKSWING;
-        TraningTypeText.text = CommonFunc.ConvertPoseTypeStr(TrainingMode);
+        TraningTypeText.text = "Back Swing Top";// CommonFunc.ConvertPoseTypeStr(TrainingMode);
 
         StartMenuAction();
     }
@@ -386,7 +396,7 @@ public class MainTraningUI : MonoBehaviour {
 
         TrainingSetStep = TRAINING_SET_STEP.ANGLE;
         TrainingMode = CommonData.TRAINING_POSE.TRAINING_ADDRESS;
-        TraningTypeText.text = CommonFunc.ConvertPoseTypeStr(TrainingMode);
+        TraningTypeText.text = "Address"; //CommonFunc.ConvertPoseTypeStr(TrainingMode);
 
         StartMenuAction();
     }
@@ -406,7 +416,7 @@ public class MainTraningUI : MonoBehaviour {
                 HexagonMenu[btnIndex].SetButtonColor(CommonFunc.HexToColor(HexagonMenuColor[btnIndex], 1f));
 
             if(level == 0)
-                HexagonMenu[btnIndex].SetText(string.Format("{0}",CommonFunc.ConvertPoseAngleTypeStr(type)));
+                HexagonMenu[btnIndex].SetText(string.Format("{0}\nOFF",CommonFunc.ConvertPoseAngleTypeStr(type)));
             else
                 HexagonMenu[btnIndex].SetText(string.Format("{0}\n{1}", CommonFunc.ConvertPoseAngleTypeStr(type), CommonFunc.ConvertPoseLevelStr(level)));
         }

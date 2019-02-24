@@ -76,15 +76,10 @@ public class CommonData : MonoBehaviour
         TRAINING_SIDE_OK
     }
 
-    public enum GRADE_TYPE
-    {
-        BRONZE,
-        SILVER,
-        GOLD,
-        PLATINUM,
-    }
-
     public static int ANGLE_MAX_LEVEL = 4;
+
+    public static string[] GRADE_STR = { "달걀", "병아리", "닭", "새", "독수리", "알바트로스" };
+    public static string[] GRADE_IMG_STR = { "grade_1", "grade_2", "grade_3", "grade_4", "grade_5", "grade_6" };
 
     public static int[] TRAINING_TIME = { 5, 10, 15, 20 };
     public static int TRAINING_READY_TIME = 2;

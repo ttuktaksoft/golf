@@ -16,6 +16,7 @@ public class AlarmSlotUI : MonoBehaviour
     public GameObject BigSlotObj;
     public RectTransform BigSlotRect;
     public Text BigSlotMsg;
+    public Image BigSlotImg;
 
     private bool MiniMode = true;
 
@@ -29,7 +30,7 @@ public class AlarmSlotUI : MonoBehaviour
         MiniSlotTitle.text = data.Title;
         MiniSlotDate.text = data.DateStr;
 
-        BigSlotMsg.text = data.BodyStr;
+        CommonFunc.SetImageFile(data.BodyImgStr, ref BigSlotImg);        
 
         RefreshSlot();
     }

@@ -5,11 +5,14 @@ using UnityEngine.UI;
 
 public class RewardUI : MonoBehaviour
 {
-    public Image Thumbnail;
-    public Text Name;
+    public UIMyInfo MyInfo;
+
+    public Image GradeImg;
     public Text Grade;
-    public Image Gender;
-    public List<UIRewardPracticeGraph> PracticeList = new List<UIRewardPracticeGraph>();
+    public Text Point;
+
+    //public List<UIRewardPracticeGraph> PracticeList = new List<UIRewardPracticeGraph>();
+
 
     public GameObject GiftconListObj;
     public GameObject GiftconEmpty;
@@ -20,25 +23,21 @@ public class RewardUI : MonoBehaviour
 
     public void Init()
     {
-        Name.text = TKManager.Instance.Name;
-        Grade.text = CommonFunc.ConvertGradeStr(TKManager.Instance.GetGrade());
-        Grade.color = CommonFunc.HexToColor(CommonFunc.GetGradeColor(TKManager.Instance.GetGrade()));
-        if (TKManager.Instance.GetGender() == CommonData.GENDER.GENDER_MAN)
-            CommonFunc.SetImageFile("icon_man", ref Gender);
-        else
-            CommonFunc.SetImageFile("icon_woman", ref Gender);
+        MyInfo.Init();
 
         RefreshGiftconList();
 
-        for (int i = 0; i < DataManager.Instance.PracticeDataList.Count; i++)
-        {
-            if (PracticeList.Count <= i)
-                break;
-            var data = DataManager.Instance.PracticeDataList[i];
-            PracticeList[i].SetData(data);
-        }
+        CommonFunc.SetGradeImg(ref GradeImg, TKManager.Instance.GetGrade());
+        Grade.text = CommonFunc.GetGradeStr(TKManager.Instance.GetGrade());
+        Point.text = string.Format("현재 포인트 : {0:n0} Point", TKManager.Instance.Point);
 
-        CommonFunc.RefreshThumbnail(ref Thumbnail);
+        //for (int i = 0; i < DataManager.Instance.PracticeDataList.Count; i++)
+        //{
+        //    if (PracticeList.Count <= i)
+        //        break;
+        //    var data = DataManager.Instance.PracticeDataList[i];
+        //    PracticeList[i].SetData(data);
+        //}
     }
 
     public void RefreshGiftconList()

@@ -34,11 +34,13 @@ public class DataManager : MonoBehaviour
         //TKManager.Instance.SetName("이민영");
         //TKManager.Instance.SetPhoneNumber("010-1234-1234");
         TKManager.Instance.SetGender(CommonData.GENDER.GENDER_MAN);
-        TKManager.Instance.SetGrade(CommonData.GRADE_TYPE.BRONZE);
+        TKManager.Instance.SetGrade(0);
 
-        AlarmDataList.Add(new AlarmData("1월 아카데미 특강안내", DateTime.Now.Ticks, CommonData.TEMP_ALARM_MSG[0]));
-        AlarmDataList.Add(new AlarmData("2월 아카데미 특강안내", DateTime.Now.Ticks, CommonData.TEMP_ALARM_MSG[1]));
-        AlarmDataList.Add(new AlarmData("3월 아카데미 특강안내", DateTime.Now.Ticks, CommonData.TEMP_ALARM_MSG[2]));
+        AlarmDataList.Add(new AlarmData("새해인사", DateTime.Now.Ticks, "alram_1"));
+        AlarmDataList.Add(new AlarmData("아카데미 소개", DateTime.Now.Ticks, "alram_2"));
+        AlarmDataList.Add(new AlarmData("아카데미 홍보", DateTime.Now.Ticks, "alram_3"));
+        AlarmDataList.Add(new AlarmData("어플 사용방법", DateTime.Now.Ticks, "alram_4"));
+        AlarmDataList.Add(new AlarmData("정식버전 출시 일정", DateTime.Now.Ticks, "alram_5"));
 
         //Dictionary<CommonData.TRAINING_ANGLE, int> angleList = new Dictionary<CommonData.TRAINING_ANGLE, int>();
         //angleList.Add(CommonData.TRAINING_ANGLE.TRAINING_ANGLE_BEND, 1);
@@ -87,13 +89,13 @@ public class DataManager : MonoBehaviour
         //        "힘들다!")
         //    );
 
-        //GiftconDataList.Add(new GiftconData(1,"스타벅스 아메리카노", ""));
+        GiftconDataList.Add(new GiftconData(1,"스타벅스 아메리카노", ""));
         //GiftconDataList.Add(new GiftconData(2,"스타벅스 아메리카노", ""));
         //GiftconDataList.Add(new GiftconData(3,"스타벅스 아메리카노", ""));
         //GiftconDataList.Add(new GiftconData(4,"스타벅스 아메리카노", ""));
         //GiftconDataList.Add(new GiftconData(5, "스타벅스 아메리카노", ""));
 
-        if(PracticeDataList.Count <= 0)
+        if (PracticeDataList.Count <= 0)
         {
             PracticeDataList.Add(new PracticeData(CommonData.TRAINING_TYPE.TRAINING_POSE, CommonData.TRAINING_POSE.TRAINING_ADDRESS, 0));
             PracticeDataList.Add(new PracticeData(CommonData.TRAINING_TYPE.TRAINING_POSE, CommonData.TRAINING_POSE.TRAINING_BACKSWING, 0));

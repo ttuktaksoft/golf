@@ -21,9 +21,9 @@ public class UIGiftconSlot : MonoBehaviour
 
     public void SetData(GiftconData data)
     {
-        CommonFunc.SetImageFile("Temp_1/test_1", ref GiftconImg);
-        Title.text = data.Title;
-        Desc.text = data.ExpirationTime;
+        //CommonFunc.SetImageFile("Temp_1/test_1", ref GiftconImg);
+        //Title.text = data.Title;
+        //Desc.text = data.ExpirationTime;
         GiftconIndex = data.Index;
         RefreshUIAction = null;
     }

@@ -7,15 +7,15 @@ public class AlarmData
 {
     public string Title;
     public long Date;
-    public string BodyStr;
+    public string BodyImgStr;
 
     public string DateStr;
 
-    public AlarmData(string title, long date, string body)
+    public AlarmData(string title, long date, string bodyimg)
     {
         Title = title;
         Date = date;
-        BodyStr = body;
+        BodyImgStr = bodyimg;
 
         DateTime time = new DateTime(date);
         DateStr = string.Format("{0:D2}-{1:D2}", time.Month, time.Day);

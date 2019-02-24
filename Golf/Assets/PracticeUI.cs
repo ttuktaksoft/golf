@@ -40,8 +40,7 @@ public class PracticeUI : MonoBehaviour
     public Text ReadyCount;
 
     public Text TrainingType;
-    public Text TrainingCount;
-    public Text TrainingAngleType;
+    public Text TrainingGetPoint;
 
     public Button PauseButton;
 
@@ -81,32 +80,12 @@ public class PracticeUI : MonoBehaviour
         TrainingSuccessCount = 0;
         PracticeOrderType = PRACTICE_ORDER.READY;
 
-        TrainingCount.text = "0회";
-        TrainingAngleType.text = "";
+        TrainingGetPoint.text = "0회";
 
         if (TKManager.Instance.GetTrainingType() == CommonData.TRAINING_TYPE.TRAINING_TEMPO)
             TrainingType.text = CommonFunc.ConvertTrainingTypeStr(TKManager.Instance.GetTrainingType());
         else
-        {
             TrainingType.text = CommonFunc.ConvertPoseTypeStr(TKManager.Instance.GetPoseType());
-
-            StringBuilder builder = new StringBuilder();
-            var angleTypeList = TKManager.Instance.GetAngleType();
-            var enumerator = angleTypeList.GetEnumerator();
-            int count = angleTypeList.Count;
-
-            while (enumerator.MoveNext())
-            {
-                count--;
-                if (enumerator.Current.Value == 0)
-                    continue;
-                builder.Append(string.Format("{0} {1}", CommonFunc.ConvertPoseAngleTypeStr(enumerator.Current.Key), CommonFunc.ConvertPoseLevelStr(enumerator.Current.Value)));
-                if (count > 0)
-                    builder.Append(",");
-            }
-
-            TrainingAngleType.text = builder.ToString();
-        }
 
         if (TKManager.Instance.GetGender() == CommonData.GENDER.GENDER_MAN)
             RefData = CommonData.REF_MAN;
@@ -366,7 +345,7 @@ public class PracticeUI : MonoBehaviour
                         TrainingSuccessCount++;
                         TrainingTime = TKManager.Instance.GetTrainingTimer();
                         SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_RETURN, true);
-                        TrainingCount.text = string.Format("{0}회", TrainingSuccessCount);
+                        TrainingGetPoint.text = string.Format("{0}회", TrainingSuccessCount);
                         bSuccessEnter = true;
 
                         waitTime = CommonData.TRAINING_READY_TIME;
@@ -417,7 +396,7 @@ public class PracticeUI : MonoBehaviour
                 }
                     
                 TrainingSuccessCount++;
-                TrainingCount.text = string.Format("{0}회", TrainingSuccessCount);
+                TrainingGetPoint.text = string.Format("{0}회", TrainingSuccessCount);
                 TrainingTime = CommonData.TEMPO_TRAINING_WAIT_TIME;
 
                 TempoTrainingDesc.text = "SHOT!";

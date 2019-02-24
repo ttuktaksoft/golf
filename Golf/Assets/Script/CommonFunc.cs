@@ -99,43 +99,24 @@ public class CommonFunc : MonoBehaviour
         return "";
     }
 
-    static public string ConvertGradeStr(CommonData.GRADE_TYPE type)
+    static public string GetGradeStr(int grade)
     {
-        switch (type)
-        {
-            case CommonData.GRADE_TYPE.BRONZE:
-                return "브론즈";
-            case CommonData.GRADE_TYPE.SILVER:
-                return "실버";
-            case CommonData.GRADE_TYPE.GOLD:
-                return "골드";
-            case CommonData.GRADE_TYPE.PLATINUM:
-                return "플래티넘";
-            default:
-                break;
-        }
-
-        return "";
+        if (grade == 0 ||
+            CommonData.GRADE_STR.Length <= grade)
+            return "";
+        return CommonData.GRADE_STR[grade - 1];
     }
 
-    static public string GetGradeColor(CommonData.GRADE_TYPE type)
+    static public void SetGradeImg(ref Image img, int grade)
     {
-        switch (type)
-        {
-            case CommonData.GRADE_TYPE.BRONZE:
-                return "#e47911";
-            case CommonData.GRADE_TYPE.SILVER:
-                return "#c0c0c0";
-            case CommonData.GRADE_TYPE.GOLD:
-                return "#ffd700";
-            case CommonData.GRADE_TYPE.PLATINUM:
-                return "#E5E4E2";
-            default:
-                break;
-        }
+        if (grade == 0 ||
+            CommonData.GRADE_IMG_STR.Length <= grade)
+            return;
 
-        return "";
+        SetImageFile(CommonData.GRADE_IMG_STR[grade - 1], ref img);
     }
+
+
 
     static public void RefreshThumbnail(ref Image img)
     {

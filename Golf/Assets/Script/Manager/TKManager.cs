@@ -22,7 +22,8 @@ public class TKManager : MonoBehaviour
 
     private CommonData.GENDER Gender;
     public string Name { get; private set; }
-    private CommonData.GRADE_TYPE Grade = CommonData.GRADE_TYPE.BRONZE;
+    private int Grade = 1;
+    public int Point { get; private set; }
     public string PhoneNumber { get; private set; }
     public CommonData.TRAINING_TYPE TrainingType;
     public CommonData.TRAINING_POSE PoseType;
@@ -31,7 +32,7 @@ public class TKManager : MonoBehaviour
     public int TempoTrainingLevel = 3;
     public Sprite ThumbnailSprite = null;
     public string ThumbnailSpritePath = "";
-    public bool MirrorMode = false;
+    public bool MirrorMode = true;
 
     private SaveData MySaveData = new SaveData();
     public bool MyLoadData = false;
@@ -137,64 +138,17 @@ public class TKManager : MonoBehaviour
     {
         PhoneNumber = num;
     }
-
-    public CommonData.GRADE_TYPE GetGrade()
+    public int GetGrade()
     {
+        if (Grade == 0)
+            return 1;
+
         return Grade;
     }
-
-    public void SetGrade(CommonData.GRADE_TYPE type)
+    public void SetGrade(int grade)
     {
-        Grade = type;
+        Grade = grade;
     }
-
-    public void UpGrade()
-    {
-        if (Grade == CommonData.GRADE_TYPE.PLATINUM)
-            return;
-
-        SetGrade(Grade + 1);
-    }
-
-    public string GetGradeStr()
-    {
-        return CommonFunc.ConvertGradeStr(Grade);
-    }
-
-    public void UpdateGrade()
-    {
-        var list = DataManager.Instance.PracticeDataList;
-        bool upgrade = true;
-        for (int i = 0; i < list.Count; i++)
-        {
-            if (list[i].PracticeCount < CommonData.MAX_PRACTICE_COUNT)
-            {
-                upgrade = false;
-                break;
-            }
-        }
-
-        if(upgrade)
-        {
-            UpGrade();
-
-            for (int i = 0; i < list.Count; i++)
-            {
-                list[i].ResetCount();
-            }
-
-            SaveFile();
-        }
-    }
-
-
-
-
-
-
-
-
-
 
 
 
@@ -204,7 +158,7 @@ public class TKManager : MonoBehaviour
     {
         public CommonData.GENDER Gender = CommonData.GENDER.GENDER_MAN;
         public string Name = "";
-        public CommonData.GRADE_TYPE Grade = CommonData.GRADE_TYPE.BRONZE;
+        public int Grade = 1;
         public string PhoneNumber = "";
         public List<EvaluationData> EvaluationDataList = new List<EvaluationData>();
         public string ThumbnailSpritePath = "";
