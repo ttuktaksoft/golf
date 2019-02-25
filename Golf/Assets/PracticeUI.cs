@@ -480,12 +480,33 @@ public class PracticeUI : MonoBehaviour
                 }
                 else if (GyroStatus[2] < RefData[nTrainMode] - LevelCover)
                 {
-   
+
                     Model_RotateLeft.SetActive(true);
                     Model_RotateRight.SetActive(false);
-                    Model_RotateLeft.transform.Rotate(0, 0, ArrowSpeed);
 
-                    rotationRightNeed = false;
+                    if (Model_RotateLeft.transform.rotation.y < -0.7)
+                        Model_RotateLeft.transform.rotation = new Quaternion(0, 0.9f, 0, 1);
+                    else
+                        Model_RotateLeft.transform.Rotate(0, -1 * ArrowSpeed, 0);
+
+                    /*
+                    if (TKManager.Instance.MirrorMode)
+                    {
+                        Model_RotateLeft.SetActive(true);
+                        Model_RotateRight.SetActive(false);
+                        Model_RotateLeft.transform.Rotate(0, 0, ArrowSpeed);
+
+                        rotationRightNeed = false;
+                    }
+                    else
+                    {
+                        Model_RotateRight.SetActive(true);
+                        Model_RotateLeft.SetActive(false);
+                        Model_RotateRight.transform.Rotate(0, 0, ArrowSpeed);
+
+                        rotationRightNeed = false;
+                    }
+                    */
 
 
                     rotationPlaying = true;
@@ -498,9 +519,40 @@ public class PracticeUI : MonoBehaviour
 
                 else if (RefData[nTrainMode] - LevelCover < GyroStatus[2])
                 {
-                    Model_RotateRight.SetActive(true);
-                    Model_RotateLeft.SetActive(false);
-                    Model_RotateRight.transform.Rotate(0, 0, -1 * ArrowSpeed);
+                    
+                          Model_RotateRight.SetActive(true);
+                          Model_RotateLeft.SetActive(false);
+
+                          if (Model_RotateRight.transform.rotation.y > 0.7)
+                              Model_RotateRight.transform.rotation = new Quaternion(0,- 0.9f, 0, 1);
+                          else
+                              Model_RotateRight.transform.Rotate(0, ArrowSpeed, 0);
+                       
+         
+
+                    rotationRightNeed = false;
+
+
+                    rotationRightNeed = true;
+
+                    /*
+                    if (TKManager.Instance.MirrorMode)
+                    {
+                        Model_RotateRight.SetActive(true);
+                        Model_RotateLeft.SetActive(false);
+                        Model_RotateRight.transform.Rotate(0, 0, -1 * ArrowSpeed);
+
+                        rotationRightNeed = true;
+                    }
+                    else
+                    {
+                        Model_RotateLeft.SetActive(true);
+                        Model_RotateRight.SetActive(false);
+                        Model_RotateLeft.transform.Rotate(0, 0, ArrowSpeed);
+
+                        rotationRightNeed = true;
+                    }
+                    */
 
                     rotationRightNeed = true;
 
