@@ -29,7 +29,7 @@ public class RewardUI : MonoBehaviour
 
         CommonFunc.SetGradeImg(ref GradeImg, TKManager.Instance.GetGrade());
         Grade.text = CommonFunc.GetGradeStr(TKManager.Instance.GetGrade());
-        Point.text = string.Format("현재 포인트 : {0:n0} Point", TKManager.Instance.Point + 1000);
+        Point.text = string.Format("현재 포인트 : {0:n0} Point", TKManager.Instance.Point);
 
         //for (int i = 0; i < DataManager.Instance.PracticeDataList.Count; i++)
         //{

@@ -24,6 +24,7 @@ public class PopupUserSetting : Popup
     private bool TermsEnable = false;
     private Action OkAction = null;
     private CommonData.GENDER Gender = CommonData.GENDER.GENDER_MAN;
+    private bool Firstuser = false;
 
     public PopupUserSetting()
         : base(PopupMgr.POPUP_TYPE.USER_SETTING)
@@ -49,7 +50,8 @@ public class PopupUserSetting : Popup
         if (popupData == null)
             return;
 
-        if (popupData.FirstUser)
+        Firstuser = popupData.FirstUser;
+        if (Firstuser)
         {
             Title.text = "회원가입";
             Cancel.gameObject.SetActive(false);
@@ -112,9 +114,24 @@ public class PopupUserSetting : Popup
             return;
         }
         */
-        if(TermsEnable == false)
+        if(Firstuser)
         {
-            PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.MSG, new PopupMsg.PopupData("트레이닝 포인트에 따른 각종 혜택을 받기 위해서 개인정보 취급동의가 필요 합니다.", () =>
+            if (TermsEnable == false)
+            {
+                PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.MSG, new PopupMsg.PopupData("트레이닝 포인트에 따른 각종 혜택을 받기 위해서 개인정보 취급동의가 필요 합니다.", () =>
+                {
+                    TKManager.Instance.SetName(Name.text.ToString());
+                    TKManager.Instance.SetPhoneNumber(Number.text.ToString());
+                    TKManager.Instance.SetGender(Gender);
+
+                    if (OkAction != null)
+                        OkAction();
+
+                    TKManager.Instance.SaveFile();
+                    PopupMgr.Instance.DismissPopup();
+                }));
+            }
+            else
             {
                 TKManager.Instance.SetName(Name.text.ToString());
                 TKManager.Instance.SetPhoneNumber(Number.text.ToString());
@@ -125,7 +142,7 @@ public class PopupUserSetting : Popup
 
                 TKManager.Instance.SaveFile();
                 PopupMgr.Instance.DismissPopup();
-            }));
+            }
         }
         else
         {
@@ -139,6 +156,7 @@ public class PopupUserSetting : Popup
             TKManager.Instance.SaveFile();
             PopupMgr.Instance.DismissPopup();
         }
+        
     }
 
     public void OnClickCancel()

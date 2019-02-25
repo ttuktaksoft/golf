@@ -235,7 +235,7 @@ public class MainTraningUI : MonoBehaviour {
                 else if (i == 4)
                     HexagonMenu[i].Init("아카데미\n소개", "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickAcademyInfo);
                 else if (i == 5)
-                    HexagonMenu[i].Init("튜토리얼\n영상", "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickTutorial);
+                    HexagonMenu[i].Init("사용방법", "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickTutorial);
             }
 
             ChangeTempoTraningPosLevel();
@@ -344,19 +344,28 @@ public class MainTraningUI : MonoBehaviour {
         if (MenuAction)
             return;
         List<string> list = new List<string>();
-        if (TrainingSetStep == TRAINING_SET_STEP.MAIN)
+        
+        if(TrainingType == CommonData.TRAINING_TYPE.TRAINING_POSE)
         {
-            list.Add("t_1");
-            list.Add("t_2");
-            list.Add("t_3");
-            PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.HELP, new PopupHelp.PopupData(list));
+            if (TrainingSetStep == TRAINING_SET_STEP.MAIN)
+            {
+                list.Add("t_1");
+                list.Add("t_2");
+                PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.HELP, new PopupHelp.PopupData(list));
+            }
+            else
+            {
+                list.Add("t_1_1");
+                list.Add("t_1_2");
+                list.Add("t_1_3");
+                list.Add("t_1_4");
+                PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.HELP, new PopupHelp.PopupData(list));
+            }
         }
         else
         {
-            list.Add("t_1_1");
-            list.Add("t_1_2");
-            list.Add("t_1_3");
-            list.Add("t_1_4");
+            list.Add("t_2_1");
+            list.Add("t_2_2");
             PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.HELP, new PopupHelp.PopupData(list));
         }
         

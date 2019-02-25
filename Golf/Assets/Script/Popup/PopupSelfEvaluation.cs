@@ -17,6 +17,7 @@ public class PopupSelfEvaluation : Popup
     private int StarCount = 1;
     private CommonData.TRAINING_TYPE TrainingType = CommonData.TRAINING_TYPE.TRAINING_POSE;
     private int TrainingCount = 0;
+    private int TrainingPoint = 0;
     private CommonData.TRAINING_POSE PoseType = CommonData.TRAINING_POSE.TRAINING_ADDRESS;
     private Dictionary<CommonData.TRAINING_ANGLE, int> AngleTypeList = new Dictionary<CommonData.TRAINING_ANGLE, int>();
     private Action EndAction = null;
@@ -56,11 +57,15 @@ public class PopupSelfEvaluation : Popup
 
         if (TrainingType == CommonData.TRAINING_TYPE.TRAINING_POSE)
         {
-            Title.text = string.Format("{0} {1}회", CommonFunc.ConvertPoseTypeStr(PoseType), TrainingCount);
+            TrainingPoint = TrainingCount * 3;
+            Title.text = string.Format("{0} {1}Point", CommonFunc.ConvertPoseTypeStr(PoseType), TrainingPoint);
         }
         else
+        {
+            TrainingPoint = 0;
             Title.text = string.Format("{0} {1}회", CommonFunc.ConvertTrainingTypeStr(TrainingType, false), TrainingCount);
-
+        }
+            
         Msg.text = "";
         RefreshStar();
     }
@@ -111,6 +116,9 @@ public class PopupSelfEvaluation : Popup
 
             DataManager.Instance.AddPracticeData(CommonData.TRAINING_TYPE.TRAINING_TEMPO);
         }
+
+        TKManager.Instance.Point += TrainingPoint;
+        TKManager.Instance.SaveFile();
 
         PopupMgr.Instance.DismissPopup();
 

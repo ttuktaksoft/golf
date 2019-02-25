@@ -23,7 +23,7 @@ public class TKManager : MonoBehaviour
     private CommonData.GENDER Gender;
     public string Name { get; private set; }
     private int Grade = 1;
-    public int Point { get; private set; }
+    public int Point = 0;
     public string PhoneNumber { get; private set; }
     public CommonData.TRAINING_TYPE TrainingType;
     public CommonData.TRAINING_POSE PoseType;
@@ -159,6 +159,7 @@ public class TKManager : MonoBehaviour
         public CommonData.GENDER Gender = CommonData.GENDER.GENDER_MAN;
         public string Name = "";
         public int Grade = 1;
+        public int Point = 0;
         public string PhoneNumber = "";
         public List<EvaluationData> EvaluationDataList = new List<EvaluationData>();
         public string ThumbnailSpritePath = "";
@@ -169,6 +170,7 @@ public class TKManager : MonoBehaviour
             Gender = TKManager.Instance.GetGender();
             Name = TKManager.Instance.Name;
             Grade = TKManager.Instance.GetGrade();
+            Point = TKManager.Instance.Point;
             PhoneNumber = TKManager.Instance.PhoneNumber;
             EvaluationDataList = DataManager.Instance.EvaluationDataList;
             ThumbnailSpritePath = TKManager.Instance.ThumbnailSpritePath;
@@ -181,6 +183,7 @@ public class TKManager : MonoBehaviour
             TKManager.Instance.Name = Name;
             TKManager.Instance.SetGrade(Grade);
             TKManager.Instance.PhoneNumber = PhoneNumber;
+            TKManager.Instance.Point = Point;
 
             if (EvaluationDataList == null)
                 DataManager.Instance.EvaluationDataList = new List<EvaluationData>();

@@ -96,7 +96,8 @@ public class PracticeUI : MonoBehaviour
 
         if (TKManager.Instance.GetTrainingType() == CommonData.TRAINING_TYPE.TRAINING_TEMPO)
         {
-           
+
+            TrainingGetPoint.text = "0회";
             Model_BendDown.SetActive(false);
             Model_BendUp.SetActive(false);
 
@@ -350,6 +351,17 @@ public class PracticeUI : MonoBehaviour
                         bSuccessEnter = true;
 
                         waitTime = CommonData.TRAINING_READY_TIME;
+                    }
+
+                    while (SoundManager.Instance.IsFxAudioPlay())
+                    {
+                        yield return null;
+                    }
+
+                    if (TrainingSuccess == false)
+                    {
+                        bSuccessEnter = true;
+                        continue;
                     }
                 }
                 else
@@ -781,7 +793,7 @@ public class PracticeUI : MonoBehaviour
         PracticeOrderType = PRACTICE_ORDER.END;
         PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.MSG, new PopupMsg.PopupData("훈련을 종료 하시겠습니까?", () =>
          {
-             PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.SELF_EVALUATION, new PopupSelfEvaluation.PopupData(TrainingSuccessCount, () =>
+             PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.SELF_EVALUATION, new PopupSelfEvaluation.PopupData(TrainingSuccessCount,() =>
              {
                  GyroScopeManager.Instance.DestroyGyro();
                  StopAllCoroutines();

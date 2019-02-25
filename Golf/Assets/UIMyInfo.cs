@@ -10,6 +10,7 @@ public class UIMyInfo : MonoBehaviour
     public GameObject ThumbnailCameraIcon;
     public Text Name;
     public Image GradeImg;
+    public Text Point;
     //public Text Grade;
     public Image Gender;
     public Button Edit;
@@ -26,6 +27,8 @@ public class UIMyInfo : MonoBehaviour
         if (editEnable == false)
             ThumbnailEdit.onClick.RemoveAllListeners();
         ThumbnailCameraIcon.gameObject.SetActive(editEnable);
+
+        Point.text = string.Format("{0:n0} Point", TKManager.Instance.Point);
 
         RefreshUI();
     }
