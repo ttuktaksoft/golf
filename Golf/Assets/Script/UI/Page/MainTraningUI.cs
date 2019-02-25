@@ -196,7 +196,7 @@ public class MainTraningUI : MonoBehaviour {
                     else if (i == 5)
                     {
                         TKManager.Instance.MirrorMode = true;
-                        HexagonMenu[i].Init("거울보기\nON", "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickMirrorMode);
+                        HexagonMenu[i].Init("미러링\n모드", "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickMirrorMode);
                     }
                 }
 
@@ -359,6 +359,7 @@ public class MainTraningUI : MonoBehaviour {
                 list.Add("t_1_2");
                 list.Add("t_1_3");
                 list.Add("t_1_4");
+                list.Add("t_1_5");
                 PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.HELP, new PopupHelp.PopupData(list));
             }
         }
@@ -380,13 +381,13 @@ public class MainTraningUI : MonoBehaviour {
 
         if(TKManager.Instance.MirrorMode)
         {
-            HexagonMenu[5].SetText("거울보기\nON");
+            HexagonMenu[5].SetText("미러링\n모드");
             HexagonMenu[5].SetButtonColor(CommonFunc.HexToColor(HexagonMenuColor[5], 1f));
         }
         else
         {
-            HexagonMenu[5].SetText("거울보기\nOFF");
-            HexagonMenu[5].SetButtonColor(CommonFunc.HexToColor(HexagonMenuColor[5], 0.5f));
+            HexagonMenu[5].SetText("거울보기\n모드");
+            HexagonMenu[5].SetButtonColor(CommonFunc.HexToColor(HexagonMenuColor[5], 1f));
         }
     }
 
