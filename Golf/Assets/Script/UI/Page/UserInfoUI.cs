@@ -33,7 +33,7 @@ public class UserInfoUI : MonoBehaviour {
         }
 
         int maxSlot = 4;
-        for (int i = DataManager.Instance.EvaluationDataList.Count - 1; i >= 0; i--)
+        for (int i = 0; i < DataManager.Instance.EvaluationDataList.Count; i++)
         {
             maxSlot--;
             var data = DataManager.Instance.EvaluationDataList[i];

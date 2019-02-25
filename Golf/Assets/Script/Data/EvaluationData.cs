@@ -57,7 +57,7 @@ public class EvaluationData
     {
         if (TrainingType == CommonData.TRAINING_TYPE.TRAINING_POSE)
         {
-            return string.Format("{0} {1}회", CommonFunc.ConvertPoseTypeStr(PoseType), TrainingCount);
+            return string.Format("{0} {1}Point", CommonFunc.ConvertPoseTypeStr(PoseType), TrainingCount * 3);
         }
         else
             return string.Format("{0} {1}회", CommonFunc.ConvertTrainingTypeStr(TrainingType, false), TrainingCount);
