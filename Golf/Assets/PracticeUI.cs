@@ -734,7 +734,12 @@ public class PracticeUI : MonoBehaviour
                 }
 
                 SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_BEND_OK);
-                
+
+                if (TrainingSuccess_Rotate == false)
+                    bVoiceGuide_Rotation = false;
+                if (TrainingSuccess_Side == false)
+                    bVoiceGuide_Side = false;
+
             }
         }
         else if (rotationPlaying)
@@ -758,6 +763,9 @@ public class PracticeUI : MonoBehaviour
                 }
 
                 SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_ROTATION_OK);
+
+                if (TrainingSuccess_Side == false)
+                    bVoiceGuide_Side = false;
             }
         }
         else if (sidebendPlaying)
