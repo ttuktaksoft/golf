@@ -58,12 +58,12 @@ public class PopupSelfEvaluation : Popup
         if (TrainingType == CommonData.TRAINING_TYPE.TRAINING_POSE)
         {
             TrainingPoint = TrainingCount * 3;
-            Title.text = string.Format("{0} {1}Point", CommonFunc.ConvertPoseTypeStr(PoseType), TrainingPoint);
+            Title.text = string.Format("{0} {1}Point", CommonFunc.ConvertPoseTypeEngStr(PoseType), TrainingPoint);
         }
         else
         {
             TrainingPoint = 0;
-            Title.text = string.Format("{0} {1}회", CommonFunc.ConvertTrainingTypeStr(TrainingType, false), TrainingCount);
+            Title.text = string.Format("{0} {1}회", CommonFunc.ConvertTrainingTypeEngStr(TrainingType, false), TrainingCount);
         }
             
         Msg.text = "";

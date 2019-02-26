@@ -50,6 +50,23 @@ public class CommonFunc : MonoBehaviour
         return "";
     }
 
+    static public string ConvertPoseTypeEngStr(CommonData.TRAINING_POSE type)
+    {
+        switch (type)
+        {
+            case CommonData.TRAINING_POSE.TRAINING_ADDRESS:
+                return "Address";
+            case CommonData.TRAINING_POSE.TRAINING_BACKSWING:
+                return "Back Swing Top";
+            case CommonData.TRAINING_POSE.TRAINING_IMPACT:
+                return "Impact";
+            default:
+                break;
+        }
+
+        return "";
+    }
+
     static public string ConvertPoseAngleTypeStr(CommonData.TRAINING_ANGLE type)
     {
         switch (type)
@@ -91,6 +108,26 @@ public class CommonFunc : MonoBehaviour
                         return "사운드\n트레이닝";
                     else
                         return "사운드 트레이닝";
+                }
+            default:
+                break;
+        }
+
+        return "";
+    }
+
+    static public string ConvertTrainingTypeEngStr(CommonData.TRAINING_TYPE type, bool enter = false)
+    {
+        switch (type)
+        {
+            case CommonData.TRAINING_TYPE.TRAINING_POSE:
+                return "포즈";
+            case CommonData.TRAINING_TYPE.TRAINING_TEMPO:
+                {
+                    if (enter)
+                        return "Sound\nTraining";
+                    else
+                        return "Sound Training";
                 }
             default:
                 break;

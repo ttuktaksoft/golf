@@ -80,12 +80,12 @@ public class PracticeUI : MonoBehaviour
         TrainingSuccessCount = 0;
         PracticeOrderType = PRACTICE_ORDER.READY;
 
-        TrainingGetPoint.text = "0 Point";
+        TrainingGetPoint.text = "0Point";
 
         if (TKManager.Instance.GetTrainingType() == CommonData.TRAINING_TYPE.TRAINING_TEMPO)
-            TrainingType.text = CommonFunc.ConvertTrainingTypeStr(TKManager.Instance.GetTrainingType());
+            TrainingType.text = CommonFunc.ConvertTrainingTypeEngStr(TKManager.Instance.GetTrainingType());
         else
-            TrainingType.text = CommonFunc.ConvertPoseTypeStr(TKManager.Instance.GetPoseType());
+            TrainingType.text = CommonFunc.ConvertPoseTypeEngStr(TKManager.Instance.GetPoseType());
 
         if (TKManager.Instance.GetGender() == CommonData.GENDER.GENDER_MAN)
             RefData = CommonData.REF_MAN;
@@ -347,7 +347,7 @@ public class PracticeUI : MonoBehaviour
                         TrainingSuccessCount++;
                         TrainingTime = TKManager.Instance.GetTrainingTimer();
                         SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_RETURN, true);
-                        TrainingGetPoint.text = string.Format("{0:n0} Point", TrainingSuccessCount * 3);
+                        TrainingGetPoint.text = string.Format("{0:n0}Point", TrainingSuccessCount * 3);
                         bSuccessEnter = true;
 
                         waitTime = CommonData.TRAINING_READY_TIME;

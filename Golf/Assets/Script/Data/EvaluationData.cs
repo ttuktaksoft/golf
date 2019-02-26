@@ -57,10 +57,10 @@ public class EvaluationData
     {
         if (TrainingType == CommonData.TRAINING_TYPE.TRAINING_POSE)
         {
-            return string.Format("{0} {1}Point", CommonFunc.ConvertPoseTypeStr(PoseType), TrainingCount * 3);
+            return string.Format("{0} {1}Point", CommonFunc.ConvertPoseTypeEngStr(PoseType), TrainingCount * 3);
         }
         else
-            return string.Format("{0} {1}회", CommonFunc.ConvertTrainingTypeStr(TrainingType, false), TrainingCount);
+            return string.Format("{0} {1}회", CommonFunc.ConvertTrainingTypeEngStr(TrainingType, false), TrainingCount);
     }
 
     public string GetAngle()

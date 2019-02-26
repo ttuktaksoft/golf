@@ -13,9 +13,9 @@ public class UIRewardPracticeGraph : MonoBehaviour
     public void SetData(PracticeData data)
     {
         if(data.TrainingType == CommonData.TRAINING_TYPE.TRAINING_TEMPO)
-            Title.text = CommonFunc.ConvertTrainingTypeStr(data.TrainingType);
+            Title.text = CommonFunc.ConvertTrainingTypeEngStr(data.TrainingType);
         else
-            Title.text = CommonFunc.ConvertPoseTypeStr(data.TrainingPoseType);
+            Title.text = CommonFunc.ConvertPoseTypeEngStr(data.TrainingPoseType);
 
         Desc.text = string.Format("{0} / {1}", data.PracticeCount, CommonData.MAX_PRACTICE_COUNT);
         Today.text = string.Format("Today : {0}", data.TodayPracticeCount);

@@ -161,8 +161,7 @@ public class MainTraningUI : MonoBehaviour {
                 TrainingModeLevelBtnIndex.Clear();
 
                 AngleSelectInfoText.gameObject.SetActive(true);
-                TKManager.Instance.MirrorMode = false;
-
+  
                 for (int i = 0; i < HexagonMenu.Count; i++)
                 {
                     if (i == 0)
@@ -195,8 +194,8 @@ public class MainTraningUI : MonoBehaviour {
                     }
                     else if (i == 5)
                     {
-                        TKManager.Instance.MirrorMode = true;
-                        HexagonMenu[i].Init("미러링\n모드", "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickMirrorMode);
+                        TKManager.Instance.MirrorMode = false;
+                        HexagonMenu[i].Init("거울보기\n모드", "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickMirrorMode);
                     }
                 }
 
