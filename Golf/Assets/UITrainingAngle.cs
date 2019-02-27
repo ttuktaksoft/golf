@@ -41,7 +41,9 @@ public class UITrainingAngle : MonoBehaviour
         float value_2 = (successMax - MinValue) * (180 / value);
         MaxLine.transform.localRotation = Quaternion.Euler(MaxLine.transform.localRotation.x, MaxLine.transform.localRotation.y, (successPower * -180f));
 
-        SetAngle(value / 2);
+        Circle.transform.localRotation = Quaternion.Euler(Circle.transform.localRotation.x, Circle.transform.localRotation.y, -90f);
+        Angle.text = "0";
+        //SetAngle(value / 2);
     }
 
     public void SetAngle(float angle)

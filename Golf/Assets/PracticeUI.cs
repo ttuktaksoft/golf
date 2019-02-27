@@ -94,18 +94,19 @@ public class PracticeUI : MonoBehaviour
 
         TrainingReady();
 
+        Model_BendDown.SetActive(false);
+        Model_BendUp.SetActive(false);
+
+        Model_RotateLeft.SetActive(false);
+        Model_RotateRight.SetActive(false);
+
+        Model_SideLeft.SetActive(false);
+        Model_SideRight.SetActive(false);
+
         if (TKManager.Instance.GetTrainingType() == CommonData.TRAINING_TYPE.TRAINING_TEMPO)
         {
 
             TrainingGetPoint.text = "0회";
-            Model_BendDown.SetActive(false);
-            Model_BendUp.SetActive(false);
-
-            Model_RotateLeft.SetActive(false);
-            Model_RotateRight.SetActive(false);
-
-            Model_SideLeft.SetActive(false);
-            Model_SideRight.SetActive(false);
 
             Model.SetActive(false);
             Mirror_Model.SetActive(false);
@@ -127,14 +128,14 @@ public class PracticeUI : MonoBehaviour
             Model.SetActive(!TKManager.Instance.MirrorMode);
             Mirror_Model.SetActive(TKManager.Instance.MirrorMode);          
 
-            Model_BendDown.SetActive(true);
-            Model_BendUp.SetActive(true);
+            //Model_BendDown.SetActive(true);
+            //Model_BendUp.SetActive(true);
 
-            Model_RotateLeft.SetActive(true);
-            Model_RotateRight.SetActive(true);
+            //Model_RotateLeft.SetActive(true);
+            //Model_RotateRight.SetActive(true);
 
-            Model_SideLeft.SetActive(true);
-            Model_SideRight.SetActive(true);
+            //Model_SideLeft.SetActive(true);
+            //Model_SideRight.SetActive(true);
 
             BackgrounImg.gameObject.SetActive(true);
             PoseTrainingObj.gameObject.SetActive(true);
@@ -267,13 +268,24 @@ public class PracticeUI : MonoBehaviour
     public void TrainingStart()
     {
         if (TKManager.Instance.GetTrainingType() == CommonData.TRAINING_TYPE.TRAINING_POSE)
+        {
+            //Model_BendDown.SetActive(true);
+            //Model_BendUp.SetActive(true);
+
+            //Model_RotateLeft.SetActive(true);
+            //Model_RotateRight.SetActive(true);
+
+            //Model_SideLeft.SetActive(true);
+            //Model_SideRight.SetActive(true);
             StartCoroutine(Co_PoseTrainingStart());
+        }
         else if (TKManager.Instance.GetTrainingType() == CommonData.TRAINING_TYPE.TRAINING_TEMPO)
             StartCoroutine(Co_TempoTrainingStart());
     }
 
     IEnumerator Co_PoseTrainingStart()
     {
+        //UpdateGyroStatus();
         TrainingTime = TKManager.Instance.GetTrainingTimer();
         float soundTime = 1f;
         float waitTime = 0;
