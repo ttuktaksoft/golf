@@ -48,7 +48,7 @@ public class TKManager : MonoBehaviour
         DontDestroyOnLoad(this);
 
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
-        Application.targetFrameRate = 50;
+        Application.targetFrameRate = 30;
 #if UNITY_ANDROID || UNITY_EDITOR
         Screen.SetResolution((int)Screen.safeArea.width, ((int)Screen.safeArea.width * 16) / 9, false);
 #endif

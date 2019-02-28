@@ -12,27 +12,56 @@ public class LoadingUI : MonoBehaviour
     public bool Permissions = false;
     public bool Login = false;
 
+    static int getSDKInt()
+    {
+        using (var version = new AndroidJavaClass("android.os.Build$VERSION"))
+        {
+            return version.GetStatic<int>("SDK_INT");
+        }
+    }
+
     void Start()
     {
+
 #if (UNITY_ANDROID && !UNITY_EDITOR)
-        AndroidPermissionsManager.RequestPermission(new[] { "android.permission.READ_EXTERNAL_STORAGE" }, new AndroidPermissionCallback(
-            grantedPermission =>
-            {
-                Permissions = true;
+
+      int version = getSDKInt();
+        
+        //Log.d("!!@@@@@ version");
+        Debug.Log("!!@@@@@ version : " + version);
+
+        if (getSDKInt() < 23)
+        {
+
+            Permissions = true;
+            // Android OS Version 4.1 이상에서 동작할 내용
+        }
+        else
+        {
+            AndroidPermissionsManager.RequestPermission(new[] { "android.permission.READ_EXTERNAL_STORAGE" }, new AndroidPermissionCallback(
+         grantedPermission =>
+         {
+             Permissions = true;
                 // 권한이 승인 되었다.
                 //CallPermission();
             },
-            deniedPermission =>
-            {
+         deniedPermission =>
+         {
+            Permissions = true;
                 //canvas_denied.SetActive(true);
                 // 권한이 거절되었다.
             },
-            deniedPermissionAndDontAskAgain =>
-            {
+         deniedPermissionAndDontAskAgain =>
+         {
+            Permissions = true;
                 // 권한이 거절된데다가 다시 묻지마시오를 눌러버렸다.
                 // 안드로이드 설정창 권한에서 직접 변경 할 수 있다는 팝업을 띄우는 방식을 취해야함. 
                 //canvas_denied.SetActive(true);
             }));
+        }
+
+
+    
 #elif (UNITY_ANDROID && UNITY_EDITOR) || UNITY_IOS
         Permissions = true;
 #endif
