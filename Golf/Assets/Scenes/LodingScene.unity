@@ -308,6 +308,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Permissions: 0
   Login: 0
+  Terms: 0
 --- !u!1 &895690068
 GameObject:
   m_ObjectHideFlags: 0
@@ -337,8 +338,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c38da640c7a923c42843a59e1ddcbf3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  EvaluationDataList: []
-  PracticeDataList: []
 --- !u!4 &895690070
 Transform:
   m_ObjectHideFlags: 0
@@ -522,6 +521,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe9cc7dac14c30c468999d9858fe2776, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  FirstLoadingComplete: 0
+  LoadingCount: 0
 --- !u!4 &1150570031
 Transform:
   m_ObjectHideFlags: 0
@@ -579,12 +580,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 188c59ca6dad3f94da8406f715b52abd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Point: 0
   TrainingType: 0
   PoseType: 0
   TempoTrainingLevel: 3
   ThumbnailSprite: {fileID: 0}
-  ThumbnailSpritePath: 
   MirrorMode: 1
   MyLoadData: 0
 --- !u!1 &1457332395
@@ -826,6 +825,8 @@ MonoBehaviour:
   - {fileID: 8300000, guid: a63e1f731c22f624893ca5f509548b0f, type: 3}
   - {fileID: 8300000, guid: 87827b78c6931c64bbd972ac3e270dde, type: 3}
   - {fileID: 8300000, guid: 0d9cf0ce50db08e4ebca6df477d8bb24, type: 3}
+  - {fileID: 8300000, guid: 5a25ad625e7cf9c4db4c42418521cd34, type: 3}
+  - {fileID: 8300000, guid: 444309abf24391f488b7c0dd13aa7714, type: 3}
 --- !u!82 &2112856915
 AudioSource:
   m_ObjectHideFlags: 0

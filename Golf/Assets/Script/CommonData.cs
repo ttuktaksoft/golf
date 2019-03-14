@@ -73,7 +73,10 @@ public class CommonData : MonoBehaviour
 
         TRAINING_ROTATION_OK,
         TRAINING_BEND_OK,
-        TRAINING_SIDE_OK
+        TRAINING_SIDE_OK,
+
+        TRAINING_INTRO,
+        TRAINING_COUNTDOWN
     }
 
     public static int ANGLE_MAX_LEVEL = 4;
