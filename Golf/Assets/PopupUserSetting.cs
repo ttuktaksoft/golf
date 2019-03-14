@@ -21,7 +21,7 @@ public class PopupUserSetting : Popup
     public GameObject TermsCheckObj;
     public Button TermsViewButton;
 
-    private bool TermsEnable = false;
+    private bool TermsEnable = true;
     private Action OkAction = null;
     private CommonData.GENDER Gender = CommonData.GENDER.GENDER_MAN;
     private bool Firstuser = false;
@@ -41,7 +41,7 @@ public class PopupUserSetting : Popup
         {
             OkAction = okAction;
             FirstUser = firstuser;
-    }
+        }
     }
 
     public override void SetData(PopupBaseData data)
@@ -55,7 +55,7 @@ public class PopupUserSetting : Popup
         {
             Title.text = "회원가입";
             Cancel.gameObject.SetActive(false);
-            TermsObj.gameObject.SetActive(true);
+            TermsObj.gameObject.SetActive(false);
         }
         else
         {
@@ -66,9 +66,9 @@ public class PopupUserSetting : Popup
 
         OkAction = popupData.OkAction;
 
-        Name.text = TKManager.Instance.Name;
-        Number.text = TKManager.Instance.PhoneNumber;
-        Gender = TKManager.Instance.GetGender();
+        Name.text = TKManager.Instance.Mydata.Name;
+        Number.text = TKManager.Instance.Mydata.PhoneNumber;
+        Gender = TKManager.Instance.Mydata.Gender;
 
         CommonFunc.RefreshThumbnail(ref Thumbnail);
 
@@ -120,9 +120,9 @@ public class PopupUserSetting : Popup
             {
                 PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.MSG, new PopupMsg.PopupData("트레이닝 포인트에 따른 각종 혜택을 받기 위해서 개인정보 취급동의가 필요 합니다.", () =>
                 {
-                    TKManager.Instance.SetName(Name.text.ToString());
-                    TKManager.Instance.SetPhoneNumber(Number.text.ToString());
-                    TKManager.Instance.SetGender(Gender);
+                    TKManager.Instance.Mydata.SetName(Name.text.ToString());
+                    TKManager.Instance.Mydata.SetPhoneNumber(Number.text.ToString());
+                    TKManager.Instance.Mydata.SetGender(Gender);
 
                     if (OkAction != null)
                         OkAction();
@@ -133,9 +133,9 @@ public class PopupUserSetting : Popup
             }
             else
             {
-                TKManager.Instance.SetName(Name.text.ToString());
-                TKManager.Instance.SetPhoneNumber(Number.text.ToString());
-                TKManager.Instance.SetGender(Gender);
+                TKManager.Instance.Mydata.SetName(Name.text.ToString());
+                TKManager.Instance.Mydata.SetPhoneNumber(Number.text.ToString());
+                TKManager.Instance.Mydata.SetGender(Gender);
 
                 if (OkAction != null)
                     OkAction();
@@ -146,9 +146,9 @@ public class PopupUserSetting : Popup
         }
         else
         {
-            TKManager.Instance.SetName(Name.text.ToString());
-            TKManager.Instance.SetPhoneNumber(Number.text.ToString());
-            TKManager.Instance.SetGender(Gender);
+            TKManager.Instance.Mydata.SetName(Name.text.ToString());
+            TKManager.Instance.Mydata.SetPhoneNumber(Number.text.ToString());
+            TKManager.Instance.Mydata.SetGender(Gender);
 
             if (OkAction != null)
                 OkAction();
@@ -204,7 +204,7 @@ public class PopupUserSetting : Popup
                     Debug.Log("!!!!!!Couldn't load texture from " + path);
                     return;
                 }
-                TKManager.Instance.ThumbnailSpritePath = path;
+                TKManager.Instance.Mydata.ThumbnailSpritePath = path;
                 TKManager.Instance.ThumbnailSprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Thumbnail.rectTransform.pivot);
                 Thumbnail.sprite = TKManager.Instance.ThumbnailSprite;
 

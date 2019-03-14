@@ -28,18 +28,18 @@ public class UIMyInfo : MonoBehaviour
             ThumbnailEdit.onClick.RemoveAllListeners();
         ThumbnailCameraIcon.gameObject.SetActive(editEnable);
 
-        Point.text = string.Format("{0:n0} Point", TKManager.Instance.Point);
+        Point.text = string.Format("{0:n0} P / {1:n0} P / 상위 25%", TKManager.Instance.Mydata.SeasonPoint, TKManager.Instance.Mydata.AccumulatePoint);
 
         RefreshUI();
     }
 
     public void RefreshUI()
     {
-        Name.text = TKManager.Instance.Name;
+        Name.text = TKManager.Instance.Mydata.Name;
         //Grade.text = CommonFunc.GetGradeStr();
-        CommonFunc.SetGradeImg(ref GradeImg, TKManager.Instance.GetGrade());
+        CommonFunc.SetGradeImg(ref GradeImg, TKManager.Instance.Mydata.Grade);
 
-        if (TKManager.Instance.GetGender() == CommonData.GENDER.GENDER_MAN)
+        if (TKManager.Instance.Mydata.Gender == CommonData.GENDER.GENDER_MAN)
             CommonFunc.SetImageFile("icon_man", ref Gender);
         else
             CommonFunc.SetImageFile("icon_woman", ref Gender);

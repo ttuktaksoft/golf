@@ -20,18 +20,13 @@ public class TKManager : MonoBehaviour
         }
     }
 
-    private CommonData.GENDER Gender;
-    public string Name { get; private set; }
-    private int Grade = 1;
-    public int Point = 0;
-    public string PhoneNumber { get; private set; }
+    public UserData Mydata = null;
     public CommonData.TRAINING_TYPE TrainingType;
     public CommonData.TRAINING_POSE PoseType;
     public Dictionary<CommonData.TRAINING_ANGLE, int> AngleTypeList = new Dictionary<CommonData.TRAINING_ANGLE, int>();
     public Gyroscope gyro;
     public int TempoTrainingLevel = 3;
     public Sprite ThumbnailSprite = null;
-    public string ThumbnailSpritePath = "";
     public bool MirrorMode = true;
 
     private SaveData MySaveData = new SaveData();
@@ -40,7 +35,9 @@ public class TKManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Gender = CommonData.GENDER.GENDER_MAN;
+        // TODO 파베에서 데이터 받아와야함
+        Mydata = new UserData();
+        
         TrainingType = CommonData.TRAINING_TYPE.TRAINING_POSE;
         PoseType = CommonData.TRAINING_POSE.TRAINING_ADDRESS;
         gyro = Input.gyro;
@@ -64,15 +61,6 @@ public class TKManager : MonoBehaviour
             UnityEngine.ScreenCapture.CaptureScreenshot("shot.png");
         }
 #endif
-    }
-
-    public void SetGender(CommonData.GENDER Gender)
-    {
-        this.Gender = Gender;
-    }
-    public CommonData.GENDER GetGender()
-    {
-        return this.Gender;
     }
 
     public void SetTrainingType(CommonData.TRAINING_TYPE type)
@@ -129,27 +117,6 @@ public class TKManager : MonoBehaviour
         return TrainingTimer;
     }
 
-    public void SetName(string name)
-    {
-        Name = name;
-    }
-
-    public void SetPhoneNumber(string num)
-    {
-        PhoneNumber = num;
-    }
-    public int GetGrade()
-    {
-        if (Grade == 0)
-            return 1;
-
-        return Grade;
-    }
-    public void SetGrade(int grade)
-    {
-        Grade = grade;
-    }
-
 
 
 
@@ -163,32 +130,26 @@ public class TKManager : MonoBehaviour
         public string PhoneNumber = "";
         public List<EvaluationData> EvaluationDataList = new List<EvaluationData>();
         public string ThumbnailSpritePath = "";
-        public List<PracticeData> PracticeDataList = new List<PracticeData>();
 
         public void Save()
         {
-            Gender = TKManager.Instance.GetGender();
-            Name = TKManager.Instance.Name;
-            Grade = TKManager.Instance.GetGrade();
-            Point = TKManager.Instance.Point;
-            PhoneNumber = TKManager.Instance.PhoneNumber;
-            EvaluationDataList = DataManager.Instance.EvaluationDataList;
-            ThumbnailSpritePath = TKManager.Instance.ThumbnailSpritePath;
-            PracticeDataList = DataManager.Instance.PracticeDataList;
+            Gender = TKManager.Instance.Mydata.Gender;
+            Name = TKManager.Instance.Mydata.Name;
+            Grade = TKManager.Instance.Mydata.Grade;
+            Point = TKManager.Instance.Mydata.SeasonPoint;
+            PhoneNumber = TKManager.Instance.Mydata.PhoneNumber;
+            EvaluationDataList = TKManager.Instance.Mydata.EvaluationDataList;
+            ThumbnailSpritePath = TKManager.Instance.Mydata.ThumbnailSpritePath;
         }
 
         public void Load()
         {
-            TKManager.Instance.SetGender(Gender);
-            TKManager.Instance.Name = Name;
-            TKManager.Instance.SetGrade(Grade);
-            TKManager.Instance.PhoneNumber = PhoneNumber;
-            TKManager.Instance.Point = Point;
+            TKManager.Instance.Mydata.Init(Gender, Name, PhoneNumber, Point, Point);
 
             if (EvaluationDataList == null)
-                DataManager.Instance.EvaluationDataList = new List<EvaluationData>();
+                TKManager.Instance.Mydata.EvaluationDataList = new List<EvaluationData>();
             else
-                DataManager.Instance.EvaluationDataList = EvaluationDataList;
+                TKManager.Instance.Mydata.EvaluationDataList = EvaluationDataList;
 
             if (ThumbnailSpritePath != "")
             {
@@ -202,15 +163,6 @@ public class TKManager : MonoBehaviour
             }
             else
                 TKManager.Instance.ThumbnailSprite = null;
-
-            if(PracticeDataList != null)
-            {
-                DataManager.Instance.PracticeDataList = PracticeDataList;
-                for (int i = 0; i < DataManager.Instance.PracticeDataList.Count; i++)
-                {
-                    DataManager.Instance.PracticeDataList[i].RefreshPracticeCount();
-                }
-            }
         }
     }
 
@@ -241,7 +193,7 @@ public class TKManager : MonoBehaviour
         }
         else
         {
-            SaveFile();
+            //SaveFile();
         }
     }
 

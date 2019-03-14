@@ -27,9 +27,9 @@ public class RewardUI : MonoBehaviour
 
         RefreshGiftconList();
 
-        CommonFunc.SetGradeImg(ref GradeImg, TKManager.Instance.GetGrade());
-        Grade.text = CommonFunc.GetGradeStr(TKManager.Instance.GetGrade());
-        Point.text = string.Format("현재 포인트 : {0:n0} Point", TKManager.Instance.Point);
+        CommonFunc.SetGradeImg(ref GradeImg, TKManager.Instance.Mydata.Grade);
+        Grade.text = CommonFunc.GetGradeStr(TKManager.Instance.Mydata.Grade);
+        Point.text = string.Format("현재 포인트 : {0:n0} Point", TKManager.Instance.Mydata.SeasonPoint);
 
         //for (int i = 0; i < DataManager.Instance.PracticeDataList.Count; i++)
         //{
@@ -48,12 +48,12 @@ public class RewardUI : MonoBehaviour
         }
         GiftconSlotList.Clear();
 
-        GiftconListObj.SetActive(DataManager.Instance.GiftconDataList.Count > 0);
-        GiftconEmpty.SetActive(DataManager.Instance.GiftconDataList.Count <= 0);
+        GiftconListObj.SetActive(TKManager.Instance.Mydata.GiftconDataList.Count > 0);
+        GiftconEmpty.SetActive(TKManager.Instance.Mydata.GiftconDataList.Count <= 0);
 
-        for (int i = 0; i < DataManager.Instance.GiftconDataList.Count; i++)
+        for (int i = 0; i < TKManager.Instance.Mydata.GiftconDataList.Count; i++)
         {
-            var data = DataManager.Instance.GiftconDataList[i];
+            var data = TKManager.Instance.Mydata.GiftconDataList[i];
             var slotObj = Instantiate(Resources.Load("Prefab/UIGiftcon"), ListObj.transform) as GameObject;
             var slot = slotObj.GetComponent<UIGiftconSlot>();
             slot.SetData(data);

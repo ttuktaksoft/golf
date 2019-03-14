@@ -87,7 +87,7 @@ public class PracticeUI : MonoBehaviour
         else
             TrainingType.text = CommonFunc.ConvertPoseTypeEngStr(TKManager.Instance.GetPoseType());
 
-        if (TKManager.Instance.GetGender() == CommonData.GENDER.GENDER_MAN)
+        if (TKManager.Instance.Mydata.Gender == CommonData.GENDER.GENDER_MAN)
             RefData = CommonData.REF_MAN;
         else
             RefData = CommonData.REF_WOMAN;

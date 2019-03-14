@@ -17,12 +17,44 @@ public class FirebaseManager : MonoBehaviour
         }
     }
 
+    public bool FirstLoadingComplete = false;
+    public int LoadingCount = 0;
+
     void Start()
     {
         DontDestroyOnLoad(this);
     }
 
     public void init()
+    {
+
+    }
+
+    public void GetData()
+    {
+        GetUserData();
+    }
+
+    private void AddFirstLoadingComplete()
+    {
+        if (FirstLoadingComplete == false)
+            LoadingCount++;
+
+        if (LoadingCount == 14)
+            FirstLoadingComplete = true;
+    }
+
+    public void GetUserData()
+    {
+        AddFirstLoadingComplete();
+    }
+
+    public void SetUserData()
+    {
+        // TODO 파베에 UserData 세팅
+    }
+
+    public void SetSeasonPoint()
     {
 
     }

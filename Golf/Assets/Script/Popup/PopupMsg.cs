@@ -13,6 +13,15 @@ public class PopupMsg : Popup
     private Action OkAction = null;
     private Action CancelAction = null;
 
+    private BUTTON_TYPE ButtonType = BUTTON_TYPE.TWO;
+
+    public enum BUTTON_TYPE
+    {
+        ONE,
+        TWO,
+    }
+
+
     public PopupMsg()
         : base(PopupMgr.POPUP_TYPE.MSG)
     {
@@ -24,12 +33,14 @@ public class PopupMsg : Popup
         public string Msg;
         public Action OkAction = null;
         public Action CancelAction = null;
+        public BUTTON_TYPE ButtonType = BUTTON_TYPE.TWO;
 
-        public PopupData(string msg, Action okAction = null, Action cancelAction = null)
+        public PopupData(string msg, Action okAction = null, Action cancelAction = null, BUTTON_TYPE type = BUTTON_TYPE.TWO)
         {
             Msg = msg;
             OkAction = okAction;
             CancelAction = cancelAction;
+            ButtonType = type;
         }
     }
 
@@ -42,6 +53,21 @@ public class PopupMsg : Popup
         Msg.text = popupData.Msg;
         OkAction = popupData.OkAction;
         CancelAction = popupData.CancelAction;
+        ButtonType = popupData.ButtonType;
+
+        switch (ButtonType)
+        {
+            case BUTTON_TYPE.ONE:
+                OK.gameObject.SetActive(true);
+                Cancel.gameObject.SetActive(false);
+                break;
+            case BUTTON_TYPE.TWO:
+                OK.gameObject.SetActive(true);
+                Cancel.gameObject.SetActive(true);
+                break;
+            default:
+                break;
+        }
     }
 
 

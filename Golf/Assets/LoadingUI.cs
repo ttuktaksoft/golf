@@ -11,6 +11,7 @@ public class LoadingUI : MonoBehaviour
 
     public bool Permissions = false;
     public bool Login = false;
+    public bool Terms = false;
 
     static int getSDKInt()
     {
@@ -92,7 +93,28 @@ public class LoadingUI : MonoBehaviour
         DataManager.Instance.init();
 
         yield return new WaitForSeconds(2f);
-        if(TKManager.Instance.MyLoadData == false)
+        
+        if (TKManager.Instance.MyLoadData == false)
+        {
+            Terms = false;
+            PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.TERMS, new PopupTerms.PopupData(() =>
+            {
+                Terms = true;
+            }));
+        }
+        else
+            Terms = true;
+
+        while (true)
+        {
+            if (Terms)
+                break;
+
+            yield return null;
+        }
+
+
+        if (TKManager.Instance.MyLoadData == false)
         {
             PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.USER_SETTING, new PopupUserSetting.PopupData(() =>
             {

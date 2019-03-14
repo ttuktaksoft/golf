@@ -90,7 +90,7 @@ public class PopupSelfEvaluation : Popup
     {
         if(TrainingType == CommonData.TRAINING_TYPE.TRAINING_POSE)
         {
-            DataManager.Instance.AddEvaluationData(
+            TKManager.Instance.Mydata.AddEvaluationData(
             new EvaluationData(
                 DateTime.Now.Ticks,
                 CommonData.TRAINING_TYPE.TRAINING_POSE,
@@ -100,12 +100,10 @@ public class PopupSelfEvaluation : Popup
                 StarCount,
                 Msg.text.ToString())
             );
-
-            DataManager.Instance.AddPracticeData(CommonData.TRAINING_TYPE.TRAINING_POSE, PoseType);
         }
         else
         {
-            DataManager.Instance.AddEvaluationData(
+            TKManager.Instance.Mydata.AddEvaluationData(
             new EvaluationData(
                 DateTime.Now.Ticks,
                 CommonData.TRAINING_TYPE.TRAINING_TEMPO,
@@ -113,11 +111,9 @@ public class PopupSelfEvaluation : Popup
                 StarCount,
                 Msg.text.ToString())
             );
-
-            DataManager.Instance.AddPracticeData(CommonData.TRAINING_TYPE.TRAINING_TEMPO);
         }
 
-        TKManager.Instance.Point += TrainingPoint;
+        TKManager.Instance.Mydata.AddSeasonPoint(TrainingPoint);
         TKManager.Instance.SaveFile();
 
         PopupMgr.Instance.DismissPopup();

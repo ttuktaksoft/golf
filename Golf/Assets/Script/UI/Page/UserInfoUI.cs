@@ -21,7 +21,7 @@ public class UserInfoUI : MonoBehaviour {
         }
         EvaluationSlotList.Clear();
 
-        if (DataManager.Instance.EvaluationDataList.Count > 0)
+        if (TKManager.Instance.Mydata.EvaluationDataList.Count > 0)
         {
             EvaluationList.SetActive(true);
             EmptyText.SetActive(false);
@@ -33,10 +33,10 @@ public class UserInfoUI : MonoBehaviour {
         }
 
         int maxSlot = 4;
-        for (int i = 0; i < DataManager.Instance.EvaluationDataList.Count; i++)
+        for (int i = 0; i < TKManager.Instance.Mydata.EvaluationDataList.Count; i++)
         {
             maxSlot--;
-            var data = DataManager.Instance.EvaluationDataList[i];
+            var data = TKManager.Instance.Mydata.EvaluationDataList[i];
             var slotObj = Instantiate(Resources.Load("Prefab/UIEvaluationSlotMini"), EvaluationList.transform) as GameObject;
             var slot = slotObj.GetComponent<EvaluationSlotUI>();
             slot.SetData(data);

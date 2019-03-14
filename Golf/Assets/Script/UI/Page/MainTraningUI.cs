@@ -189,7 +189,7 @@ public class MainTraningUI : MonoBehaviour {
                     }
                     else if (i == 4)
                     {
-                        HexagonMenu[i].Init("트레이닝 시간\n5초", "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickTrainingTime);
+                        HexagonMenu[i].Init("사용방법", "", CommonFunc.HexToColor(HexagonMenuColor[i], 1f), OnClickTutorial);
                         TrainingTimeBtnIndex = i;
                     }
                     else if (i == 5)
@@ -352,6 +352,10 @@ public class MainTraningUI : MonoBehaviour {
                 list.Add("t_2");
                 PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.HELP, new PopupHelp.PopupData(list));
             }
+            else if(TrainingSetStep == TRAINING_SET_STEP.ANGLE)
+            {
+                Application.OpenURL("https://www.youtube.com/watch?v=X-e_V2SYguQ");
+            }
             else
             {
                 list.Add("t_1_1");
@@ -364,9 +368,12 @@ public class MainTraningUI : MonoBehaviour {
         }
         else
         {
+            Application.OpenURL("https://www.youtube.com/watch?v=rjwRbsmFO1g");
+            /*
             list.Add("t_2_1");
             list.Add("t_2_2");
             PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.HELP, new PopupHelp.PopupData(list));
+            */
         }
         
     }

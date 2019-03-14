@@ -61,7 +61,7 @@ public class PopupGiftcon : Popup
     {
         PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.MSG, new PopupMsg.PopupData("기프티콘을 삭제 하시겠습니까?", () =>
         {
-            DataManager.Instance.RemoveGiftcon(GiftconIndex);
+            TKManager.Instance.Mydata.RemoveGiftcon(GiftconIndex);
 
             if (RefreshUIAction != null)
                 RefreshUIAction();
