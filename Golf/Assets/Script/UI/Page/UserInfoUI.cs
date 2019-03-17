@@ -63,6 +63,6 @@ public class UserInfoUI : MonoBehaviour {
 
     public void OnClickFriendPlus()
     {
-
+        PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.FRIEND_PLUS);
     }
 }

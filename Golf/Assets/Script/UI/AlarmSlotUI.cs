@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,17 +19,22 @@ public class AlarmSlotUI : MonoBehaviour
     public Text BigSlotMsg;
     public Image BigSlotImg;
 
-    private bool MiniMode = true;
+    public bool MiniMode = true;
+
+    private int SlotIndex = 0;
+    private Action<int> ClickAction;
 
     private void Awake()
     {
         SlotButton.onClick.AddListener(OnClickModeChange);
     }
 
-    public void SetData(AlarmData data)
+    public void SetData(AlarmData data, int index, Action<int> clickAction)
     {
         MiniSlotTitle.text = data.Title;
         MiniSlotDate.text = data.DateStr;
+        SlotIndex = index;
+        ClickAction = clickAction;
 
         CommonFunc.SetImageFile(data.BodyImgStr, ref BigSlotImg);        
 
@@ -47,6 +53,8 @@ public class AlarmSlotUI : MonoBehaviour
         MiniMode = !MiniMode;
 
         RefreshSlot();
+
+        ClickAction(SlotIndex);
     }
 
     public void RefreshSlot()

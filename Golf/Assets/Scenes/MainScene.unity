@@ -1322,6 +1322,7 @@ MonoBehaviour:
   EmptyText: {fileID: 521377002}
   AlarmList: {fileID: 792343556}
   ListObj: {fileID: 165543407}
+  ScrollViewContent: {fileID: 165543408}
 --- !u!1 &447196873
 GameObject:
   m_ObjectHideFlags: 0
@@ -4385,9 +4386,9 @@ RectTransform:
   m_Father: {fileID: 1662286721}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 475.7, y: 228.68}
+  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -64.29999, y: -42.320007}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1334293955
