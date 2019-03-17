@@ -138,10 +138,9 @@ public class CommonFunc : MonoBehaviour
 
     static public string GetGradeStr(int grade)
     {
-        if (grade == 0 ||
-            CommonData.GRADE_STR.Length <= grade)
+        if (CommonData.GRADE_STR.Length <= grade)
             return "";
-        return CommonData.GRADE_STR[grade - 1];
+        return CommonData.GRADE_STR[grade];
     }
 
     static public void SetGradeImg(ref Image img, int grade)
