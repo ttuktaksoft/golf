@@ -9,9 +9,15 @@ public class UserInfoUI : MonoBehaviour {
     
     public GameObject EmptyText;
     public GameObject EvaluationList;
+    public Button FriendPlus;
     private List<EvaluationSlotUI> EvaluationSlotList = new List<EvaluationSlotUI>();
 
     public List<UIFriendSlot> FriendSlotList = new List<UIFriendSlot>();
+
+    public void Awake()
+    {
+        FriendPlus.onClick.AddListener(OnClickFriendPlus);
+    }
 
     public void Init()
     {
@@ -52,6 +58,11 @@ public class UserInfoUI : MonoBehaviour {
         }
 
         MyInfo.Init(true);
+
+    }
+
+    public void OnClickFriendPlus()
+    {
 
     }
 }

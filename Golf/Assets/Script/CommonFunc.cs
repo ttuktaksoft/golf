@@ -146,11 +146,10 @@ public class CommonFunc : MonoBehaviour
 
     static public void SetGradeImg(ref Image img, int grade)
     {
-        if (grade == 0 ||
-            CommonData.GRADE_IMG_STR.Length <= grade)
+        if (CommonData.GRADE_IMG_STR.Length <= grade)
             return;
 
-        SetImageFile(CommonData.GRADE_IMG_STR[grade - 1], ref img);
+        SetImageFile(CommonData.GRADE_IMG_STR[grade], ref img);
     }
 
 

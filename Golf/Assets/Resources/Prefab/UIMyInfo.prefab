@@ -705,6 +705,7 @@ MonoBehaviour:
   ThumbnailCameraIcon: {fileID: 609901679238885047}
   Name: {fileID: 609901680951803651}
   GradeImg: {fileID: 8817048041115348079}
+  Percent: {fileID: 8466297096623653820}
   Point: {fileID: 983782365140248457}
   Gender: {fileID: 609901679955044928}
   Edit: {fileID: 609901679487565680}

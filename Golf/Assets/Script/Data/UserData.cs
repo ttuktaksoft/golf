@@ -11,7 +11,8 @@ public class UserData
     public string PhoneNumber { get; private set; }
     public int SeasonPoint { get; private set; }
     public int AccumulatePoint { get; private set; }
-    
+    public int Percent { get; private set; }
+
     public List<EvaluationData> EvaluationDataList = new List<EvaluationData>();
     public List<GiftconData> GiftconDataList = new List<GiftconData>();
 
@@ -25,6 +26,8 @@ public class UserData
         PhoneNumber = "";
         SeasonPoint = 0;
         AccumulatePoint = 0;
+        Grade = 0;
+        Percent = 100;
     }
 
     public void Init(CommonData.GENDER gender, string name, string phoneNumber, int seasonPoint, int accumulatePoint)
@@ -34,6 +37,8 @@ public class UserData
         PhoneNumber = phoneNumber;
         SeasonPoint = seasonPoint;
         AccumulatePoint = accumulatePoint;
+
+        RefreshGrade();
     }
 
     public void SetGender(CommonData.GENDER gender)
@@ -54,22 +59,25 @@ public class UserData
         FirebaseManager.Instance.SetUserData();
     }
 
-    // TODO 제거 해야함
-    public void SetGrade(int grade)
-    {
-        Grade = grade;
-    }
-
-    public void SetSeasonPoint(int point)
-    {
-        SeasonPoint = point;
-    }
-
     public void AddSeasonPoint(int point)
     {
         SeasonPoint += point;
+        AccumulatePoint += point;
+        RefreshGrade();
         FirebaseManager.Instance.SetSeasonPoint();
     }
+
+    public void RefreshGrade()
+    {
+        var arr = CommonData.GRADE_POINT;
+        Grade = arr.Length - 1;
+        for (int i = 0; i < arr.Length; i++)
+        {
+            if (AccumulatePoint < arr[i])
+                Grade = i;
+        }
+    }
+    
 
     public void AddEvaluationData(EvaluationData data)
     {

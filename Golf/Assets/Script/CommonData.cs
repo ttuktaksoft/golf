@@ -79,6 +79,17 @@ public class CommonData : MonoBehaviour
         TRAINING_COUNTDOWN
     }
 
+    public static int[] GRADE_POINT =
+    {
+        10000,
+        20000,
+        30000,
+        40000,
+        50000,
+        60000,
+    };
+
+
     public static int ANGLE_MAX_LEVEL = 4;
 
     public static string[] GRADE_STR = { "달걀", "병아리", "닭", "새", "독수리", "알바트로스" };
