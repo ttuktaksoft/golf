@@ -10,6 +10,7 @@ public class UIMyInfo : MonoBehaviour
     public GameObject ThumbnailCameraIcon;
     public Text Name;
     public Image GradeImg;
+    public Text Percent;
     public Text Point;
     //public Text Grade;
     public Image Gender;
@@ -28,7 +29,8 @@ public class UIMyInfo : MonoBehaviour
             ThumbnailEdit.onClick.RemoveAllListeners();
         ThumbnailCameraIcon.gameObject.SetActive(editEnable);
 
-        Point.text = string.Format("{0:n0} P / {1:n0} P / 상위 25%", TKManager.Instance.Mydata.SeasonPoint, TKManager.Instance.Mydata.AccumulatePoint);
+        Percent.text = string.Format("상위 {0}%", TKManager.Instance.Mydata.Percent);
+        Point.text = string.Format("{0:n0} P / {1:n0} P", TKManager.Instance.Mydata.SeasonPoint, TKManager.Instance.Mydata.AccumulatePoint);
 
         RefreshUI();
     }
