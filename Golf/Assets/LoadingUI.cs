@@ -94,24 +94,24 @@ public class LoadingUI : MonoBehaviour
 
         yield return new WaitForSeconds(2f);
         
-        if (TKManager.Instance.MyLoadData == false)
-        {
-            Terms = false;
-            PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.TERMS, new PopupTerms.PopupData(() =>
-            {
-                Terms = true;
-            }));
-        }
-        else
-            Terms = true;
+        //if (TKManager.Instance.MyLoadData == false)
+        //{
+        //    Terms = false;
+        //    PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.TERMS, new PopupTerms.PopupData(() =>
+        //    {
+        //        Terms = true;
+        //    }));
+        //}
+        //else
+        //    Terms = true;
 
-        while (true)
-        {
-            if (Terms)
-                break;
+        //while (true)
+        //{
+        //    if (Terms)
+        //        break;
 
-            yield return null;
-        }
+        //    yield return null;
+        //}
 
 
         if (TKManager.Instance.MyLoadData == false)
