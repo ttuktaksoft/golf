@@ -222,8 +222,7 @@ public class PracticeUI : MonoBehaviour
     }
     IEnumerator Co_PoseTrainingReady()
     {
-        GyroScopeManager.Instance.TrainingReadyStart();
-        SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_ENTER);
+        SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_INTRO);
         yield return Co_TrainingReady();
 
   
@@ -250,7 +249,9 @@ public class PracticeUI : MonoBehaviour
             yield return null;
         }
 
-        SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_START);
+        GyroScopeManager.Instance.TrainingReadyStart();
+
+        SoundManager.Instance.PlayFXSound(CommonData.SOUND_TYPE.TRAINING_COUNTDOWN);
         int readyTime = CommonData.TRAINING_READY_TIME;
         while (true)
         {
