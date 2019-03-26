@@ -37,7 +37,9 @@ public class TKManager : MonoBehaviour
     {
         // TODO 파베에서 데이터 받아와야함
         Mydata = new UserData();
-        
+
+        FirebaseManager.Instance.init();
+
         TrainingType = CommonData.TRAINING_TYPE.TRAINING_POSE;
         PoseType = CommonData.TRAINING_POSE.TRAINING_ADDRESS;
         gyro = Input.gyro;
@@ -130,6 +132,7 @@ public class TKManager : MonoBehaviour
         public string PhoneNumber = "";
         public List<EvaluationData> EvaluationDataList = new List<EvaluationData>();
         public string ThumbnailSpritePath = "";
+        public string Index = "";
 
         public void Save()
         {
@@ -140,11 +143,12 @@ public class TKManager : MonoBehaviour
             PhoneNumber = TKManager.Instance.Mydata.PhoneNumber;
             EvaluationDataList = TKManager.Instance.Mydata.EvaluationDataList;
             ThumbnailSpritePath = TKManager.Instance.Mydata.ThumbnailSpritePath;
+            Index = TKManager.Instance.Mydata.Index;
         }
 
         public void Load()
         {
-            TKManager.Instance.Mydata.Init(Gender, Name, PhoneNumber, Point, Point);
+            TKManager.Instance.Mydata.Init(Gender, Index, Name, PhoneNumber, Point, Point);
 
             if (EvaluationDataList == null)
                 TKManager.Instance.Mydata.EvaluationDataList = new List<EvaluationData>();

@@ -6,6 +6,7 @@ using UnityEngine;
 public class UserData
 {
     public CommonData.GENDER Gender;
+    public string Index { get; private set; }
     public string Name;
     public int Grade { get; private set; }
     public string PhoneNumber { get; private set; }
@@ -21,6 +22,7 @@ public class UserData
 
     public UserData()
     {
+        Index = "";
         Gender = CommonData.GENDER.GENDER_MAN;
         Name = "";
         PhoneNumber = "";
@@ -30,8 +32,9 @@ public class UserData
         Percent = 100;
     }
 
-    public void Init(CommonData.GENDER gender, string name, string phoneNumber, int seasonPoint, int accumulatePoint)
+    public void Init(CommonData.GENDER gender, string index, string name, string phoneNumber, int seasonPoint, int accumulatePoint)
     {
+        Index = index;
         Gender = gender;
         Name = name;
         PhoneNumber = phoneNumber;
@@ -39,6 +42,12 @@ public class UserData
         AccumulatePoint = accumulatePoint;
 
         RefreshGrade();
+    }
+
+    public void SetIndex(string index)
+    {
+        Index = index;
+        FirebaseManager.Instance.SetUserData();
     }
 
     public void SetGender(CommonData.GENDER gender)

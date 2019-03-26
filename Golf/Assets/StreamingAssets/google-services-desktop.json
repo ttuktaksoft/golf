@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "817764521458",
+    "firebase_url": "https://golfhometraining.firebaseio.com",
+    "project_id": "golfhometraining",
+    "storage_bucket": "golfhometraining.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:817764521458:android:6ed410b265538fe5",
+        "android_client_info": {
+          "package_name": "com.GolfAcademy.Golf"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "817764521458-avjq34pru6a1of9r0il30likenoap9rr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAO5DnXs_pmSRailpyYGZWu2vsJGabUU6o"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
