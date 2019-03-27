@@ -858,6 +858,21 @@ public class PracticeUI : MonoBehaviour
          {
              PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.SELF_EVALUATION, new PopupSelfEvaluation.PopupData(TrainingSuccessCount,() =>
              {
+
+                 var tempTrainingType = 0;
+
+                 if(TKManager.Instance.GetTrainingType() == CommonData.TRAINING_TYPE.TRAINING_POSE)
+                 {
+                     tempTrainingType = (int)TKManager.Instance.GetPoseType();
+                 }
+                 else
+                 {
+                     tempTrainingType = 1;
+                 }
+
+                 FirebaseManager.Instance.SetTraingReport(tempTrainingType, TrainingSuccessCount);
+
+
                  GyroScopeManager.Instance.DestroyGyro();
                  StopAllCoroutines();
                  SceneManager.LoadScene("MainScene", LoadSceneMode.Single);
