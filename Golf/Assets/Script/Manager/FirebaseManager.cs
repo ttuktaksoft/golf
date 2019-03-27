@@ -54,7 +54,77 @@ public class FirebaseManager : MonoBehaviour
 
         Firebase.Messaging.FirebaseMessaging.TokenReceived += OnTokenReceived;
         Firebase.Messaging.FirebaseMessaging.MessageReceived += OnMessageReceived;
+
+        SignUpByAnonymouse();
     }
+
+    public void SignUpByGoogle()
+    {
+        Firebase.Auth.Credential credential =
+        Firebase.Auth.GoogleAuthProvider.GetCredential(googleIdToken, googleAccessToken);
+
+        auth.SignInWithCredentialAsync(credential).ContinueWith(task => {
+            if (task.IsCanceled)
+            {
+                Debug.LogError("SignInWithCredentialAsync was canceled.");
+                return;
+            }
+            if (task.IsFaulted)
+            {
+                Debug.LogError("SignInWithCredentialAsync encountered an error: " + task.Exception);
+                return;
+            }
+
+            Firebase.Auth.FirebaseUser newUser = task.Result;
+            Debug.LogFormat("User signed in successfully: {0} ({1})",
+                newUser.DisplayName, newUser.UserId);
+        });
+    }
+
+    public void SignUpByAnonymouse()
+    {
+        auth.SignInAnonymouslyAsync().ContinueWith(task => {
+            if (task.IsCanceled)
+            {
+                Debug.LogError("SignInAnonymouslyAsync was canceled.");
+                return;
+            }
+            if (task.IsFaulted)
+            {
+                Debug.LogError("SignInAnonymouslyAsync encountered an error: " + task.Exception);
+                return;
+            }
+
+            Firebase.Auth.FirebaseUser newUser = task.Result;
+            Debug.LogFormat("User signed in successfully: {0} ({1})",
+                newUser.DisplayName, newUser.UserId);
+        });
+    }
+
+    public void SignUpByFaceBook()
+    {
+        /*
+        Firebase.Auth.Credential credential =
+    Firebase.Auth.FacebookAuthProvider.GetCredential(accessToken);
+        auth.SignInWithCredentialAsync(credential).ContinueWith(task => {
+            if (task.IsCanceled)
+            {
+                Debug.LogError("SignInWithCredentialAsync was canceled.");
+                return;
+            }
+            if (task.IsFaulted)
+            {
+                Debug.LogError("SignInWithCredentialAsync encountered an error: " + task.Exception);
+                return;
+            }
+
+            Firebase.Auth.FirebaseUser newUser = task.Result;
+            Debug.LogFormat("User signed in successfully: {0} ({1})",
+                newUser.DisplayName, newUser.UserId);
+        });
+        */
+    }
+
 
     public void GetData()
     {
@@ -69,6 +139,29 @@ public class FirebaseManager : MonoBehaviour
         if (LoadingCount == 1)
             FirstLoadingComplete = true;
     }
+
+    // 유져 인덱스 받아오기
+    public void RegisterUserByFirebase()
+    {
+        mDatabaseRef.Child("UsersCount").RunTransaction(mutableData =>
+        {
+            int tempCount = Convert.ToInt32(mutableData.Value);
+
+            if (tempCount == 0)
+            {
+                tempCount = 0;
+            }
+            else
+            {
+                TKManager.Instance.Mydata.SetIndex(tempCount.ToString());
+                SetUserData();
+                mutableData.Value = tempCount + 1;
+            }
+
+            return TransactionResult.Success(mutableData);
+        });
+    }
+
 
     // 사용자 정보 파이어베이스에서 로드
     public void GetUserData()
@@ -151,7 +244,7 @@ public class FirebaseManager : MonoBehaviour
 
         mDatabaseRef.Child("Users").Child(TKManager.Instance.Mydata.Index).Child("Index").SetValueAsync(TKManager.Instance.Mydata.Index);
         mDatabaseRef.Child("Users").Child(TKManager.Instance.Mydata.Index).Child("Name").SetValueAsync(TKManager.Instance.Mydata.Name);
-        mDatabaseRef.Child("Users").Child(TKManager.Instance.Mydata.Index).Child("Gender").SetValueAsync(TKManager.Instance.Mydata.Gender);
+        mDatabaseRef.Child("Users").Child(TKManager.Instance.Mydata.Index).Child("Gender").SetValueAsync((int)TKManager.Instance.Mydata.Gender);
         mDatabaseRef.Child("Users").Child(TKManager.Instance.Mydata.Index).Child("AccumPoint").SetValueAsync(TKManager.Instance.Mydata.AccumulatePoint);
         mDatabaseRef.Child("Users").Child(TKManager.Instance.Mydata.Index).Child("SeasonPoint").SetValueAsync(TKManager.Instance.Mydata.SeasonPoint);
         mDatabaseRef.Child("Users").Child(TKManager.Instance.Mydata.Index).Child("Grade").SetValueAsync(TKManager.Instance.Mydata.Grade);
@@ -159,8 +252,115 @@ public class FirebaseManager : MonoBehaviour
         
     }
 
+
+    // 사용자 성별 파이어베이스에 세팅
+    public void SetUserGender()
+    {
+        mDatabaseRef.Child("Users").Child(TKManager.Instance.Mydata.Index).Child("Gender").SetValueAsync((int)TKManager.Instance.Mydata.Gender);
+    }
+
+    // 사용자 네임 파이어베이스에 세팅
+    public void SetUserName()
+    {
+        mDatabaseRef.Child("Users").Child(TKManager.Instance.Mydata.Index).Child("Name").SetValueAsync(TKManager.Instance.Mydata.Name);
+    }
+
+    // 사용자 시즌포인트 세팅
     public void SetSeasonPoint()
     {
-
+        mDatabaseRef.Child("Users").Child(TKManager.Instance.Mydata.Index).Child("SeasonPoint").SetValueAsync(TKManager.Instance.Mydata.SeasonPoint);
     }
+
+    // 사용자 누적포인트 세팅
+    public void SetAccumPoint()
+    {
+        mDatabaseRef.Child("Users").Child(TKManager.Instance.Mydata.Index).Child("AccumPoint").SetValueAsync(TKManager.Instance.Mydata.AccumulatePoint);
+    }
+
+    // 사용자 퍼센트 세팅
+    public void SetPercent()
+    {
+        mDatabaseRef.Child("Users").Child(TKManager.Instance.Mydata.Index).Child("Percent").SetValueAsync(TKManager.Instance.Mydata.Percent);
+    }
+
+    // 사용자 등급 세팅
+    public void SetGrade()
+    {
+        mDatabaseRef.Child("Users").Child(TKManager.Instance.Mydata.Index).Child("Grade").SetValueAsync(TKManager.Instance.Mydata.Grade);
+    }
+
+
+    // 사용자 트레이닝 세팅    
+    public void SetTraingReport(int trainingType, int trainingCount)
+    {
+        switch(trainingType)
+        {
+            case 0:
+                GetPoseTrainingCount("Address", trainingCount);
+                break;
+            case 1:
+                GetTempoTrainingCount(trainingCount);
+                break;
+            case 6:
+                GetPoseTrainingCount("BackSwingTop", trainingCount);
+                break;
+            case 12:
+                GetPoseTrainingCount("Impact", trainingCount);
+                break;
+        }
+    }
+
+    public void GetPoseTrainingCount(string trainingType, int trainingCount)
+    {
+        mDatabaseRef.Child("TraingReport").Child("PoseTraining").Child(trainingType).Child(TKManager.Instance.Mydata.Index).GetValueAsync().ContinueWith(task =>
+        {
+            if (task.IsFaulted)
+            {
+                // Handle the error...
+            }
+            else if (task.IsCompleted)
+            {
+                DataSnapshot snapshot = task.Result;
+
+                if (snapshot.Exists)
+                {
+                    int tempCount = Convert.ToInt32(snapshot.Value);
+
+                    tempCount += trainingCount;
+                    mDatabaseRef.Child("TraingReport").Child("PoseTraining").Child(trainingType).Child(TKManager.Instance.Mydata.Index).SetValueAsync(trainingCount);
+
+                    mDatabaseRef.Child("Users").Child(TKManager.Instance.Mydata.Index).Child("PoseTraining").Child(trainingType).SetValueAsync(trainingCount);
+                }
+                //  Debug.LogFormat("UserInfo: Index : {0} NickName {1} Point {2}", TKManager.Instance.MyData.Index, TKManager.Instance.MyData.NickName, TKManager.Instance.MyData.Point);
+            }
+        });
+    }
+
+    public void GetTempoTrainingCount(int trainingCount)
+    {
+        mDatabaseRef.Child("TraingReport").Child("TempoTraining").Child(TKManager.Instance.Mydata.Index).GetValueAsync().ContinueWith(task =>
+        {
+
+            if (task.IsFaulted)
+            {
+                // Handle the error...
+            }
+            else if (task.IsCompleted)
+            {
+                DataSnapshot snapshot = task.Result;
+
+                if (snapshot.Exists)
+                {
+                    int tempCount = Convert.ToInt32(snapshot.Value);
+
+                    tempCount += trainingCount;
+                    mDatabaseRef.Child("TraingReport").Child("TempoTraining").Child(TKManager.Instance.Mydata.Index).SetValueAsync(trainingCount);
+
+                    mDatabaseRef.Child("Users").Child(TKManager.Instance.Mydata.Index).Child("TempoTraining").SetValueAsync(trainingCount);
+                }                
+            }
+        });
+    }
+
+
 }

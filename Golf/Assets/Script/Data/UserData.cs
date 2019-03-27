@@ -47,25 +47,24 @@ public class UserData
     public void SetIndex(string index)
     {
         Index = index;
-        FirebaseManager.Instance.SetUserData();
     }
 
     public void SetGender(CommonData.GENDER gender)
     {
         Gender = gender;
-        FirebaseManager.Instance.SetUserData();
+      //  FirebaseManager.Instance.SetUserGender();
     }
 
     public void SetName(string name)
     {
         Name = name;
-        FirebaseManager.Instance.SetUserData();
+      //  FirebaseManager.Instance.SetUserName();
     }
 
     public void SetPhoneNumber(string num)
     {
         PhoneNumber = num;
-        FirebaseManager.Instance.SetUserData();
+      //  FirebaseManager.Instance.SetUserData();
     }
 
     public void AddSeasonPoint(int point)

@@ -30,7 +30,7 @@ public class DataManager : MonoBehaviour
     {
         //TKManager.Instance.SetName("이민영");
         //TKManager.Instance.SetPhoneNumber("010-1234-1234");
-        TKManager.Instance.Mydata.SetGender(CommonData.GENDER.GENDER_MAN);
+        //TKManager.Instance.Mydata.SetGender(CommonData.GENDER.GENDER_MAN);
 
         AlarmDataList.Add(new AlarmData("새해인사", DateTime.Now.Ticks, "alram_1"));
         AlarmDataList.Add(new AlarmData("아카데미 소개", DateTime.Now.Ticks, "alram_2"));

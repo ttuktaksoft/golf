@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+    <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width" />
+
+  <title>회원 트레이닝 현황</title>
+  <!-- materialize.css 포함 -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link type="text/css" rel="stylesheet" href="materialize.min.css"  media="screen,projection"/>
+  <!-- SyntaxHighlighter 포함 -->
+  <link href="shCore.css" rel="stylesheet" type="text/css" />
+  <!-- <link href="css/shThemeDefault.css" rel="stylesheet" type="text/css" /> -->
+  <link href="shThemeMidnight.css" rel="stylesheet" type="text/css" />
+  <style>
+    #Summary {font-size: 1.2em; }
+    #Summary ul{ margin-left: 32px; }
+    #Summary ul li{ list-style: disc; }
+    .hint{ border-left: 0.3em #ddd solid; padding-left: 1em; color: #777;}
+    .code_block{ background-color: #eee; padding: 5px; }
+    table, th, td {
+           border: 1px solid #bcbcbc;
+         }
+         table {
+   width: 1000px;
+ }
+  </style>
+
+</head>
+
+<body>
+  <!-- 상단 네비게이션 -->
+  <nav class="indigo">
+    <div class="nav-wrapper">
+      <div class="container">
+        <a href="/" class="breadcrumb">메인 페이지</a>
+        <a href="/GolfEquip.html" class="breadcrumb">유져 현황 관리자</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container center"><br><br>
+
+  </div>
+
+  <!-- 내용영역 -->
+  <div class="container" id="CONTENTS">
+    <!-- 핵심 -->
+    <h3 class="indigo-text center">:+: 유져 트레이닝 현황 :+:</h3>
+
+
+    <div class="row z-depth-1">
+      <div class="col l12 m12 s12">
+        <p>
+        트레이닝 앱 총 사용 인원 :
+          <!-- TODO 4. 상태 보기용 span 확인-->
+           <span id="LOTTO_GROUP" class="blue-text">0명</span>
+         </p>
+      </div>
+    </div>
+
+    <br>
+    <br>
+
+
+    <table>
+      <h5 class="indigo-text">:+: 트레이닝 횟수 :+:</h5>
+      <thead>
+        <th>회차</th>
+        <th>어드레스</th>
+        <th>백스윙탑</th>
+        <th>임팩트</th>
+        <th>템포트레이닝</th>
+      </thead>
+      <tbody id="lottoBuyUserConut"></tbody>
+    </table>
+
+    <br>
+    <br>
+
+
+        <table>
+          <h5 class="indigo-text">:+: 회차별 베스트 유져 :+:</h5>
+          <thead>
+            <th>회차</th>
+            <th>인덱스</th>
+            <th>닉네임</th>
+            <th>성별</th>
+          </thead>
+          <tbody id="lottoBuyUserConut"></tbody>
+        </table>
+
+        <br>
+        <br>
+
+
+    <table>
+      <h5 class="indigo-text">:+: 성별 현황  :+:</h5>
+      <thead>
+        <th>남성</th>
+        <th>여성</th>
+      </thead>
+      <tbody id="LottoAccountInfo"></tbody>
+    </table>
+
+        <br>
+        <br>
+
+
+
+
+  </div>
+
+
+  <!--Import jQuery before materialize.js-->
+  <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js">
+  </script>
+  <script type="text/javascript" src="./js/materialize.min.js"></script>
+  <script type="text/javascript" src="./js/shCore.js"></script>
+  <script type="text/javascript" src="./js/shAutoloader.js"></script>
+  <script type="text/javascript">
+
+  // SyntaxHighlighter 설정 (http://alexgorbatchev.com/SyntaxHighlighter)
+    SyntaxHighlighter.autoloader(
+      'bash shell             ./js/shBrushBash.js',
+      'js jscript javascript  ./js/shBrushJScript.js'
+    );
+    SyntaxHighlighter.defaults['toolbar'] = false;
+    SyntaxHighlighter.all()
+  </script>
+
+  <script src="https://www.gstatic.com/firebasejs/5.7.2/firebase.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.5.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.5.2/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.5.2/firebase-database.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/3.2.1/firebase-storage.js"></script>
+  <script src="./fireinit.js"></script>
+  <script type="text/javascript">
+
+
+
+
+</script>
+</body>
+
+</html>

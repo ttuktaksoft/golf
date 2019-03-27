@@ -1,11 +1,11 @@
 // Initialize Firebase
 // TODO: Replace with your project's customized code snippet
 var config = {
-  apiKey: "AIzaSyA_imM5VWH04xiG7Z4A5e6pI5vzTIbbSqw",
-  authDomain: "treasureone-4472e.firebaseapp.com",
-  databaseURL: "https://treasureone-4472e.firebaseio.com/",
-  projectId: "treasureone-4472e",
-  storageBucket: "treasureone-4472e.appspot.com",
-  messagingSenderId: "641308195675",
+  apiKey: "AIzaSyC1zjMdJF8tSVbweT63XbeSdxsGLLgcceA",
+  authDomain: "golfhometraining.firebaseapp.com",
+  databaseURL: "https://golfhometraining.firebaseio.com",
+  projectId: "golfhometraining",
+  storageBucket: "golfhometraining.appspot.com",
+  messagingSenderId: "817764521458"
 };
 firebase.initializeApp(config);

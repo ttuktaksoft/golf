@@ -124,6 +124,8 @@ public class PopupUserSetting : Popup
                     TKManager.Instance.Mydata.SetPhoneNumber(Number.text.ToString());
                     TKManager.Instance.Mydata.SetGender(Gender);
 
+                    FirebaseManager.Instance.RegisterUserByFirebase();
+
                     if (OkAction != null)
                         OkAction();
 
@@ -137,6 +139,8 @@ public class PopupUserSetting : Popup
                 TKManager.Instance.Mydata.SetPhoneNumber(Number.text.ToString());
                 TKManager.Instance.Mydata.SetGender(Gender);
 
+                FirebaseManager.Instance.RegisterUserByFirebase();
+
                 if (OkAction != null)
                     OkAction();
 
@@ -149,6 +153,8 @@ public class PopupUserSetting : Popup
             TKManager.Instance.Mydata.SetName(Name.text.ToString());
             TKManager.Instance.Mydata.SetPhoneNumber(Number.text.ToString());
             TKManager.Instance.Mydata.SetGender(Gender);
+
+            FirebaseManager.Instance.SetUserData();
 
             if (OkAction != null)
                 OkAction();
