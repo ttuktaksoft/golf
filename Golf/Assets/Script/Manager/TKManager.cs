@@ -20,6 +20,8 @@ public class TKManager : MonoBehaviour
         }
     }
 
+    public LoadingHUD HUD;
+
     public UserData Mydata = null;
     public CommonData.TRAINING_TYPE TrainingType;
     public CommonData.TRAINING_POSE PoseType;
@@ -140,6 +142,21 @@ public class TKManager : MonoBehaviour
             Debug.Log("!!!!!!SetUserLocation not enable" + Input.location.isEnabledByUser);
         }
     }
+
+
+    public void ShowHUD()
+    {
+        HUD.gameObject.SetActive(true);
+        //HUD.ShowHUD(msg, subMsg, waitTime, waitTimeMsg);
+    }
+
+    public void HideHUD()
+    {
+        HUD.gameObject.SetActive(false);
+        //HUD.HideHUD();
+    }
+
+
 
 
 

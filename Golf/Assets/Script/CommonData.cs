@@ -125,4 +125,9 @@ public class CommonData : MonoBehaviour
 
         public string PurchasePrice;
     }
+
+    public static string KAKAO_REST_API_KEY = "96fdf25c2067947d06be784620aa70c2";
+    public static string KAKAO_REDIRECT_URI = "https://golfhometraining.firebaseapp.com/kakaoLogin.html";
+    public static string KAKAO_PROPERTIES_FB = "properties.firebasekey";
+    public static string KAKAO_PROPERTIES_FB_D = "firebasekey";
 }
