@@ -137,6 +137,31 @@
   <script src="./fireinit.js"></script>
   <script type="text/javascript">
 
+  var CurSeason;
+
+  function SetUserTrainingReport()
+  {
+      firebase.database().ref('/TraingReport/' + CurSeason).once('value', function(snapshot) {
+        var message = snapshot.val();
+        console.log(message);
+    });
+  }
+
+
+  firebase.database().ref('/CurSeason').once('value', function(snapshot) {
+    var message = snapshot.val();
+    CurSeason = message;
+    SetUserTrainingReport();
+    console.log(CurSeason);
+  });
+
+  firebase.database().ref('/UsersCount').once('value', function(snapshot) {
+    var message = snapshot.val();
+    Lottocount = message;
+    $("#LOTTO_GROUP").text(Lottocount - 1 + '명');
+  });
+
+
 
 
 
