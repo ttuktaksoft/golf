@@ -13,6 +13,7 @@ public class UserData
     public int SeasonPoint { get; private set; }
     public int AccumulatePoint { get; private set; }
     public int Percent { get; private set; }
+    public LocationInfo currentGPSPosition;
 
     public List<EvaluationData> EvaluationDataList = new List<EvaluationData>();
     public List<GiftconData> GiftconDataList = new List<GiftconData>();

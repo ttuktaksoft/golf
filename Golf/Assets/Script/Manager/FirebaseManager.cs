@@ -154,6 +154,7 @@ public class FirebaseManager : MonoBehaviour
             else
             {
                 TKManager.Instance.Mydata.SetIndex(tempCount.ToString());
+
                 SetUserData();
                 mutableData.Value = tempCount + 1;
             }
@@ -189,8 +190,10 @@ public class FirebaseManager : MonoBehaviour
                 int tempAccumPoint = Convert.ToInt32(tempData["AccumPoint"]);
                 int tempSeasonPoint = Convert.ToInt32(tempData["SeasonPoint"]);
 
-                TKManager.Instance.Mydata.Init((CommonData.GENDER)tempGender, userIdx, tempName, null, tempSeasonPoint, tempAccumPoint);            
-            }
+                TKManager.Instance.Mydata.Init((CommonData.GENDER)tempGender, userIdx, tempName, null, tempSeasonPoint, tempAccumPoint);
+                TKManager.Instance.SetUserLocation();
+
+                }
 
                 AddFirstLoadingComplete();
 
@@ -312,6 +315,7 @@ public class FirebaseManager : MonoBehaviour
 
     public void GetPoseTrainingCount(string trainingType, int trainingCount)
     {
+        
         mDatabaseRef.Child("TraingReport").Child("PoseTraining").Child(trainingType).Child(TKManager.Instance.Mydata.Index).GetValueAsync().ContinueWith(task =>
         {
             if (task.IsFaulted)
@@ -322,17 +326,24 @@ public class FirebaseManager : MonoBehaviour
             {
                 DataSnapshot snapshot = task.Result;
 
-                if (snapshot.Exists)
+                if (snapshot.Exists || snapshot.Value != null)
                 {
                     int tempCount = Convert.ToInt32(snapshot.Value);
 
                     tempCount += trainingCount;
-                    mDatabaseRef.Child("TraingReport").Child("PoseTraining").Child(trainingType).Child(TKManager.Instance.Mydata.Index).SetValueAsync(trainingCount);
+                    mDatabaseRef.Child("TraingReport").Child("PoseTraining").Child(trainingType).Child(TKManager.Instance.Mydata.Index).SetValueAsync(tempCount);
 
-                    mDatabaseRef.Child("Users").Child(TKManager.Instance.Mydata.Index).Child("PoseTraining").Child(trainingType).SetValueAsync(trainingCount);
+                    mDatabaseRef.Child("Users").Child(TKManager.Instance.Mydata.Index).Child("PoseTraining").Child(trainingType).SetValueAsync(tempCount);
                 }
-                //  Debug.LogFormat("UserInfo: Index : {0} NickName {1} Point {2}", TKManager.Instance.MyData.Index, TKManager.Instance.MyData.NickName, TKManager.Instance.MyData.Point);
             }
+            else
+            {
+                mDatabaseRef.Child("TraingReport").Child("PoseTraining").Child(trainingType).Child(TKManager.Instance.Mydata.Index).SetValueAsync(trainingCount);
+                mDatabaseRef.Child("Users").Child(TKManager.Instance.Mydata.Index).Child("PoseTraining").Child(trainingType).SetValueAsync(trainingCount);
+            }
+
+            //  Debug.LogFormat("UserInfo: Index : {0} NickName {1} Point {2}", TKManager.Instance.MyData.Index, TKManager.Instance.MyData.NickName, TKManager.Instance.MyData.Point);
+        
         });
     }
 
@@ -349,18 +360,54 @@ public class FirebaseManager : MonoBehaviour
             {
                 DataSnapshot snapshot = task.Result;
 
-                if (snapshot.Exists)
+                if (snapshot.Exists || snapshot.Value != null)
                 {
                     int tempCount = Convert.ToInt32(snapshot.Value);
 
                     tempCount += trainingCount;
+                    mDatabaseRef.Child("TraingReport").Child("TempoTraining").Child(TKManager.Instance.Mydata.Index).SetValueAsync(tempCount);
+                    mDatabaseRef.Child("Users").Child(TKManager.Instance.Mydata.Index).Child("TempoTraining").SetValueAsync(tempCount);
+                }
+                else
+                {
                     mDatabaseRef.Child("TraingReport").Child("TempoTraining").Child(TKManager.Instance.Mydata.Index).SetValueAsync(trainingCount);
-
                     mDatabaseRef.Child("Users").Child(TKManager.Instance.Mydata.Index).Child("TempoTraining").SetValueAsync(trainingCount);
-                }                
+                }
             }
         });
     }
 
+    public void SetUserLocation(LocationInfo Position)
+    {
+        mDatabaseRef.Child("Users").Child(TKManager.Instance.Mydata.Index).Child("Lat").SetValueAsync(Position.latitude);
+        mDatabaseRef.Child("Users").Child(TKManager.Instance.Mydata.Index).Child("Lon").SetValueAsync(Position.longitude);
+    }
+
+    public void SetPurchaseItem(CommonData.PURCHASE_ITEM itemType, string Name, string Address, string Number, string Price)
+    {
+        CommonData._sPurchaseInfo purchaseInfo;
+
+        purchaseInfo.PurchaseType = itemType;
+        purchaseInfo.PurchaseDate = DateTime.Now.ToString("yyyy-MM-dd");
+        purchaseInfo.PurchaseName = Name;
+        purchaseInfo.PurchaseAddress = Address;
+        purchaseInfo.PurchaseNumber = Number;
+        purchaseInfo.PurchasePrice = Price;
+
+        mDatabaseRef.Child("Purchase").Child(itemType.ToString()).Push().SetValueAsync(purchaseInfo);
+
+        /*
+        switch (itemType)
+        {
+            case CommonData.PURCHASE_ITEM.PURCHASE_MFS:
+                mDatabaseRef.Child("Purchase").Child("MFS").Child("Lat").SetValueAsync(purchaseInfo);
+                break;
+            case CommonData.PURCHASE_ITEM.PURCHASE_COCONUT:
+                break;
+            case CommonData.PURCHASE_ITEM.PURCHASE_COFFEE:
+                break;
+        }
+        */
+    }
 
 }

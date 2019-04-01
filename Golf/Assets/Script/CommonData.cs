@@ -88,7 +88,12 @@ public class CommonData : MonoBehaviour
         50000,
         60000,
     };
-
+    public enum PURCHASE_ITEM
+    {
+        PURCHASE_MFS = 0,
+        PURCHASE_COCONUT,
+        PURCHASE_COFFEE
+    }
 
     public static int ANGLE_MAX_LEVEL = 4;
 
@@ -107,4 +112,17 @@ public class CommonData : MonoBehaviour
         "2월 아카데미 특강안내\n\nPGA 그린적중률 1위를 기록한 제이슨 데이입니다.\n\n파워풀하고 아주 간결한 스윙 스타일로 유명합니다.\n제이슨 데이가 시합 직전에 연습하는 패턴에서\n몇 개의 공을 치는지 정리해보았습니다.\n60 웨지샷 20~30미터 거리 6개\n60도 러프에서의 연습 6개\n그린 주변의 벙커샷 5개\n샌드웨지 어프로치샷 4개\n9번 아이언 풀스윙 8개\n7번 아이언 풀스윙 5개\n5번 아이언 풀스윙 9개",
         "3월 아카데미 특강안내\n\nPGA 그린적중률 1위를 기록한 제이슨 데이입니다.\n\n파워풀하고 아주 간결한 스윙 스타일로 유명합니다.\n제이슨 데이가 시합 직전에 연습하는 패턴에서\n몇 개의 공을 치는지 정리해보았습니다.\n60 웨지샷 20~30미터 거리 6개\n60도 러프에서의 연습 6개\n그린 주변의 벙커샷 5개\n샌드웨지 어프로치샷 4개\n9번 아이언 풀스윙 8개\n7번 아이언 풀스윙 5개\n5번 아이언 풀스윙 9개",
     };
+
+    public struct _sPurchaseInfo
+    {
+        public CommonData.PURCHASE_ITEM PurchaseType;
+
+        public string PurchaseDate;
+
+        public string PurchaseName;
+        public string PurchaseAddress;
+        public string PurchaseNumber;
+
+        public string PurchasePrice;
+    }
 }
