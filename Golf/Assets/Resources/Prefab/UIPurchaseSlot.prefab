@@ -179,7 +179,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 0}
+  m_TargetGraphic: {fileID: 8279958431909760684}
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
@@ -202,7 +202,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8361410317243829089}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ba37b9507c3da74ca77c04ba2b7f60a, type: 3}
+  m_Script: {fileID: 11500000, guid: a353f6b7061ab884b99daa8c4b9ef935, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   SlotButton: {fileID: 1327459006933398011}

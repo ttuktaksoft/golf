@@ -194,9 +194,9 @@ public class FirebaseManager : MonoBehaviour
                 string tempName = tempData["Name"].ToString();
                 int tempAccumPoint = Convert.ToInt32(tempData["AccumPoint"]);
                 int tempSeasonPoint = Convert.ToInt32(tempData["SeasonPoint"]);
-                string tempThumbNail = tempData["ThumbNail"].ToString();
+                //string tempThumbNail = tempData["ThumbNail"].ToString();
 
-                TKManager.Instance.Mydata.Init((CommonData.GENDER)tempGender, userIdx, tempName, null, tempSeasonPoint, tempAccumPoint, tempThumbNail);
+                TKManager.Instance.Mydata.Init((CommonData.GENDER)tempGender, userIdx, tempName, null, tempSeasonPoint, tempAccumPoint, "");
                 }
 
                 AddFirstLoadingComplete();
