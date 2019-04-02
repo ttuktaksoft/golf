@@ -30,6 +30,7 @@ public class FirebaseManager : MonoBehaviour
     private string googleAccessToken;
     public DatabaseReference mDatabaseRef;
 
+    public bool RegisterUserProgress = false;
 
     public void OnTokenReceived(object sender, Firebase.Messaging.TokenReceivedEventArgs token)
     {
@@ -143,6 +144,7 @@ public class FirebaseManager : MonoBehaviour
     // 유져 인덱스 받아오기
     public void RegisterUserByFirebase()
     {
+        RegisterUserProgress = true;
         mDatabaseRef.Child("UsersCount").RunTransaction(mutableData =>
         {
             int tempCount = Convert.ToInt32(mutableData.Value);
@@ -157,6 +159,8 @@ public class FirebaseManager : MonoBehaviour
 
                 SetUserData();
                 mutableData.Value = tempCount + 1;
+
+                RegisterUserProgress = false;
             }
 
             return TransactionResult.Success(mutableData);
@@ -191,7 +195,6 @@ public class FirebaseManager : MonoBehaviour
                 int tempSeasonPoint = Convert.ToInt32(tempData["SeasonPoint"]);
 
                 TKManager.Instance.Mydata.Init((CommonData.GENDER)tempGender, userIdx, tempName, null, tempSeasonPoint, tempAccumPoint);
-                TKManager.Instance.SetUserLocation();
                 }
 
                 AddFirstLoadingComplete();

@@ -54,6 +54,9 @@ public class PopupFreindPlus : Popup
     public void OnClcikFriendPlus()
     {
         string friendCode = FriendCodeInput.text.ToString();
-        PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.MSG, new PopupMsg.PopupData("친구를 추가하였습니다"));
+        if(friendCode == "")
+            PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.MSG, new PopupMsg.PopupData("친구코드를 입력해주세요", null, null, PopupMsg.BUTTON_TYPE.ONE));
+        else
+            PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.MSG, new PopupMsg.PopupData("친구를 추가하시겠습니까?"));
     }
 }
