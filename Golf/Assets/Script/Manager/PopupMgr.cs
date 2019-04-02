@@ -34,7 +34,8 @@ public class PopupMgr : MonoBehaviour
         WEB_VIEW,
         TERMS,
         HELP,
-        FRIEND_PLUS
+        FRIEND_PLUS,
+        REWARD_SELECT
     }
     
     private Dictionary<POPUP_TYPE, Popup> PopupList = new Dictionary<POPUP_TYPE, Popup>();

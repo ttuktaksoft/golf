@@ -7,17 +7,25 @@ public class RewardUI : MonoBehaviour
 {
     public UIMyInfo MyInfo;
 
-    //public List<UIRewardPracticeGraph> PracticeList = new List<UIRewardPracticeGraph>();
-
+    public GameObject RewardSelectObj;
+    public Button RewardSelectButton;
 
     public GameObject GiftconListObj;
     public GameObject GiftconEmpty;
     public GameObject ListObj;
     private List<UIGiftconSlot> GiftconSlotList = new List<UIGiftconSlot>();
 
+    public GameObject PurchaseListObj;
+    public GameObject PurchaseListEmpty;
+    public GameObject PurchaseList;
+    private List<UIPurchaseSlot> PurchaseSlotList = new List<UIPurchaseSlot>();
+
     public List<UIGradeInfoSlot> GradeInfoSlotList = new List<UIGradeInfoSlot>();
 
-
+    public void Awake()
+    {
+        RewardSelectButton.onClick.AddListener(OnClickRewardSelect);
+    }
 
     public void Init()
     {
@@ -29,13 +37,6 @@ public class RewardUI : MonoBehaviour
         {
             GradeInfoSlotList[i].SetGrade(i);
         }
-        //for (int i = 0; i < DataManager.Instance.PracticeDataList.Count; i++)
-        //{
-        //    if (PracticeList.Count <= i)
-        //        break;
-        //    var data = DataManager.Instance.PracticeDataList[i];
-        //    PracticeList[i].SetData(data);
-        //}
     }
 
     public void RefreshGiftconList()
@@ -58,5 +59,10 @@ public class RewardUI : MonoBehaviour
             slot.SetRefreshUIAction(RefreshGiftconList);
             GiftconSlotList.Add(slot);
         }
+    }
+
+    public void OnClickRewardSelect()
+    {
+        PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.REWARD_SELECT);
     }
 }

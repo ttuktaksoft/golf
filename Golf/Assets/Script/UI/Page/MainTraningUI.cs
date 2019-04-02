@@ -342,6 +342,9 @@ public class MainTraningUI : MonoBehaviour {
     {
         if (MenuAction)
             return;
+
+        PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.TUTORIAL);
+        return;
         List<string> list = new List<string>();
         
         if(TrainingType == CommonData.TRAINING_TYPE.TRAINING_POSE)
