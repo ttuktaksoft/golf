@@ -83,7 +83,11 @@ public class UserData
         for (int i = 0; i < arr.Length; i++)
         {
             if (AccumulatePoint < arr[i])
+            {
                 Grade = i;
+                break;
+            }
+                
         }
     }
     

@@ -195,7 +195,7 @@ public class FirebaseManager : MonoBehaviour
                 int tempSeasonPoint = Convert.ToInt32(tempData["SeasonPoint"]);
 
                 TKManager.Instance.Mydata.Init((CommonData.GENDER)tempGender, userIdx, tempName, null, tempSeasonPoint, tempAccumPoint);
-                TKManager.Instance.SetUserLocation();
+                
 
                 }
 

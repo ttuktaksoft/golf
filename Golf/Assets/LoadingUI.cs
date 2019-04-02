@@ -217,6 +217,8 @@ public class LoadingUI : MonoBehaviour
             yield return null;
         }
 
+        TKManager.Instance.SetUserLocation();
+
         TKManager.Instance.HideHUD();
 
         SceneManager.LoadScene("MainScene", LoadSceneMode.Single);
