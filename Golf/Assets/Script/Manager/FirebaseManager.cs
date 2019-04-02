@@ -4,8 +4,10 @@ using UnityEngine;
 using System;
 using Firebase;
 using Firebase.Database;
+using Firebase.Storage;
 using Firebase.Unity.Editor;
 using Firebase.Auth;
+
 
 public class FirebaseManager : MonoBehaviour
 {
@@ -21,7 +23,6 @@ public class FirebaseManager : MonoBehaviour
             return _instance;
         }
     }
-
     public bool FirstLoadingComplete = false;
     public int LoadingCount = 0;
     public Firebase.Auth.FirebaseAuth auth;
@@ -193,8 +194,9 @@ public class FirebaseManager : MonoBehaviour
                 string tempName = tempData["Name"].ToString();
                 int tempAccumPoint = Convert.ToInt32(tempData["AccumPoint"]);
                 int tempSeasonPoint = Convert.ToInt32(tempData["SeasonPoint"]);
+                string tempThumbNail = tempData["ThumbNail"].ToString();
 
-                TKManager.Instance.Mydata.Init((CommonData.GENDER)tempGender, userIdx, tempName, null, tempSeasonPoint, tempAccumPoint);
+                TKManager.Instance.Mydata.Init((CommonData.GENDER)tempGender, userIdx, tempName, null, tempSeasonPoint, tempAccumPoint, tempThumbNail);
                 }
 
                 AddFirstLoadingComplete();
@@ -453,6 +455,12 @@ public class FirebaseManager : MonoBehaviour
         mDatabaseRef.Child("Users").Child(TKManager.Instance.Mydata.Index).Child("Name").SetValueAsync(TKManager.Instance.Mydata.Name);
     }
 
+    // 사용자 썸네일 세팅
+    public void SetThumbNail(Texture2D ThumbTexture)
+    {
+ 
+    }
+
     // 사용자 시즌포인트 세팅
     public void SetSeasonPoint()
     {
@@ -594,5 +602,114 @@ public class FirebaseManager : MonoBehaviour
         }
         */
     }
+ 
+    public void SetRecommenderCode()
+    {
+        char[] stringChars = new char[4];
+        var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+
+        var random = new System.Random();
+
+        for (int i = 0; i < stringChars.Length; i++)
+        {
+            stringChars[i] = chars[random.Next(chars.Length)];
+        }
+
+        String tempUserCode = new String(stringChars);
+        tempUserCode += TKManager.Instance.Mydata.Index;
+
+        mDatabaseRef.Child("Users").Child(TKManager.Instance.Mydata.Index).Child("UserCode").SetValueAsync(tempUserCode);
+    }
+
+    public void AddFreind(string userCode)
+    {
+        mDatabaseRef.Child("UserCode").Child(userCode).GetValueAsync().ContinueWith(task =>
+        {
+
+            if (task.IsFaulted)
+            {
+                // Handle the error...
+            }
+            else if (task.IsCompleted)
+            {
+                DataSnapshot snapshot = task.Result;
+
+                if (snapshot.Exists || snapshot.Value != null)
+                {
+                    var tempIndex = snapshot.Value.ToString();                    
+                    mDatabaseRef.Child("Users").Child(TKManager.Instance.Mydata.Index).Child("FriendList").Push().SetValueAsync(tempIndex);
+                }
+                else
+                {
+                    // 코드 잘못 쳤을 경우
+                }
+            }
+        });
+    }
+
+    public void GetFreindList()
+    {        
+        mDatabaseRef.Child("Users").Child(TKManager.Instance.Mydata.Index).Child("FriendList").GetValueAsync().ContinueWith(task =>
+        {
+            if (task.IsFaulted)
+            {
+                // Handle the error...
+            }
+            else if (task.IsCompleted)
+            {
+                DataSnapshot snapshot = task.Result;
+
+                if (snapshot.Exists || snapshot.Value != null)
+                {
+                    foreach (var tempChild in snapshot.Children)
+                    {
+                        Debug.Log(tempChild.Value.ToString());
+                        GetFreindInfo(tempChild.Value.ToString());
+                    }
+
+                    
+                    
+
+                }
+                else
+                {
+
+                }
+            }
+        });
+    }
+
+    public void GetFreindInfo(string freindIndex)
+    {
+        mDatabaseRef.Child("Users").Child(freindIndex).GetValueAsync().ContinueWith(task =>
+        {
+            if (task.IsFaulted)
+            {
+                // Handle the error...
+            }
+            else if (task.IsCompleted)
+            {
+                DataSnapshot snapshot = task.Result;
+
+                if (snapshot.Exists || snapshot.Value != null)
+                {
+
+                    var tempData = snapshot.Value as Dictionary<string, object>;
+
+                    string tempName = tempData["Name"].ToString();
+                    var tempGender = Convert.ToInt32(tempData["Gender"]);                    
+                    int tempAccumPoint = Convert.ToInt32(tempData["AccumPoint"]);
+                    int tempSeasonPoint = Convert.ToInt32(tempData["SeasonPoint"]);
+                    int tempThumbNail = Convert.ToInt32(tempData["ThumbNail"]);
+                    
+                }
+                else
+                {
+                    
+                }
+            }
+        });
+    }
+
 
 }

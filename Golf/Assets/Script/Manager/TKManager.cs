@@ -186,7 +186,7 @@ public class TKManager : MonoBehaviour
 
         public void Load()
         {
-            TKManager.Instance.Mydata.Init(Gender, Index, Name, PhoneNumber, Point, Point);
+            TKManager.Instance.Mydata.Init(Gender, Index, Name, PhoneNumber, Point, Point, ThumbnailSpritePath);
 
             if (EvaluationDataList == null)
                 TKManager.Instance.Mydata.EvaluationDataList = new List<EvaluationData>();

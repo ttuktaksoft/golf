@@ -7,7 +7,7 @@ public class UserData
 {
     public CommonData.GENDER Gender;
     public string Index { get; private set; }
-    public string Name;
+    public string Name;    
     public int Grade { get; private set; }
     public string PhoneNumber { get; private set; }
     public int SeasonPoint { get; private set; }
@@ -33,7 +33,7 @@ public class UserData
         Percent = 100;
     }
 
-    public void Init(CommonData.GENDER gender, string index, string name, string phoneNumber, int seasonPoint, int accumulatePoint)
+    public void Init(CommonData.GENDER gender, string index, string name, string phoneNumber, int seasonPoint, int accumulatePoint, string ThumbNail)
     {
         Index = index;
         Gender = gender;
@@ -41,6 +41,7 @@ public class UserData
         PhoneNumber = phoneNumber;
         SeasonPoint = seasonPoint;
         AccumulatePoint = accumulatePoint;
+        ThumbnailSpritePath = ThumbNail;
 
         RefreshGrade();
     }
