@@ -192,22 +192,213 @@ public class FirebaseManager : MonoBehaviour
 
                 TKManager.Instance.Mydata.Init((CommonData.GENDER)tempGender, userIdx, tempName, null, tempSeasonPoint, tempAccumPoint);
                 TKManager.Instance.SetUserLocation();
-
                 }
 
                 AddFirstLoadingComplete();
-
                 //  Debug.LogFormat("UserInfo: Index : {0} NickName {1} Point {2}", TKManager.Instance.MyData.Index, TKManager.Instance.MyData.NickName, TKManager.Instance.MyData.Point);
             }
         });
     }
 
-    // 닉네임 중복 체크
-    public bool IsExistNickName(string NickName)
-    {
-        bool rtValue = false;
+    // 튜토리얼 정보 파이어베이스에서 로드
+    public void GetTutorialData()
+    {              
+        mDatabaseRef.Child("Tutorial").OrderByKey().LimitToLast(4)
+       .GetValueAsync().ContinueWith(task =>
+       {
+           if (task.IsFaulted)
+           {
+               // Handle the error...
+           }
+           else if (task.IsCompleted)
+           {
+               DataSnapshot snapshot = task.Result;
+               if (snapshot != null && snapshot.Exists)
+               {
+                   foreach (var tempChild in snapshot.Children)
+                   {
+                       int tempIndex = Convert.ToInt32(tempChild.Key);                       
+                       var tempData = tempChild.Value as Dictionary<string, object>;
+                       var tempTitle = tempData["Title"].ToString();
+                       var tempType = tempData["Type"].ToString();
+                       var tempContent = tempData["Content"].ToString();
+                   }
+               }
+               else
+               {
+                    
+               }
 
-        mDatabaseRef.Child("UserNameList").GetValueAsync().ContinueWith(task =>
+               AddFirstLoadingComplete();
+           }
+       }
+      );
+    }
+
+    // 아카데미 정보 파이어베이스에서 로드
+    public void GetAcademyData()
+    {
+        mDatabaseRef.Child("Academy").GetValueAsync().ContinueWith(task =>
+       {
+           if (task.IsFaulted)
+           {
+               // Handle the error...
+           }
+           else if (task.IsCompleted)
+           {
+               DataSnapshot snapshot = task.Result;
+               if (snapshot != null && snapshot.Exists)
+               {
+                   var tempData = snapshot.Value.ToString();                   
+               }
+               else
+               {
+
+               }
+
+               AddFirstLoadingComplete();
+           }
+       }
+      );
+    }
+
+    // 마켓 정보 파이어베이스에서 로드
+    public void GetMarketData()
+    {
+        mDatabaseRef.Child("Market").GetValueAsync().ContinueWith(task =>
+        {
+            if (task.IsFaulted)
+            {
+                // Handle the error...
+            }
+            else if (task.IsCompleted)
+            {
+                DataSnapshot snapshot = task.Result;
+                if (snapshot != null && snapshot.Exists)
+                {
+                    var tempData = snapshot.Value.ToString();
+                }
+                else
+                {
+
+                }
+
+                AddFirstLoadingComplete();
+            }
+        }
+      );
+    }
+
+    // 커피 기프티콘 정보 파이어베이스에서 로드
+    public void GetGiftData()
+    {
+        mDatabaseRef.Child("Gifticon").GetValueAsync().ContinueWith(task =>
+        {
+            if (task.IsFaulted)
+            {
+                // Handle the error...
+            }
+            else if (task.IsCompleted)
+            {
+                DataSnapshot snapshot = task.Result;
+                if (snapshot != null && snapshot.Exists)
+                {
+                    foreach (var tempChild in snapshot.Children)
+                    {
+                        int tempIndex = Convert.ToInt32(tempChild.Key);
+                        var tempData = tempChild.Value as Dictionary<string, object>;
+                        var tempThumb = tempData["Thumb"].ToString();
+                        var tempContent = tempData["Content"].ToString();
+                    }                    
+                }
+                else
+                {
+
+                }
+
+                AddFirstLoadingComplete();
+            }
+        }
+      );
+    }
+
+    // 리워드 정보 파이어베이스에서 로드
+    public void GetRewardData()
+    {
+        mDatabaseRef.Child("Reward").GetValueAsync().ContinueWith(task =>
+        {
+            if (task.IsFaulted)
+            {
+                // Handle the error...
+            }
+            else if (task.IsCompleted)
+            {
+                DataSnapshot snapshot = task.Result;
+                if (snapshot != null && snapshot.Exists)
+                {
+                    foreach (var tempChild in snapshot.Children)
+                    {
+                        int tempIndex = Convert.ToInt32(tempChild.Key);
+                        var tempData = tempChild.Value as Dictionary<string, object>;
+                        var tempThumb = tempData["Thumb"].ToString();
+                        var tempTitle = tempData["Title"].ToString();
+                        var tempType = tempData["Type"].ToString();
+                        var tempContent = tempData["Content"].ToString();
+                    }
+                }
+                else
+                {
+
+                }
+
+                AddFirstLoadingComplete();
+            }
+        }
+      );
+    }
+
+
+    // 기타알림 정보 파이어베이스에서 로드
+    public void GetAlarmData()
+    {
+        mDatabaseRef.Child("Alarm").OrderByKey().LimitToLast(4)
+       .GetValueAsync().ContinueWith(task =>
+       {
+           if (task.IsFaulted)
+           {
+               // Handle the error...
+           }
+           else if (task.IsCompleted)
+           {
+               DataSnapshot snapshot = task.Result;
+               if (snapshot != null && snapshot.Exists)
+               {
+                   foreach (var tempChild in snapshot.Children)
+                   {
+                       int tempIndex = Convert.ToInt32(tempChild.Key);
+                       var tempData = tempChild.Value as Dictionary<string, object>;
+                       var tempTitle = tempData["Title"].ToString();
+                       var tempContent = tempData["Content"].ToString();
+
+                   }
+               }
+               else
+               {
+
+               }
+
+               AddFirstLoadingComplete();
+           }
+       }
+      );
+    }
+
+    // 닉네임 중복 체크
+    public void IsExistNickName(string NickName)
+    {
+        var tempExist = true;
+
+        mDatabaseRef.Child("UserNameList").Child(NickName).GetValueAsync().ContinueWith(task =>
         {
 
             if (task.IsFaulted)
@@ -218,32 +409,23 @@ public class FirebaseManager : MonoBehaviour
             {
                 DataSnapshot snapshot = task.Result;
 
-                if (snapshot.Exists)
+                if (snapshot.Exists || snapshot.Value != null)
                 {
-
-                    foreach (var tempChild in snapshot.Children)
-                    {
-                        var tempData = tempChild.Value.ToString();
-                        Debug.LogFormat("UserInfo: Index : {0}", tempData);
-
-                        if(tempData.Equals(NickName))
-                        {
-                            rtValue = true;
-                            break;                           
-                        }
-                    }
+                    tempExist = true;
+                }
+                else
+                {
+                    tempExist = false;
                 }
                 //  Debug.LogFormat("UserInfo: Index : {0} NickName {1} Point {2}", TKManager.Instance.MyData.Index, TKManager.Instance.MyData.NickName, TKManager.Instance.MyData.Point);
             }
         });
-
-        return rtValue;
     }
 
     // 사용자 정보 파이어베이스에 세팅
     public void SetUserData()
     {
-        mDatabaseRef.Child("UserNameList").Child(TKManager.Instance.Mydata.Index).SetValueAsync(TKManager.Instance.Mydata.Name);
+        mDatabaseRef.Child("UserNameList").Child(TKManager.Instance.Mydata.Name).SetValueAsync(TKManager.Instance.Mydata.Index);
 
         mDatabaseRef.Child("Users").Child(TKManager.Instance.Mydata.Index).Child("Index").SetValueAsync(TKManager.Instance.Mydata.Index);
         mDatabaseRef.Child("Users").Child(TKManager.Instance.Mydata.Index).Child("Name").SetValueAsync(TKManager.Instance.Mydata.Name);
