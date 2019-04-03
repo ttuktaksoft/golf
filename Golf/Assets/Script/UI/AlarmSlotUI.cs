@@ -36,7 +36,7 @@ public class AlarmSlotUI : MonoBehaviour
         SlotIndex = index;
         ClickAction = clickAction;
 
-        CommonFunc.SetImageFile(data.BodyImgStr, ref BigSlotImg);        
+        CommonFunc.SetImageFile(TextureCacheManager.Instance.GetTexture(data.ContentURL), ref BigSlotImg);        
 
         RefreshSlot();
     }

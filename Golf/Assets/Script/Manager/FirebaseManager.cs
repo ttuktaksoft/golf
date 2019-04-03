@@ -31,7 +31,35 @@ public class FirebaseManager : MonoBehaviour
     private string googleAccessToken;
     public DatabaseReference mDatabaseRef;
 
+    public bool NickNameExist = false;
     public bool RegisterUserProgress = false;
+
+    private bool FirebaseProgress = false;
+    private Action FirebaseProgressEndAction = null;
+
+    public void SetFirebaseProgressEndAction(Action action)
+    {
+        FirebaseProgress = true;
+        FirebaseProgressEndAction = action;
+        StartCoroutine(Co_FirebaseProgressEndAction());
+    }
+
+    private IEnumerator Co_FirebaseProgressEndAction()
+    {
+        TKManager.Instance.ShowHUD();
+        while (true)
+        {
+            if (FirebaseProgress == false)
+                break;
+
+            yield return null;
+        }
+
+        TKManager.Instance.HideHUD();
+
+        if (FirebaseProgressEndAction != null)
+            FirebaseProgressEndAction();
+    }
 
     public void OnTokenReceived(object sender, Firebase.Messaging.TokenReceivedEventArgs token)
     {
@@ -131,6 +159,10 @@ public class FirebaseManager : MonoBehaviour
     public void GetData()
     {
         GetUserData();
+        GetTutorialData();
+        GetAcademyData();
+        GetMarketData();
+        GetAlarmData();
     }
 
     private void AddFirstLoadingComplete()
@@ -138,7 +170,7 @@ public class FirebaseManager : MonoBehaviour
         if (FirstLoadingComplete == false)
             LoadingCount++;
 
-        if (LoadingCount == 1)
+        if (LoadingCount == 5)
             FirstLoadingComplete = true;
     }
 
@@ -174,40 +206,51 @@ public class FirebaseManager : MonoBehaviour
     {
         string userIdx = TKManager.Instance.Mydata.Index;
 
+        Debug.Log("GetUserData Start");
         mDatabaseRef.Child("Users").Child(userIdx).GetValueAsync().ContinueWith(task =>
         {
 
-        if (task.IsFaulted)
-        {
-            // Handle the error...
-        }
-        else if (task.IsCompleted)
-        {
-            DataSnapshot snapshot = task.Result;
-
-            if (snapshot.Exists)
+            if (task.IsFaulted)
             {
-                var tempData = snapshot.Value as Dictionary<string, object>;
+                // Handle the error...
+            }
+            else if (task.IsCompleted)
+            {
+                DataSnapshot snapshot = task.Result;
 
-                var tempGender = Convert.ToInt32(tempData["Gender"]);
+                if (snapshot.Exists)
+                {
+                    var tempData = snapshot.Value as Dictionary<string, object>;
 
-                string tempName = tempData["Name"].ToString();
-                int tempAccumPoint = Convert.ToInt32(tempData["AccumPoint"]);
-                int tempSeasonPoint = Convert.ToInt32(tempData["SeasonPoint"]);
-                //string tempThumbNail = tempData["ThumbNail"].ToString();
+                    var tempGender = Convert.ToInt32(tempData["Gender"]);
 
-                TKManager.Instance.Mydata.Init((CommonData.GENDER)tempGender, userIdx, tempName, null, tempSeasonPoint, tempAccumPoint, "");
+                    string tempName = tempData["Name"].ToString();
+                    int tempAccumPoint = Convert.ToInt32(tempData["AccumPoint"]);
+                    int tempSeasonPoint = Convert.ToInt32(tempData["SeasonPoint"]);
+                    //string tempThumbNail = tempData["ThumbNail"].ToString();
+
+                    TKManager.Instance.Mydata.Init((CommonData.GENDER)tempGender, userIdx, tempName, null, tempSeasonPoint, tempAccumPoint, "");
+
+                    if (tempData.ContainsKey("UserCode") == false)
+                        SetRecommenderCode();
+                    else
+                    {
+                        string tempUserCode = tempData["UserCode"].ToString();
+                        TKManager.Instance.Mydata.UserCode = tempUserCode;
+                    }
                 }
 
+                Debug.Log("GetUserData End");
                 AddFirstLoadingComplete();
                 //  Debug.LogFormat("UserInfo: Index : {0} NickName {1} Point {2}", TKManager.Instance.MyData.Index, TKManager.Instance.MyData.NickName, TKManager.Instance.MyData.Point);
-            }
+                }
         });
     }
 
     // 튜토리얼 정보 파이어베이스에서 로드
     public void GetTutorialData()
-    {              
+    {
+        Debug.Log("GetTutorialData Start");
         mDatabaseRef.Child("Tutorial").OrderByKey().LimitToLast(4)
        .GetValueAsync().ContinueWith(task =>
        {
@@ -227,13 +270,16 @@ public class FirebaseManager : MonoBehaviour
                        var tempTitle = tempData["Title"].ToString();
                        var tempType = tempData["Type"].ToString();
                        var tempContent = tempData["Content"].ToString();
+
+                       TutorialData tutorialData = new TutorialData(tempTitle, tempContent);
+                       DataManager.Instance.AddTutorialData(tempType, tutorialData);
                    }
                }
                else
                {
                     
                }
-
+               Debug.Log("GetTutorialData End");
                AddFirstLoadingComplete();
            }
        }
@@ -243,6 +289,7 @@ public class FirebaseManager : MonoBehaviour
     // 아카데미 정보 파이어베이스에서 로드
     public void GetAcademyData()
     {
+        Debug.Log("GetAcademyData Start");
         mDatabaseRef.Child("Academy").GetValueAsync().ContinueWith(task =>
        {
            if (task.IsFaulted)
@@ -254,13 +301,13 @@ public class FirebaseManager : MonoBehaviour
                DataSnapshot snapshot = task.Result;
                if (snapshot != null && snapshot.Exists)
                {
-                   var tempData = snapshot.Value.ToString();                   
+                   DataManager.Instance.AcademyURL = snapshot.Value.ToString();                   
                }
                else
                {
 
                }
-
+               Debug.Log("GetAcademyData End");
                AddFirstLoadingComplete();
            }
        }
@@ -270,7 +317,13 @@ public class FirebaseManager : MonoBehaviour
     // 마켓 정보 파이어베이스에서 로드
     public void GetMarketData()
     {
-        mDatabaseRef.Child("Market").GetValueAsync().ContinueWith(task =>
+        Debug.Log("GetMarketData Start");
+#if (UNITY_ANDROID || UNITY_EDITOR)
+        string dataKey = "MarketAOS";
+#elif UNITY_IOS
+        string dataKey = "MarketIOS";
+#endif
+        mDatabaseRef.Child(dataKey).GetValueAsync().ContinueWith(task =>
         {
             if (task.IsFaulted)
             {
@@ -281,13 +334,13 @@ public class FirebaseManager : MonoBehaviour
                 DataSnapshot snapshot = task.Result;
                 if (snapshot != null && snapshot.Exists)
                 {
-                    var tempData = snapshot.Value.ToString();
+                    DataManager.Instance.MarketURL = snapshot.Value.ToString();
                 }
                 else
                 {
 
                 }
-
+                Debug.Log("GetMarketData End");
                 AddFirstLoadingComplete();
             }
         }
@@ -366,6 +419,7 @@ public class FirebaseManager : MonoBehaviour
     // 기타알림 정보 파이어베이스에서 로드
     public void GetAlarmData()
     {
+        Debug.Log("GetAlarmData Start");
         mDatabaseRef.Child("Alarm").OrderByKey().LimitToLast(4)
        .GetValueAsync().ContinueWith(task =>
        {
@@ -384,14 +438,26 @@ public class FirebaseManager : MonoBehaviour
                        var tempData = tempChild.Value as Dictionary<string, object>;
                        var tempTitle = tempData["Title"].ToString();
                        var tempContent = tempData["Content"].ToString();
+                       var tempDate = tempData["Date"].ToString();
+                       DateTime date = new DateTime();
 
+                       if (DateTime.TryParseExact(tempDate, "yyyyMMdd", null, System.Globalization.DateTimeStyles.None, out date))
+                       {
+                           AlarmData alarmData = new AlarmData(tempTitle, date, tempContent);
+                           DataManager.Instance.AddAlarmData(alarmData);
+                           TextureCacheManager.Instance.AddLoadImageURL(tempContent);
+                       }
+                       else
+                       {
+                           Debug.LogFormat("GetAlarmData 날짜 형식이 맞지 않습니다 {0}", tempDate);
+                       }
                    }
                }
                else
                {
 
                }
-
+               Debug.Log("GetAlarmData End");
                AddFirstLoadingComplete();
            }
        }
@@ -399,9 +465,9 @@ public class FirebaseManager : MonoBehaviour
     }
 
     // 닉네임 중복 체크
-    public void IsExistNickName(string NickName)
+    public void IsExistNickName(string NickName, Action endAction)
     {
-        var tempExist = true;
+        SetFirebaseProgressEndAction(endAction);
 
         mDatabaseRef.Child("UserNameList").Child(NickName).GetValueAsync().ContinueWith(task =>
         {
@@ -416,11 +482,11 @@ public class FirebaseManager : MonoBehaviour
 
                 if (snapshot.Exists || snapshot.Value != null)
                 {
-                    tempExist = true;
+                    NickNameExist = true;
                 }
                 else
                 {
-                    tempExist = false;
+                    NickNameExist = false;
                 }
                 //  Debug.LogFormat("UserInfo: Index : {0} NickName {1} Point {2}", TKManager.Instance.MyData.Index, TKManager.Instance.MyData.NickName, TKManager.Instance.MyData.Point);
             }
@@ -617,12 +683,15 @@ public class FirebaseManager : MonoBehaviour
 
         String tempUserCode = new String(stringChars);
         tempUserCode += TKManager.Instance.Mydata.Index;
+        TKManager.Instance.Mydata.UserCode = tempUserCode;
 
         mDatabaseRef.Child("Users").Child(TKManager.Instance.Mydata.Index).Child("UserCode").SetValueAsync(tempUserCode);
+        mDatabaseRef.Child("UserCode").Child(tempUserCode).SetValueAsync(TKManager.Instance.Mydata.Index);
     }
 
-    public void AddFreind(string userCode)
+    public void AddFreind(string userCode, Action<bool> endAction)
     {
+        TKManager.Instance.ShowHUD();
         mDatabaseRef.Child("UserCode").Child(userCode).GetValueAsync().ContinueWith(task =>
         {
 
@@ -634,14 +703,17 @@ public class FirebaseManager : MonoBehaviour
             {
                 DataSnapshot snapshot = task.Result;
 
+                TKManager.Instance.HideHUD();
                 if (snapshot.Exists || snapshot.Value != null)
                 {
                     var tempIndex = snapshot.Value.ToString();                    
                     mDatabaseRef.Child("Users").Child(TKManager.Instance.Mydata.Index).Child("FriendList").Push().SetValueAsync(tempIndex);
+                    endAction(true);
                 }
                 else
                 {
                     // 코드 잘못 쳤을 경우
+                    endAction(false);
                 }
             }
         });

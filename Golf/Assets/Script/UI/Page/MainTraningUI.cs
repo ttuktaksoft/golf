@@ -335,7 +335,7 @@ public class MainTraningUI : MonoBehaviour {
         if (MenuAction)
             return;
 
-        Application.OpenURL("http://mygolfbiz.kr/about-us");
+        Application.OpenURL(DataManager.Instance.AcademyURL);
     }
 
     public void OnClickTutorial()
@@ -343,7 +343,26 @@ public class MainTraningUI : MonoBehaviour {
         if (MenuAction)
             return;
 
-        PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.TUTORIAL);
+        if (TrainingType == CommonData.TRAINING_TYPE.TRAINING_POSE)
+        {
+            if (TrainingSetStep == TRAINING_SET_STEP.MAIN)
+            {
+                PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.TUTORIAL, new PopupTutorial.PopupData(TutorialData.TUTORIAL_TYPE.MAIN));
+            }
+            else if (TrainingSetStep == TRAINING_SET_STEP.ANGLE)
+            {
+                PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.TUTORIAL, new PopupTutorial.PopupData(TutorialData.TUTORIAL_TYPE.ANGLE));
+            }
+            else
+            {
+                PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.TUTORIAL, new PopupTutorial.PopupData(TutorialData.TUTORIAL_TYPE.POSE));
+            }
+        }
+        else
+        {
+            PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.TUTORIAL, new PopupTutorial.PopupData(TutorialData.TUTORIAL_TYPE.TEMPO));
+        }
+
         return;
         List<string> list = new List<string>();
         

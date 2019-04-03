@@ -8,7 +8,7 @@ public class PopupTutorial : Popup
     public Button OK;
     public GameObject ListObj;
     private List<UITutorialSlot> TutorialSlotList = new List<UITutorialSlot>();
-
+    private TutorialData.TUTORIAL_TYPE TutorialType = TutorialData.TUTORIAL_TYPE.MAIN;
 
     public PopupTutorial()
         : base(PopupMgr.POPUP_TYPE.TUTORIAL)
@@ -18,18 +18,30 @@ public class PopupTutorial : Popup
 
     public class PopupData : PopupBaseData
     {
-        public PopupData()
+        public TutorialData.TUTORIAL_TYPE TutorialType = TutorialData.TUTORIAL_TYPE.MAIN;
+        public PopupData(TutorialData.TUTORIAL_TYPE type)
         {
+            TutorialType = type;
         }
     }
 
     public override void SetData(PopupBaseData data)
     {
-        if (TutorialSlotList.Count <= 0)
+        PopupData popupData = data as PopupData;
+        TutorialType = popupData.TutorialType;
+
+        for (int i = 0; i < TutorialSlotList.Count; i++)
         {
-            for (int i = 0; i < DataManager.Instance.TutorialDataList.Count; i++)
+            DestroyImmediate(TutorialSlotList[i].gameObject);
+        }
+        TutorialSlotList.Clear();
+
+        if(DataManager.Instance.TutorialDataList.ContainsKey(TutorialType))
+        {
+            var list = DataManager.Instance.TutorialDataList[TutorialType];
+            for (int i = 0; i < list.Count; i++)
             {
-                var temp_data = DataManager.Instance.TutorialDataList[i];
+                var temp_data = list[i];
                 var slotObj = Instantiate(Resources.Load("Prefab/UITutorialSlot"), ListObj.transform) as GameObject;
                 var slot = slotObj.GetComponent<UITutorialSlot>();
                 slot.SetData(temp_data);

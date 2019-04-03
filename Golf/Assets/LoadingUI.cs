@@ -119,6 +119,7 @@ public class LoadingUI : MonoBehaviour
         TKManager.Instance.gyro.enabled = false;
         TKManager.Instance.LoadFile();
         DataManager.Instance.init();
+        TextureCacheManager.Instance.init();
 
         yield return new WaitForSeconds(2f);
         TKManager.Instance.HideHUD();
@@ -212,6 +213,16 @@ public class LoadingUI : MonoBehaviour
         while (true)
         {
             if (FirebaseManager.Instance.FirstLoadingComplete)
+                break;
+
+            yield return null;
+        }
+
+        TextureCacheManager.Instance.LoadImage();
+
+        while (true)
+        {
+            if (TextureCacheManager.Instance.ImageLoadProgress)
                 break;
 
             yield return null;

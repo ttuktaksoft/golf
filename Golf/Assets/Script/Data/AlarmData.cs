@@ -6,19 +6,18 @@ using UnityEngine;
 public class AlarmData
 {
     public string Title;
-    public long Date;
-    public string BodyImgStr;
+    public DateTime Date;
+    public string ContentURL;
 
     public string DateStr;
 
-    public AlarmData(string title, long date, string bodyimg)
+    public AlarmData(string title, DateTime date, string contentURL)
     {
         Title = title;
         Date = date;
-        BodyImgStr = bodyimg;
+        ContentURL = contentURL;
 
-        DateTime time = new DateTime(date);
-        DateStr = string.Format("{0:D2}-{1:D2}", time.Month, time.Day);
+        DateStr = string.Format("{0:D2}-{1:D2}", date.Month, date.Day);
 
     }
 }

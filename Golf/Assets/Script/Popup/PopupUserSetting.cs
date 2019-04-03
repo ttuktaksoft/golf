@@ -115,19 +115,19 @@ public class PopupUserSetting : Popup
         }
         */
 
-        //FirebaseManager.Instance.IsExistNickName(Name.text.ToString(), () =>
+        FirebaseManager.Instance.IsExistNickName(Name.text.ToString(), () =>
         {
-            //if(FirebaseManager.Instance.NickNameExist)
-            //{
-            //    PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.MSG, new PopupMsg.PopupData("닉네임이 중복입니다", null, null, PopupMsg.BUTTON_TYPE.ONE));
-            //}
-            //else
-            //{
+            if (FirebaseManager.Instance.NickNameExist)
+            {
+                PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.MSG, new PopupMsg.PopupData("닉네임이 중복입니다", null, null, PopupMsg.BUTTON_TYPE.ONE));
+            }
+            else
+            {
                 if (Firstuser)
                 {
                     if (TermsEnable == false)
                     {
-                        PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.MSG, new PopupMsg.PopupData("트레이닝 포인트에 따른 각종 혜택을 받기 위해서 개인정보 취급동의가 필요 합니다.", () =>
+                        PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.MSG, new PopupMsg.PopupData("트레이닝 포인트에 따른 각종 혜택을 받기 위해서 개인정보 취급동의가 필요 합니다", () =>
                         {
                             TKManager.Instance.Mydata.SetName(Name.text.ToString());
                             TKManager.Instance.Mydata.SetPhoneNumber(Number.text.ToString());
@@ -172,7 +172,7 @@ public class PopupUserSetting : Popup
                     PopupMgr.Instance.DismissPopup();
                 }
             }
-        //});
+        });
     }
 
     public void OnClickCancel()

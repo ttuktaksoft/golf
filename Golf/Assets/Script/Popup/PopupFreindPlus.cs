@@ -19,6 +19,7 @@ public class PopupFreindPlus : Popup
 
     public override void SetData(PopupBaseData data)
     {
+        RecommenderCode.text = TKManager.Instance.Mydata.UserCode;
     }
 
     public void Awake()

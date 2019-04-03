@@ -78,8 +78,6 @@ public class MainUI : MonoBehaviour {
     }
     public void OnClickAlarm()
     {
-        //PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.WEB_VIEW);
-//        Application.OpenURL("http://unity3d.com/");
         ChangeTab(MAIN_MENU_TYPE.ALARM);
     }
     public void OnClickReward()
@@ -138,6 +136,6 @@ public class MainUI : MonoBehaviour {
 
     public void OnClickWeb()
     {
-        Application.OpenURL("http://mygolfbiz.kr/main");
+        Application.OpenURL(DataManager.Instance.MarketURL);
     }
 }

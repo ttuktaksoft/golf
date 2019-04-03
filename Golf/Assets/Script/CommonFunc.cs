@@ -19,6 +19,11 @@ public class CommonFunc : MonoBehaviour
         img.sprite = imgSprite;
     }
 
+    static public void SetImageFile(Texture2D texture, ref Image img)
+    {
+        img.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), img.rectTransform.pivot);
+    }
+
     static public void SetImageSize(Vector2 size, ref Image img)
     {
         RectTransform rt = img.GetComponent<RectTransform>();
