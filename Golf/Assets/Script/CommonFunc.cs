@@ -165,4 +165,22 @@ public class CommonFunc : MonoBehaviour
         else
             img.sprite = TKManager.Instance.ThumbnailSprite;
     }
+
+    static public int RefreshGrade(int accumulatePoint)
+    {
+        int returnGrade = 0;
+        var arr = CommonData.GRADE_POINT;
+        returnGrade = arr.Length - 1;
+        for (int i = 0; i < arr.Length; i++)
+        {
+            if (accumulatePoint < arr[i])
+            {
+                returnGrade = i;
+                break;
+            }
+
+        }
+
+        return returnGrade;
+    }
 }

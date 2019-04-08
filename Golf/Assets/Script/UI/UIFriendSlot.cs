@@ -11,26 +11,18 @@ public class UIFriendSlot : MonoBehaviour
     public Image GradeImg;
     public Text Point;
 
-    public void Init(int index = 0)
+    public void SetData(FriendData data)
     {
-        
-        if(index == 0)
-        {
-            CommonFunc.SetImageFile("Temp_1/test_6", ref Thumbnail);
-            Name.text = "이민영";
-            CommonFunc.SetImageFile("icon_man", ref Gender);
-            CommonFunc.SetGradeImg(ref GradeImg, 6);
-            Point.text = string.Format("{0:n0} Point", 10000);
-        }
+        CommonFunc.SetImageFile(TextureCacheManager.Instance.GetTexture(data.ThumbnailUrl), ref Thumbnail);
+        Name.text = data.Nickname;
 
-        if (index == 1)
-        {
-            CommonFunc.SetImageFile("logo_2", ref Thumbnail);
-            Name.text = "이민영골프아카데미";
+        if (data.Gender == CommonData.GENDER.GENDER_MAN)
             CommonFunc.SetImageFile("icon_man", ref Gender);
-            CommonFunc.SetGradeImg(ref GradeImg, 5);
-            Point.text = string.Format("{0:n0} Point", 5000);
-        }
+        else
+            CommonFunc.SetImageFile("icon_woman", ref Gender);
+
+        CommonFunc.SetGradeImg(ref GradeImg, data.Grade);
+        Point.text = string.Format("{0:n0} P", data.SeasonPoint);
     }
 
 }

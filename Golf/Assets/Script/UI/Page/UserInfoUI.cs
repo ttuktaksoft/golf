@@ -12,7 +12,9 @@ public class UserInfoUI : MonoBehaviour {
     public Button FriendPlus;
     private List<EvaluationSlotUI> EvaluationSlotList = new List<EvaluationSlotUI>();
 
-    public List<UIFriendSlot> FriendSlotList = new List<UIFriendSlot>();
+    public GameObject FriendEmptyText;
+    public GameObject FriendList;
+    private List<UIFriendSlot> FriendSlotList = new List<UIFriendSlot>();
 
     public void Awake()
     {
@@ -52,10 +54,7 @@ public class UserInfoUI : MonoBehaviour {
                 break;
         }
 
-        for (int i = 0; i < FriendSlotList.Count; i++)
-        {
-            FriendSlotList[i].Init(i);
-        }
+        RefreshFriendList();
 
         MyInfo.Init(true);
 
@@ -63,6 +62,36 @@ public class UserInfoUI : MonoBehaviour {
 
     public void OnClickFriendPlus()
     {
-        PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.FRIEND_PLUS);
+        PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.FRIEND_PLUS, new PopupFreindPlus.PopupData(RefreshFriendList));
+    }
+
+    public void RefreshFriendList()
+    {
+        var friendList = TKManager.Instance.Mydata.FriendDataList;
+        for (int i = 0; i < FriendSlotList.Count; i++)
+        {
+            DestroyImmediate(FriendSlotList[i].gameObject);
+        }
+        FriendSlotList.Clear();
+
+        if (friendList.Count > 0)
+        {
+            FriendList.SetActive(true);
+            FriendEmptyText.SetActive(false);
+        }
+        else
+        {
+            FriendList.SetActive(false);
+            FriendEmptyText.SetActive(true);
+        }
+
+        for (int i = 0; i < friendList.Count; i++)
+        {
+            var data = friendList[i];
+            var slotObj = Instantiate(Resources.Load("Prefab/UIFriendSlot"), FriendList.transform) as GameObject;
+            var slot = slotObj.GetComponent<UIFriendSlot>();
+            slot.SetData(data);
+            FriendSlotList.Add(slot);
+        }
     }
 }

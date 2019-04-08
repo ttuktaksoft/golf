@@ -32,6 +32,7 @@ public class FirebaseManager : MonoBehaviour
     public DatabaseReference mDatabaseRef;
 
     public bool NickNameExist = false;
+    public bool AddFriendEnable = false;
     public bool RegisterUserProgress = false;
 
     private bool FirebaseProgress = false;
@@ -163,6 +164,7 @@ public class FirebaseManager : MonoBehaviour
         GetAcademyData();
         GetMarketData();
         GetAlarmData();
+        GetFreindList();
     }
 
     private void AddFirstLoadingComplete()
@@ -689,12 +691,13 @@ public class FirebaseManager : MonoBehaviour
         mDatabaseRef.Child("UserCode").Child(tempUserCode).SetValueAsync(TKManager.Instance.Mydata.Index);
     }
 
-    public void AddFreind(string userCode, Action<bool> endAction)
+    public void AddFriend(string userCode, Action endAction)
     {
-        TKManager.Instance.ShowHUD();
+        AddFriendEnable = false;
+        SetFirebaseProgressEndAction(endAction);
+
         mDatabaseRef.Child("UserCode").Child(userCode).GetValueAsync().ContinueWith(task =>
         {
-
             if (task.IsFaulted)
             {
                 // Handle the error...
@@ -703,19 +706,21 @@ public class FirebaseManager : MonoBehaviour
             {
                 DataSnapshot snapshot = task.Result;
 
-                TKManager.Instance.HideHUD();
                 if (snapshot.Exists || snapshot.Value != null)
                 {
-                    var tempIndex = snapshot.Value.ToString();                    
+                    var tempIndex = snapshot.Value.ToString();
+                    TKManager.Instance.Mydata.AddFriend(tempIndex);
                     mDatabaseRef.Child("Users").Child(TKManager.Instance.Mydata.Index).Child("FriendList").Push().SetValueAsync(tempIndex);
-                    endAction(true);
+                    AddFriendEnable = true;
                 }
                 else
                 {
                     // 코드 잘못 쳤을 경우
-                    endAction(false);
+                    AddFriendEnable = false;
                 }
             }
+
+            FirebaseProgress = false;
         });
     }
 
@@ -736,24 +741,24 @@ public class FirebaseManager : MonoBehaviour
                     foreach (var tempChild in snapshot.Children)
                     {
                         Debug.Log(tempChild.Value.ToString());
-                        GetFreindInfo(tempChild.Value.ToString());
+                        TKManager.Instance.Mydata.AddFriend(tempChild.Value.ToString());
                     }
-
-                    
-                    
-
                 }
                 else
                 {
 
                 }
+
+                AddFirstLoadingComplete();
             }
         });
     }
 
-    public void GetFreindInfo(string freindIndex)
+    public void GetFriendData_ONE(string index, Action endAction)
     {
-        mDatabaseRef.Child("Users").Child(freindIndex).GetValueAsync().ContinueWith(task =>
+        SetFirebaseProgressEndAction(endAction);
+
+        mDatabaseRef.Child("Users").Child(index).GetValueAsync().ContinueWith(task =>
         {
             if (task.IsFaulted)
             {
@@ -768,20 +773,81 @@ public class FirebaseManager : MonoBehaviour
 
                     var tempData = snapshot.Value as Dictionary<string, object>;
 
+                    string tempIndex = tempData["Index"].ToString();
                     string tempName = tempData["Name"].ToString();
-                    var tempGender = Convert.ToInt32(tempData["Gender"]);                    
+                    var tempGender = Convert.ToInt32(tempData["Gender"]);
                     int tempAccumPoint = Convert.ToInt32(tempData["AccumPoint"]);
                     int tempSeasonPoint = Convert.ToInt32(tempData["SeasonPoint"]);
-                    int tempThumbNail = Convert.ToInt32(tempData["ThumbNail"]);
-                    
+                    string tempThumbNail = tempData["ThumbNail"].ToString();
+
+                    TKManager.Instance.Mydata.AddFriend(tempIndex, tempName, (CommonData.GENDER)tempGender, tempAccumPoint, tempSeasonPoint, tempThumbNail);
+                    TextureCacheManager.Instance.AddLoadImageURL(tempThumbNail);
                 }
                 else
                 {
-                    
+
                 }
             }
+
+            FirebaseProgress = false;
+
         });
     }
+    public IEnumerator Co_GetFriendData(List<string> list)
+    {
+        TKManager.Instance.ShowHUD();
 
+        int getDataCount = list.Count;
 
+        for (int i = 0; i < list.Count; i++)
+        {
+            GetFriendData(list[i], () =>
+            {
+                getDataCount--;
+            });
+        }
+
+        while(getDataCount > 0)
+        {
+            yield return null;
+        }
+
+        TKManager.Instance.HideHUD();
+    }
+    private void GetFriendData(string index, Action endAction)
+    {
+        mDatabaseRef.Child("Users").Child(index).GetValueAsync().ContinueWith(task =>
+        {
+            if (task.IsFaulted)
+            {
+                // Handle the error...
+            }
+            else if (task.IsCompleted)
+            {
+                DataSnapshot snapshot = task.Result;
+
+                if (snapshot.Exists || snapshot.Value != null)
+                {
+
+                    var tempData = snapshot.Value as Dictionary<string, object>;
+
+                    string tempIndex = tempData["Index"].ToString();
+                    string tempName = tempData["Name"].ToString();
+                    var tempGender = Convert.ToInt32(tempData["Gender"]);
+                    int tempAccumPoint = Convert.ToInt32(tempData["AccumPoint"]);
+                    int tempSeasonPoint = Convert.ToInt32(tempData["SeasonPoint"]);
+                    string tempThumbNail = tempData["ThumbNail"].ToString();
+
+                    TKManager.Instance.Mydata.AddFriend(tempIndex, tempName, (CommonData.GENDER)tempGender, tempAccumPoint, tempSeasonPoint, tempThumbNail);
+                    TextureCacheManager.Instance.AddLoadImageURL(tempThumbNail);
+                }
+                else
+                {
+
+                }
+            }
+
+            endAction();
+        });
+    }
 }

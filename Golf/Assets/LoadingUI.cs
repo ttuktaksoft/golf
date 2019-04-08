@@ -218,6 +218,16 @@ public class LoadingUI : MonoBehaviour
             yield return null;
         }
 
+        var friendList = TKManager.Instance.Mydata.FriendDataList;
+        var friendIndexLIst = new List<string>();
+        for (int i = 0; i < friendList.Count; i++)
+        {
+            if (friendList[i].Index != "" && friendList[i].DataLoad == false)
+                friendIndexLIst.Add(friendList[i].Index);
+        }
+
+        yield return FirebaseManager.Instance.Co_GetFriendData(friendIndexLIst);
+
         TextureCacheManager.Instance.LoadImage();
 
         while (true)

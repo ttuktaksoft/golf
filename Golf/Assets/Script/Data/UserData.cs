@@ -19,6 +19,8 @@ public class UserData
     public List<EvaluationData> EvaluationDataList = new List<EvaluationData>();
     public List<GiftconData> GiftconDataList = new List<GiftconData>();
 
+    public List<FriendData> FriendDataList = new List<FriendData>();
+
     // TODO 파베가 붙으면 변경해야함
     public string ThumbnailSpritePath = "";
 
@@ -43,8 +45,7 @@ public class UserData
         SeasonPoint = seasonPoint;
         AccumulatePoint = accumulatePoint;
         ThumbnailSpritePath = ThumbNail;
-
-        RefreshGrade();
+        Grade = CommonFunc.RefreshGrade(AccumulatePoint);
     }
 
     public void SetIndex(string index)
@@ -74,23 +75,8 @@ public class UserData
     {
         SeasonPoint += point;
         AccumulatePoint += point;
-        RefreshGrade();
+        Grade = CommonFunc.RefreshGrade(AccumulatePoint);
         FirebaseManager.Instance.SetSeasonPoint();
-    }
-
-    public void RefreshGrade()
-    {
-        var arr = CommonData.GRADE_POINT;
-        Grade = arr.Length - 1;
-        for (int i = 0; i < arr.Length; i++)
-        {
-            if (AccumulatePoint < arr[i])
-            {
-                Grade = i;
-                break;
-            }
-                
-        }
     }
     
 
@@ -112,5 +98,27 @@ public class UserData
         }
     }
 
+    public void AddFriend(string index)
+    {
+        for (int i = 0; i < FriendDataList.Count; i++)
+        {
+            if (FriendDataList[i].Index == index)
+                return;
+        }
+
+        FriendDataList.Add(new FriendData(index));
+    }
+
+    public void AddFriend(string index, string nickname, CommonData.GENDER gender, int accumulatePoint, int seasonPoint, string thumbnailUrl)
+    {
+        for (int i = 0; i < FriendDataList.Count; i++)
+        {
+            if (FriendDataList[i].Index == index)
+            {
+                FriendDataList[i].SetData(nickname, gender, accumulatePoint, seasonPoint, thumbnailUrl);
+                return;
+            }
+        }
+    }
 }
 
