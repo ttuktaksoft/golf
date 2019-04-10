@@ -18,11 +18,11 @@ public class UserData
 
     public List<EvaluationData> EvaluationDataList = new List<EvaluationData>();
     public List<GiftconData> GiftconDataList = new List<GiftconData>();
+    public List<PurchaseData> PurchaseDataList = new List<PurchaseData>();
 
     public List<FriendData> FriendDataList = new List<FriendData>();
 
-    // TODO 파베가 붙으면 변경해야함
-    public string ThumbnailSpritePath = "";
+    public string ThumbnailSpriteURL = "";
 
     public UserData()
     {
@@ -35,17 +35,23 @@ public class UserData
         Grade = 0;
         Percent = 100;
     }
-
-    public void Init(CommonData.GENDER gender, string index, string name, string phoneNumber, int seasonPoint, int accumulatePoint, string ThumbNail)
+    public void Init(string index)
     {
         Index = index;
+    }
+    public void SetData(CommonData.GENDER gender, string name, string phoneNumber, int seasonPoint, int accumulatePoint, string ThumbNail)
+    {
         Gender = gender;
         Name = name;
         PhoneNumber = phoneNumber;
         SeasonPoint = seasonPoint;
         AccumulatePoint = accumulatePoint;
-        ThumbnailSpritePath = ThumbNail;
+        ThumbnailSpriteURL = ThumbNail;
         Grade = CommonFunc.RefreshGrade(AccumulatePoint);
+
+        AddGiftcon(1, "http://cfs11.tistory.com/upload_control/download.blog?fhandle=YmxvZzM0NTUzOEBmczExLnRpc3RvcnkuY29tOi9hdHRhY2gvMS8zMzAwMDAwMDAxODcuanBn", "https://t1.daumcdn.net/cfile/tistory/995A4F395B9BD7C20E");
+        TextureCacheManager.Instance.AddLoadImageURL("http://cfs11.tistory.com/upload_control/download.blog?fhandle=YmxvZzM0NTUzOEBmczExLnRpc3RvcnkuY29tOi9hdHRhY2gvMS8zMzAwMDAwMDAxODcuanBn");
+        TextureCacheManager.Instance.AddLoadImageURL("https://t1.daumcdn.net/cfile/tistory/995A4F395B9BD7C20E");
     }
 
     public void SetIndex(string index)
@@ -77,6 +83,7 @@ public class UserData
         AccumulatePoint += point;
         Grade = CommonFunc.RefreshGrade(AccumulatePoint);
         FirebaseManager.Instance.SetSeasonPoint();
+        FirebaseManager.Instance.SetAccumPoint();
     }
     
 
@@ -84,6 +91,18 @@ public class UserData
     {
         EvaluationDataList.Insert(0, data);
         TKManager.Instance.SaveFile();
+    }
+
+    public void AddGiftcon(int index, string thumbnailURL, string giftconURL)
+    {
+        for (int i = 0; i < GiftconDataList.Count; i++)
+        {
+            if (GiftconDataList[i].Index == index)
+                return;
+        }
+
+        GiftconData data = new GiftconData(index, thumbnailURL, giftconURL);
+        GiftconDataList.Add(data);
     }
 
     public void RemoveGiftcon(int index)
@@ -96,6 +115,17 @@ public class UserData
                 break;
             }
         }
+    }
+
+    public GiftconData GetGiftconData(int index)
+    {
+        for (int i = 0; i < GiftconDataList.Count; i++)
+        {
+            if (GiftconDataList[i].Index == index)
+                return GiftconDataList[i];
+        }
+
+        return null;
     }
 
     public void AddFriend(string index)
@@ -119,6 +149,17 @@ public class UserData
                 return;
             }
         }
+    }
+
+    public PurchaseData GetPurchaseData(int index)
+    {
+        for (int i = 0; i < PurchaseDataList.Count; i++)
+        {
+            if (PurchaseDataList[i].Index == index)
+                return PurchaseDataList[i];
+        }
+
+        return null;
     }
 }
 

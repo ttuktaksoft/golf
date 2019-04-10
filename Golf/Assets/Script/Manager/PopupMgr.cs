@@ -35,7 +35,8 @@ public class PopupMgr : MonoBehaviour
         TERMS,
         HELP,
         FRIEND_PLUS,
-        REWARD_SELECT
+        REWARD_SELECT,
+        PURCHASE,
     }
     
     private Dictionary<POPUP_TYPE, Popup> PopupList = new Dictionary<POPUP_TYPE, Popup>();
@@ -61,7 +62,6 @@ public class PopupMgr : MonoBehaviour
 
         var popup = PopupList[type];
         popup.gameObject.SetActive(true);
-        popup.SetData(data);
 
         CurrentPopup = type;
         QueuePopupType.Add(type);
@@ -69,6 +69,8 @@ public class PopupMgr : MonoBehaviour
         // sortingOrder
 
         SortCanvasDepth();
+
+        popup.SetData(data);
     }
 
     public void DismissPopup()

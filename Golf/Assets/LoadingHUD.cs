@@ -10,7 +10,7 @@ public class LoadingHUD : MonoBehaviour
     void Start()
     {
         DontDestroyOnLoad(this);
-        HUDCanvas.sortingOrder = 10;
+        HUDCanvas.sortingOrder = 1000;
     }
 
     // Update is called once per frame

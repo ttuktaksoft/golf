@@ -17,12 +17,10 @@ public class UIPurchaseSlot : MonoBehaviour
         SlotButton.onClick.AddListener(OnClickSlot);
     }
 
-    public void SetData()
+    public void SetData(PurchaseData data)
     {
-        //CommonFunc.SetImageFile("Temp_1/test_1", ref GiftconImg);
-        //Title.text = data.Title;
-        //Desc.text = data.ExpirationTime;
-        
+        PurchaseIndex = data.Index;
+        CommonFunc.SetImageFile(TextureCacheManager.Instance.GetTexture(data.ThumbnailURL), ref PurchaseIconImg);
         RefreshUIAction = null;
     }
 
@@ -33,6 +31,6 @@ public class UIPurchaseSlot : MonoBehaviour
 
     public void OnClickSlot()
     {
-        //PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.GIFT_CON, new PopupGiftcon.PopupData(GiftconIndex, RefreshUIAction));
+        PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.PURCHASE, new PopupPurchase.PopupData(PurchaseIndex));
     }
 }

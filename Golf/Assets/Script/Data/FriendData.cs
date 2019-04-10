@@ -22,7 +22,7 @@ public class FriendData
 
     public void SetData(string nickname, CommonData.GENDER gender, int accumulatePoint, int seasonPoint, string thumbnailUrl)
     {
-        Nickname = Nickname;
+        Nickname = nickname;
         Gender = gender;
         AccumulatePoint = accumulatePoint;
         SeasonPoint = seasonPoint;

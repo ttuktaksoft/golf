@@ -24,6 +24,11 @@ public class CommonFunc : MonoBehaviour
         img.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), img.rectTransform.pivot);
     }
 
+    static public Sprite GetImageFile(Texture2D texture, ref Image img)
+    {
+        return Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), img.rectTransform.pivot);
+    }
+
     static public void SetImageSize(Vector2 size, ref Image img)
     {
         RectTransform rt = img.GetComponent<RectTransform>();
@@ -161,7 +166,10 @@ public class CommonFunc : MonoBehaviour
     static public void RefreshThumbnail(ref Image img)
     {
         if (TKManager.Instance.ThumbnailSprite == null)
-            SetImageFile("logo_2", ref img);
+        {
+            TKManager.Instance.ThumbnailSprite = CommonFunc.GetImageFile(TextureCacheManager.Instance.GetTexture(TKManager.Instance.Mydata.ThumbnailSpriteURL), ref img);
+            img.sprite = TKManager.Instance.ThumbnailSprite;
+        }
         else
             img.sprite = TKManager.Instance.ThumbnailSprite;
     }

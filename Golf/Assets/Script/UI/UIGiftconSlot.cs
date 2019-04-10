@@ -8,8 +8,6 @@ public class UIGiftconSlot : MonoBehaviour
 {
     public Button SlotButton;
     public Image GiftconImg;
-    public Text Title;
-    public Text Desc;
 
     private int GiftconIndex = -1;
     private Action RefreshUIAction = null;
@@ -21,10 +19,8 @@ public class UIGiftconSlot : MonoBehaviour
 
     public void SetData(GiftconData data)
     {
-        //CommonFunc.SetImageFile("Temp_1/test_1", ref GiftconImg);
-        //Title.text = data.Title;
-        //Desc.text = data.ExpirationTime;
         GiftconIndex = data.Index;
+        CommonFunc.SetImageFile(TextureCacheManager.Instance.GetTexture(data.ThumbnailURL), ref GiftconImg);
         RefreshUIAction = null;
     }
 

@@ -28,6 +28,8 @@ public class DataManager : MonoBehaviour
     public string AcademyURL = "";
     public string MarketURL = "";
 
+    public List<SeasonRewardData> SeasonRewardDataList = new List<SeasonRewardData>();
+
     public void init()
     {
         //AlarmDataList.Add(new AlarmData("새해인사", DateTime.Now.Ticks, "alram_1"));

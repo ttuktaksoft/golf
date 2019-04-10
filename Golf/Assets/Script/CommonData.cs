@@ -95,6 +95,12 @@ public class CommonData : MonoBehaviour
         PURCHASE_COFFEE
     }
 
+    public enum SEASON_REWARD_TYPE
+    {
+        GIFTCON,
+        PURCHASE
+    }
+
     public static int ANGLE_MAX_LEVEL = 4;
 
     public static string[] GRADE_STR = { "달걀", "병아리", "닭", "새", "독수리", "알바트로스" };

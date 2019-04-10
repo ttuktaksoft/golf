@@ -114,24 +114,21 @@ public class PopupUserSetting : Popup
             return;
         }
         */
-
-        FirebaseManager.Instance.IsExistNickName(Name.text.ToString(), () =>
+        if (Firstuser)
         {
-            if (FirebaseManager.Instance.NickNameExist)
+            FirebaseManager.Instance.IsExistNickName(Name.text.ToString(), () =>
             {
-                PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.MSG, new PopupMsg.PopupData("닉네임이 중복입니다", null, null, PopupMsg.BUTTON_TYPE.ONE));
-            }
-            else
-            {
-                if (Firstuser)
+                if (FirebaseManager.Instance.NickNameExist)
+                {
+                    PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.MSG, new PopupMsg.PopupData("닉네임이 중복입니다", null, null, PopupMsg.BUTTON_TYPE.ONE));
+                }
+                else
                 {
                     if (TermsEnable == false)
                     {
                         PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.MSG, new PopupMsg.PopupData("트레이닝 포인트에 따른 각종 혜택을 받기 위해서 개인정보 취급동의가 필요 합니다", () =>
                         {
-                            TKManager.Instance.Mydata.SetName(Name.text.ToString());
-                            TKManager.Instance.Mydata.SetPhoneNumber(Number.text.ToString());
-                            TKManager.Instance.Mydata.SetGender(Gender);
+                            TKManager.Instance.Mydata.SetData(Gender, Name.text.ToString(), Number.text.ToString(), 0, 0, "");
 
                             FirebaseManager.Instance.RegisterUserByFirebase();
 
@@ -144,9 +141,7 @@ public class PopupUserSetting : Popup
                     }
                     else
                     {
-                        TKManager.Instance.Mydata.SetName(Name.text.ToString());
-                        TKManager.Instance.Mydata.SetPhoneNumber(Number.text.ToString());
-                        TKManager.Instance.Mydata.SetGender(Gender);
+                        TKManager.Instance.Mydata.SetData(Gender, Name.text.ToString(), Number.text.ToString(), 0, 0, "");
 
                         FirebaseManager.Instance.RegisterUserByFirebase();
 
@@ -157,22 +152,21 @@ public class PopupUserSetting : Popup
                         PopupMgr.Instance.DismissPopup();
                     }
                 }
-                else
-                {
-                    TKManager.Instance.Mydata.SetName(Name.text.ToString());
-                    TKManager.Instance.Mydata.SetPhoneNumber(Number.text.ToString());
-                    TKManager.Instance.Mydata.SetGender(Gender);
+            });
+        }
+        else
+        {
+            // TODO 도형 이미지를 올리고 url 받아서 mydata에 세팅
+            TKManager.Instance.Mydata.SetData(Gender, Name.text.ToString(), Number.text.ToString(), 0, 0, "");
 
-                    FirebaseManager.Instance.SetUserData();
+            FirebaseManager.Instance.SetUserData();
 
-                    if (OkAction != null)
-                        OkAction();
+            if (OkAction != null)
+                OkAction();
 
-                    TKManager.Instance.SaveFile();
-                    PopupMgr.Instance.DismissPopup();
-                }
-            }
-        });
+            TKManager.Instance.SaveFile();
+            PopupMgr.Instance.DismissPopup();
+        }
     }
 
     public void OnClickCancel()
@@ -220,7 +214,6 @@ public class PopupUserSetting : Popup
                     Debug.Log("!!!!!!Couldn't load texture from " + path);
                     return;
                 }
-                TKManager.Instance.Mydata.ThumbnailSpritePath = path;
                 TKManager.Instance.ThumbnailSprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Thumbnail.rectTransform.pivot);
                 Thumbnail.sprite = TKManager.Instance.ThumbnailSprite;
 

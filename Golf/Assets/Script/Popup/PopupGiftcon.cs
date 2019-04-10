@@ -12,6 +12,7 @@ public class PopupGiftcon : Popup
 
     private int GiftconIndex = -1;
     private Action RefreshUIAction = null;
+    private GiftconData Giftcondata = null;
 
     public PopupGiftcon()
         : base(PopupMgr.POPUP_TYPE.GIFT_CON)
@@ -38,7 +39,13 @@ public class PopupGiftcon : Popup
             return;
 
         GiftconIndex = popupData.GiftconIndex;
+        Giftcondata = TKManager.Instance.Mydata.GetGiftconData(GiftconIndex);
         RefreshUIAction = popupData.RefreshUIAction;
+
+        if (Giftcondata == null)
+            OnClickOK();
+
+        CommonFunc.SetImageFile(TextureCacheManager.Instance.GetTexture(Giftcondata.GiftconURL), ref Img);
     }
 
     private void Awake()

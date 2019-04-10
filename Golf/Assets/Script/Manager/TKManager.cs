@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -34,6 +35,9 @@ public class TKManager : MonoBehaviour
     private SaveData MySaveData = new SaveData();
     public bool MyLoadData = false;
     private int TrainingTimer;
+
+    public DateTime CurrSeasonTime = new DateTime(0);
+    public DateTime NextSeasonTime = new DateTime(0);
     // Start is called before the first frame update
     void Start()
     {
@@ -163,48 +167,16 @@ public class TKManager : MonoBehaviour
     [System.Serializable]
     public class SaveData
     {
-        public CommonData.GENDER Gender = CommonData.GENDER.GENDER_MAN;
-        public string Name = "";
-        public int Grade = 1;
-        public int Point = 0;
-        public string PhoneNumber = "";
-        public List<EvaluationData> EvaluationDataList = new List<EvaluationData>();
-        public string ThumbnailSpritePath = "";
         public string Index = "";
 
         public void Save()
         {
-            Gender = TKManager.Instance.Mydata.Gender;
-            Name = TKManager.Instance.Mydata.Name;
-            Grade = TKManager.Instance.Mydata.Grade;
-            Point = TKManager.Instance.Mydata.SeasonPoint;
-            PhoneNumber = TKManager.Instance.Mydata.PhoneNumber;
-            EvaluationDataList = TKManager.Instance.Mydata.EvaluationDataList;
-            ThumbnailSpritePath = TKManager.Instance.Mydata.ThumbnailSpritePath;
             Index = TKManager.Instance.Mydata.Index;
         }
 
         public void Load()
         {
-            TKManager.Instance.Mydata.Init(Gender, Index, Name, PhoneNumber, Point, Point, ThumbnailSpritePath);
-
-            if (EvaluationDataList == null)
-                TKManager.Instance.Mydata.EvaluationDataList = new List<EvaluationData>();
-            else
-                TKManager.Instance.Mydata.EvaluationDataList = EvaluationDataList;
-
-            if (ThumbnailSpritePath != "")
-            {
-                Texture2D texture = NativeGallery.LoadImageAtPath(ThumbnailSpritePath);
-                if (texture == null)
-                {
-                    Debug.Log("!!!!!!Couldn't load texture from " + ThumbnailSpritePath);
-                    return;
-                }
-                TKManager.Instance.ThumbnailSprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f,0.5f));
-            }
-            else
-                TKManager.Instance.ThumbnailSprite = null;
+            TKManager.Instance.Mydata.Init(Index);
         }
     }
 

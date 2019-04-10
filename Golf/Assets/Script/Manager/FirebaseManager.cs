@@ -165,6 +165,7 @@ public class FirebaseManager : MonoBehaviour
         GetMarketData();
         GetAlarmData();
         GetFreindList();
+        GetSeasonData();
     }
 
     private void AddFirstLoadingComplete()
@@ -172,7 +173,7 @@ public class FirebaseManager : MonoBehaviour
         if (FirstLoadingComplete == false)
             LoadingCount++;
 
-        if (LoadingCount == 5)
+        if (LoadingCount == 6)
             FirstLoadingComplete = true;
     }
 
@@ -190,7 +191,7 @@ public class FirebaseManager : MonoBehaviour
             }
             else
             {
-                TKManager.Instance.Mydata.SetIndex(tempCount.ToString());
+                TKManager.Instance.Mydata.Init(tempCount.ToString());
 
                 SetUserData();
                 mutableData.Value = tempCount + 1;
@@ -229,9 +230,9 @@ public class FirebaseManager : MonoBehaviour
                     string tempName = tempData["Name"].ToString();
                     int tempAccumPoint = Convert.ToInt32(tempData["AccumPoint"]);
                     int tempSeasonPoint = Convert.ToInt32(tempData["SeasonPoint"]);
-                    //string tempThumbNail = tempData["ThumbNail"].ToString();
+                    string tempThumbNail = tempData["ThumbNail"].ToString();
 
-                    TKManager.Instance.Mydata.Init((CommonData.GENDER)tempGender, userIdx, tempName, null, tempSeasonPoint, tempAccumPoint, "");
+                    TKManager.Instance.Mydata.SetData((CommonData.GENDER)tempGender, tempName, null, tempSeasonPoint, tempAccumPoint, tempThumbNail);
 
                     if (tempData.ContainsKey("UserCode") == false)
                         SetRecommenderCode();
@@ -240,6 +241,8 @@ public class FirebaseManager : MonoBehaviour
                         string tempUserCode = tempData["UserCode"].ToString();
                         TKManager.Instance.Mydata.UserCode = tempUserCode;
                     }
+
+                    TextureCacheManager.Instance.AddLoadImageURL(tempThumbNail);
                 }
 
                 Debug.Log("GetUserData End");
@@ -492,6 +495,8 @@ public class FirebaseManager : MonoBehaviour
                 }
                 //  Debug.LogFormat("UserInfo: Index : {0} NickName {1} Point {2}", TKManager.Instance.MyData.Index, TKManager.Instance.MyData.NickName, TKManager.Instance.MyData.Point);
             }
+
+            FirebaseProgress = false;
         });
     }
 
@@ -505,29 +510,28 @@ public class FirebaseManager : MonoBehaviour
         mDatabaseRef.Child("Users").Child(TKManager.Instance.Mydata.Index).Child("Gender").SetValueAsync((int)TKManager.Instance.Mydata.Gender);
         mDatabaseRef.Child("Users").Child(TKManager.Instance.Mydata.Index).Child("AccumPoint").SetValueAsync(TKManager.Instance.Mydata.AccumulatePoint);
         mDatabaseRef.Child("Users").Child(TKManager.Instance.Mydata.Index).Child("SeasonPoint").SetValueAsync(TKManager.Instance.Mydata.SeasonPoint);
-        mDatabaseRef.Child("Users").Child(TKManager.Instance.Mydata.Index).Child("Grade").SetValueAsync(TKManager.Instance.Mydata.Grade);
         mDatabaseRef.Child("Users").Child(TKManager.Instance.Mydata.Index).Child("Percent").SetValueAsync(TKManager.Instance.Mydata.Percent);
-        
+        mDatabaseRef.Child("Users").Child(TKManager.Instance.Mydata.Index).Child("ThumbNail").SetValueAsync(TKManager.Instance.Mydata.ThumbnailSpriteURL);
     }
 
 
-    // 사용자 성별 파이어베이스에 세팅
-    public void SetUserGender()
-    {
-        mDatabaseRef.Child("Users").Child(TKManager.Instance.Mydata.Index).Child("Gender").SetValueAsync((int)TKManager.Instance.Mydata.Gender);
-    }
+    //// 사용자 성별 파이어베이스에 세팅
+    //public void SetUserGender()
+    //{
+    //    mDatabaseRef.Child("Users").Child(TKManager.Instance.Mydata.Index).Child("Gender").SetValueAsync((int)TKManager.Instance.Mydata.Gender);
+    //}
 
-    // 사용자 네임 파이어베이스에 세팅
-    public void SetUserName()
-    {
-        mDatabaseRef.Child("Users").Child(TKManager.Instance.Mydata.Index).Child("Name").SetValueAsync(TKManager.Instance.Mydata.Name);
-    }
+    //// 사용자 네임 파이어베이스에 세팅
+    //public void SetUserName()
+    //{
+    //    mDatabaseRef.Child("Users").Child(TKManager.Instance.Mydata.Index).Child("Name").SetValueAsync(TKManager.Instance.Mydata.Name);
+    //}
 
-    // 사용자 썸네일 세팅
-    public void SetThumbNail(Texture2D ThumbTexture)
-    {
- 
-    }
+    //// 사용자 썸네일 세팅
+    //public void SetThumbNail(Texture2D ThumbTexture)
+    //{
+
+    //}
 
     // 사용자 시즌포인트 세팅
     public void SetSeasonPoint()
@@ -541,17 +545,11 @@ public class FirebaseManager : MonoBehaviour
         mDatabaseRef.Child("Users").Child(TKManager.Instance.Mydata.Index).Child("AccumPoint").SetValueAsync(TKManager.Instance.Mydata.AccumulatePoint);
     }
 
-    // 사용자 퍼센트 세팅
-    public void SetPercent()
-    {
-        mDatabaseRef.Child("Users").Child(TKManager.Instance.Mydata.Index).Child("Percent").SetValueAsync(TKManager.Instance.Mydata.Percent);
-    }
-
-    // 사용자 등급 세팅
-    public void SetGrade()
-    {
-        mDatabaseRef.Child("Users").Child(TKManager.Instance.Mydata.Index).Child("Grade").SetValueAsync(TKManager.Instance.Mydata.Grade);
-    }
+    //// 사용자 퍼센트 세팅
+    //public void SetPercent()
+    //{
+    //    mDatabaseRef.Child("Users").Child(TKManager.Instance.Mydata.Index).Child("Percent").SetValueAsync(TKManager.Instance.Mydata.Percent);
+    //}
 
 
     // 사용자 트레이닝 세팅    
@@ -848,6 +846,50 @@ public class FirebaseManager : MonoBehaviour
             }
 
             endAction();
+        });
+    }
+
+    public void GetSeasonData()
+    {
+        mDatabaseRef.Child("Season").GetValueAsync().ContinueWith(task =>
+        {
+            if (task.IsFaulted)
+            {
+                // Handle the error...
+            }
+            else if (task.IsCompleted)
+            {
+                DataSnapshot snapshot = task.Result;
+
+                if (snapshot.Exists || snapshot.Value != null)
+                {
+                    var tempData = snapshot.Value as Dictionary<string, object>;
+
+                    string tempCurrSeason = tempData["Curr"].ToString();
+                    string tempNextSeason = tempData["Next"].ToString();
+
+                    DateTime tempCurrSeasonDate = new DateTime();
+                    if (DateTime.TryParseExact(tempCurrSeason, "yyyyMMdd", null, System.Globalization.DateTimeStyles.None, out tempCurrSeasonDate))
+                    {
+                        TKManager.Instance.CurrSeasonTime = tempCurrSeasonDate;
+                    }
+                    else
+                        Debug.LogFormat("GetSeasonData Curr 날짜 형식이 맞지 않습니다 {0}", tempCurrSeason);
+
+                    DateTime tempNextSeasonDate = new DateTime();
+                    if (DateTime.TryParseExact(tempNextSeason, "yyyyMMdd", null, System.Globalization.DateTimeStyles.None, out tempNextSeasonDate))
+                    {
+                        TKManager.Instance.NextSeasonTime = tempNextSeasonDate;
+                    }
+                    else
+                        Debug.LogFormat("GetSeasonData Next 날짜 형식이 맞지 않습니다 {0}", tempNextSeason);
+                }
+                else
+                {
+                }
+
+                AddFirstLoadingComplete();
+            }
         });
     }
 }

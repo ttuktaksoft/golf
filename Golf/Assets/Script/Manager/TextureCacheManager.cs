@@ -33,6 +33,9 @@ public class TextureCacheManager : MonoBehaviour
     }
     public void AddLoadImageURL(string url)
     {
+        if (url == "")
+            return;
+
         ImageLoadReadyUrl.Add(url);
     }
     public void LoadImage()
@@ -104,6 +107,7 @@ public class TextureCacheManager : MonoBehaviour
         if (imageCache.ContainsKey(url))
             return imageCache[url];
 
-        return null;
+        var imgSprite = (Sprite)Resources.Load("logo", typeof(Sprite));
+        return imgSprite.texture;
     }
 }
