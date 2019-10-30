@@ -65,12 +65,12 @@ public class MainTraningUI : MonoBehaviour {
     private void Awake()
     {
         HexagonMenuColor.Clear();
-        HexagonMenuColor.Add("#c8000b");
-        HexagonMenuColor.Add("#e70012");
-        HexagonMenuColor.Add("#c8000b");
-        HexagonMenuColor.Add("#a40001");
-        HexagonMenuColor.Add("#7d0000");
-        HexagonMenuColor.Add("#a40001");
+        HexagonMenuColor.Add("#4E4E4E");
+        HexagonMenuColor.Add("#464646");
+        HexagonMenuColor.Add("#383838");
+        HexagonMenuColor.Add("#333333");
+        HexagonMenuColor.Add("#2C2C2C");
+        HexagonMenuColor.Add("#252525");
 
         HexagonMenuPos.Clear();
         HexagonMenuPos.Add(new Vector3(-350, 0, 0));

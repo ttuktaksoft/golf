@@ -1152,6 +1152,7 @@ MonoBehaviour:
   FirstLoadingComplete: 0
   LoadingCount: 0
   NickNameExist: 0
+  AddFriendEnable: 0
   RegisterUserProgress: 0
 --- !u!4 &1150570031
 Transform:
@@ -1646,7 +1647,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.6784314, g: 0.6784314, b: 0.6784314, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
