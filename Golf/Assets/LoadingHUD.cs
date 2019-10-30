@@ -5,6 +5,7 @@ using UnityEngine;
 public class LoadingHUD : MonoBehaviour
 {
     public Canvas HUDCanvas;
+    public RectTransform LoadingRect;
 
     // Start is called before the first frame update
     void Start()
@@ -16,6 +17,6 @@ public class LoadingHUD : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        LoadingRect.Rotate(0f, 0f, 300f * Time.deltaTime);
     }
 }
