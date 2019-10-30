@@ -13,6 +13,7 @@ public class PopupUserSetting : Popup
     public InputField Number;
     public Button ManButton;
     public Button WomanButton;
+    public Button BigOK;
     public Button OK;
     public Button Cancel;
 
@@ -54,13 +55,17 @@ public class PopupUserSetting : Popup
         if (Firstuser)
         {
             Title.text = "회원가입";
+            OK.gameObject.SetActive(false);
             Cancel.gameObject.SetActive(false);
+            BigOK.gameObject.SetActive(true);
             TermsObj.gameObject.SetActive(false);
         }
         else
         {
             Title.text = "정보변경";
+            OK.gameObject.SetActive(true);
             Cancel.gameObject.SetActive(true);
+            BigOK.gameObject.SetActive(false);
             TermsObj.gameObject.SetActive(false);
         } 
 
@@ -79,6 +84,7 @@ public class PopupUserSetting : Popup
 
     private void Awake()
     {
+        BigOK.onClick.AddListener(OnClickOK);
         OK.onClick.AddListener(OnClickOK);
         Cancel.onClick.AddListener(OnClickCancel);
 

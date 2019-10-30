@@ -135,6 +135,7 @@ public class LoadingUI : MonoBehaviour
         else
         {
             // 로그인이 안되었다.
+            CreateUser();
             LoadingPage.gameObject.SetActive(false);
             LoginPage.gameObject.SetActive(true);
         }
@@ -157,7 +158,7 @@ public class LoadingUI : MonoBehaviour
 
         //    yield return null;
         //}
-        
+
     }
 
     public void CreateUser()

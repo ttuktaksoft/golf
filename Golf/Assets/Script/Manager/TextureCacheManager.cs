@@ -107,7 +107,7 @@ public class TextureCacheManager : MonoBehaviour
         if (imageCache.ContainsKey(url))
             return imageCache[url];
 
-        var imgSprite = (Sprite)Resources.Load("logo", typeof(Sprite));
+        var imgSprite = (Sprite)Resources.Load("logo_2", typeof(Sprite));
         return imgSprite.texture;
     }
 }
