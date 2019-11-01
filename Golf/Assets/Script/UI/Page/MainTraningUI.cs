@@ -489,7 +489,7 @@ public class MainTraningUI : MonoBehaviour {
             if (level == enumerator.Current.Key)
                 HexagonMenu[btnIndex].SetButtonColor(CommonFunc.HexToColor(HexagonMenuColor[btnIndex], 1f));
             else
-                HexagonMenu[btnIndex].SetButtonColor(CommonFunc.HexToColor(HexagonMenuColor[btnIndex], 0.5f));
+                HexagonMenu[btnIndex].SetButtonColor(CommonFunc.HexToColor(HexagonMenuColor[btnIndex], 0.3f));
         }
     }
 
