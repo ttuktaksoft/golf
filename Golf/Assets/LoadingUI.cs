@@ -39,6 +39,8 @@ public class LoadingUI : MonoBehaviour
 
     private void Awake()
     {
+        ApplicationChrome.statusBarState = ApplicationChrome.States.Visible;
+
         GuestLogin.onClick.AddListener(OnClickGuestLogin);
         Kakao.onClick.AddListener(OnClickKakaoLogin);
         WebViewClose.onClick.AddListener(OnClickWebViewClose);
