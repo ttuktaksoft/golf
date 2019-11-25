@@ -729,6 +729,7 @@ MonoBehaviour:
   BigSlotRect: {fileID: 1983563750434763452}
   BigSlotMsg: {fileID: 1983563749956557202}
   BigSlotImg: {fileID: 8072038918699264019}
+  MiniMode: 1
 --- !u!1 &3145647094375796340
 GameObject:
   m_ObjectHideFlags: 0

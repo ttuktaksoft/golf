@@ -101,7 +101,14 @@ public class LoadingUI : MonoBehaviour
 
     IEnumerator LoadingData()
     {
-        TKManager.Instance.ShowHUD();
+        var loadpopup = SceneManager.LoadSceneAsync("PopupScene", LoadSceneMode.Additive);
+        while (!loadpopup.isDone)
+        {
+            print("Loading the Scene");
+            yield return null;
+        }
+
+        TKManager.Instance.ShowLoading();
         while (true)
         {
             if (Permissions)
@@ -116,7 +123,6 @@ public class LoadingUI : MonoBehaviour
         yield return null;
         yield return null;
         yield return null;
-        SceneManager.LoadScene("PopupScene", LoadSceneMode.Additive);
 
         TKManager.Instance.gyro.enabled = false;
         TKManager.Instance.LoadFile();
@@ -124,7 +130,7 @@ public class LoadingUI : MonoBehaviour
         TextureCacheManager.Instance.init();
 
         yield return new WaitForSeconds(2f);
-        TKManager.Instance.HideHUD();
+        TKManager.Instance.HideLoading();
         
         if(TKManager.Instance.MyLoadData)
         {
@@ -173,7 +179,7 @@ public class LoadingUI : MonoBehaviour
 
     public IEnumerator Co_RegisterUserProgress()
     {
-        TKManager.Instance.ShowHUD();
+        TKManager.Instance.ShowLoading();
         while(true)
         {
             if (FirebaseManager.Instance.RegisterUserProgress == false)
@@ -197,7 +203,7 @@ public class LoadingUI : MonoBehaviour
             }
         }
 
-        TKManager.Instance.HideHUD();
+        TKManager.Instance.HideLoading();
 
         GetUserData();
     }
@@ -209,7 +215,7 @@ public class LoadingUI : MonoBehaviour
 
     public IEnumerator Co_GetUserData()
     {
-        TKManager.Instance.ShowHUD();
+        TKManager.Instance.ShowLoading();
 
         FirebaseManager.Instance.GetData();
 
@@ -243,7 +249,7 @@ public class LoadingUI : MonoBehaviour
 
         TKManager.Instance.SetUserLocation();
 
-        TKManager.Instance.HideHUD();
+        TKManager.Instance.HideLoading();
 
         SceneManager.LoadScene("MainScene", LoadSceneMode.Single);
     }
@@ -266,7 +272,7 @@ public class LoadingUI : MonoBehaviour
 
     public IEnumerator Co_KakaoLoginStart(Action createUser)
     {
-        TKManager.Instance.ShowHUD();
+        TKManager.Instance.ShowLoading();
         WebViewClose.gameObject.SetActive(true);
 
         string query = "https://kauth.kakao.com/oauth/authorize";
@@ -325,7 +331,7 @@ public class LoadingUI : MonoBehaviour
                 int index = msg.IndexOf("=");
                 if (index > 0)
                 {
-                    TKManager.Instance.HideHUD();
+                    TKManager.Instance.HideLoading();
                     string code = msg.Substring(index + 1);
                     Debug.Log(string.Format("CallFromJS_onStarted code {0}", code));
                     StartCoroutine(Co_GetAccessToken(code, createUser));
@@ -335,7 +341,7 @@ public class LoadingUI : MonoBehaviour
             }
             else if(msg.Contains("error_description"))
             {
-                TKManager.Instance.HideHUD();
+                TKManager.Instance.HideLoading();
                 WebViewClose.gameObject.SetActive(false);
                 WebView.SetVisibility(false);
             }
@@ -376,7 +382,7 @@ public class LoadingUI : MonoBehaviour
 
     public IEnumerator Co_GetAccessToken(string kakaoCode, Action createUser)
     {
-        TKManager.Instance.ShowHUD();
+        TKManager.Instance.ShowLoading();
         string query = "?grant_type=authorization_code";
         string clientId = "&client_id=" + CommonData.KAKAO_REST_API_KEY;
         string redirectUri = "&redirect_uri=" + CommonData.KAKAO_REDIRECT_URI;
@@ -398,7 +404,7 @@ public class LoadingUI : MonoBehaviour
         }
         else
         {
-            TKManager.Instance.HideHUD();
+            TKManager.Instance.HideLoading();
             var data = JsonUtility.FromJson<KakaoTokenData>(www.downloadHandler.text);
             Debug.Log(www.downloadHandler.text);
             Debug.Log("Form upload complete!");
@@ -427,7 +433,7 @@ public class LoadingUI : MonoBehaviour
 
     public IEnumerator Co_GetKakaoFBKey(string accessToken, Action createUser)
     {
-        TKManager.Instance.ShowHUD();
+        TKManager.Instance.ShowLoading();
         string propertiesFB = UnityWebRequest.EscapeURL(CommonData.KAKAO_PROPERTIES_FB);
         string query = "?property_keys=" + "[" + "\"" + propertiesFB + "\"" + "]";
         UnityWebRequest www = UnityWebRequest.Post("https://kapi.kakao.com/v2/user/me" + query, "");
@@ -445,7 +451,7 @@ public class LoadingUI : MonoBehaviour
             string str = www.downloadHandler.text;
             if (str.IndexOf("firebasekey") >= 0)
             {
-                TKManager.Instance.HideHUD();
+                TKManager.Instance.HideLoading();
                 JsonData jsonData = JsonMapper.ToObject(www.downloadHandler.text);
                 string fbKey = jsonData["properties"]["firebasekey"].ToString();
                 // 확인
@@ -454,7 +460,7 @@ public class LoadingUI : MonoBehaviour
             }
             else
             {
-                TKManager.Instance.HideHUD();
+                TKManager.Instance.HideLoading();
                 KakaoDataSaveProgress = true;
                 createUser();
             }
@@ -471,7 +477,7 @@ public class LoadingUI : MonoBehaviour
     }
     public IEnumerator Co_SetKakaoFBKey()
     {
-        TKManager.Instance.ShowHUD();
+        TKManager.Instance.ShowLoading();
         KakaoFBKeyData jsonData = new KakaoFBKeyData();
         jsonData.firebasekey = TKManager.Instance.Mydata.Index;
 
@@ -492,7 +498,7 @@ public class LoadingUI : MonoBehaviour
         }
         else
         {
-            TKManager.Instance.HideHUD();
+            TKManager.Instance.HideLoading();
             KakaoDataSaveProgress = false;
             Debug.Log(www.downloadHandler.text);
             Debug.Log("Form upload complete!");

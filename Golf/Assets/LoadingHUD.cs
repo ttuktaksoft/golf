@@ -2,16 +2,28 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LoadingHUD : MonoBehaviour
+public class LoadingHUD : Popup
 {
-    public Canvas HUDCanvas;
     public RectTransform LoadingRect;
+
+    public LoadingHUD()
+        : base(PopupMgr.POPUP_TYPE.LOADING)
+    {
+
+    }
+
+    public override void SetData(PopupBaseData data)
+    {
+    }
+
+    public void Awake()
+    {
+    }
 
     // Start is called before the first frame update
     void Start()
     {
-        DontDestroyOnLoad(this);
-        HUDCanvas.sortingOrder = 1000;
+        PopupMgr.Instance.RegisterPopup(this);
     }
 
     // Update is called once per frame
@@ -19,4 +31,5 @@ public class LoadingHUD : MonoBehaviour
     {
         LoadingRect.Rotate(0f, 0f, 300f * Time.deltaTime);
     }
+    
 }

@@ -47,7 +47,7 @@ public class FirebaseManager : MonoBehaviour
 
     private IEnumerator Co_FirebaseProgressEndAction()
     {
-        TKManager.Instance.ShowHUD();
+        TKManager.Instance.ShowLoading();
         while (true)
         {
             if (FirebaseProgress == false)
@@ -56,7 +56,7 @@ public class FirebaseManager : MonoBehaviour
             yield return null;
         }
 
-        TKManager.Instance.HideHUD();
+        TKManager.Instance.HideLoading();
 
         if (FirebaseProgressEndAction != null)
             FirebaseProgressEndAction();
@@ -793,7 +793,7 @@ public class FirebaseManager : MonoBehaviour
     }
     public IEnumerator Co_GetFriendData(List<string> list)
     {
-        TKManager.Instance.ShowHUD();
+        TKManager.Instance.ShowLoading();
 
         int getDataCount = list.Count;
 
@@ -810,7 +810,7 @@ public class FirebaseManager : MonoBehaviour
             yield return null;
         }
 
-        TKManager.Instance.HideHUD();
+        TKManager.Instance.HideLoading();
     }
     private void GetFriendData(string index, Action endAction)
     {

@@ -47,12 +47,12 @@ public class TextureCacheManager : MonoBehaviour
     {
         Debug.Log("LoadTexture Start");
         ImageLoadProgress = true;
-        TKManager.Instance.ShowHUD();
+        TKManager.Instance.ShowLoading();
         for (int i = 0; i < ImageLoadReadyUrl.Count; i++)
         {
             yield return this.LoadTexture(ImageLoadReadyUrl[i]);
         }
-        TKManager.Instance.HideHUD();
+        TKManager.Instance.HideLoading();
         Debug.Log("LoadTexture End");
         ImageLoadProgress = false;
         ImageLoadReadyUrl.Clear();

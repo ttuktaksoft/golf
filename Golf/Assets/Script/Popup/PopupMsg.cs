@@ -9,6 +9,7 @@ public class PopupMsg : Popup
     public Text Msg;
     public Button OK;
     public Button Cancel;
+    public Button Big_OK;
 
     private Action OkAction = null;
     private Action CancelAction = null;
@@ -58,12 +59,14 @@ public class PopupMsg : Popup
         switch (ButtonType)
         {
             case BUTTON_TYPE.ONE:
-                OK.gameObject.SetActive(true);
+                OK.gameObject.SetActive(false);
                 Cancel.gameObject.SetActive(false);
+                Big_OK.gameObject.SetActive(true);
                 break;
             case BUTTON_TYPE.TWO:
                 OK.gameObject.SetActive(true);
                 Cancel.gameObject.SetActive(true);
+                Big_OK.gameObject.SetActive(false);
                 break;
             default:
                 break;
@@ -75,6 +78,7 @@ public class PopupMsg : Popup
     {
         OK.onClick.AddListener(OnClickOK);
         Cancel.onClick.AddListener(OnClickCancel);
+        Big_OK.onClick.AddListener(OnClickOK);
     }
 
     public void Start()

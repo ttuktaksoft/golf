@@ -21,8 +21,6 @@ public class TKManager : MonoBehaviour
         }
     }
 
-    public LoadingHUD HUD;
-
     public UserData Mydata = null;
     public CommonData.TRAINING_TYPE TrainingType;
     public CommonData.TRAINING_POSE PoseType;
@@ -56,9 +54,9 @@ public class TKManager : MonoBehaviour
 
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
         Application.targetFrameRate = 30;
-#if UNITY_ANDROID || UNITY_EDITOR
-        Screen.SetResolution((int)Screen.safeArea.width, ((int)Screen.safeArea.width * 16) / 9, false);
-#endif
+//#if UNITY_ANDROID || UNITY_EDITOR
+//        Screen.SetResolution((int)Screen.safeArea.width, ((int)Screen.safeArea.width * 16) / 9, false);
+//#endif
         //Screen.SetResolution((int)Screen.safeArea.width, ((int)Screen.safeArea.width * 16) / 9, false);
     }
 
@@ -148,15 +146,17 @@ public class TKManager : MonoBehaviour
     }
 
 
-    public void ShowHUD()
+    public void ShowLoading()
     {
-        HUD.gameObject.SetActive(true);
+        PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.LOADING);
+        //HUD.gameObject.SetActive(true);
         //HUD.ShowHUD(msg, subMsg, waitTime, waitTimeMsg);
     }
 
-    public void HideHUD()
+    public void HideLoading()
     {
-        HUD.gameObject.SetActive(false);
+        PopupMgr.Instance.DismissPopup(PopupMgr.POPUP_TYPE.LOADING);
+        //HUD.gameObject.SetActive(false);
         //HUD.HideHUD();
     }
 

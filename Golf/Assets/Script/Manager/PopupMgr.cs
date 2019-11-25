@@ -25,6 +25,7 @@ public class PopupMgr : MonoBehaviour
     public enum POPUP_TYPE
     {
         NONE,
+        LOADING,
         TEST,
         MSG,
         GIFT_CON,
@@ -79,7 +80,18 @@ public class PopupMgr : MonoBehaviour
         if (QueuePopupType.Count <= 0)
             return;
 
-        PopupList[CurrentPopup].gameObject.SetActive(false);
+        DismissPopup(CurrentPopup);
+    }
+
+    public void DismissPopup(POPUP_TYPE type)
+    {
+        if (QueuePopupType.Count <= 0)
+            return;
+
+        if (QueuePopupType.Contains(type) == false)
+            return;
+
+        PopupList[type].gameObject.SetActive(false);
 
         QueuePopupType.RemoveAt(QueuePopupType.Count - 1);
         if (QueuePopupType.Count <= 0)
