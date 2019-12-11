@@ -155,7 +155,7 @@ public class PopupUserSetting : Popup
                             OkAction();
 
                         TKManager.Instance.SaveFile();
-                        PopupMgr.Instance.DismissPopup();
+                        PopupMgr.Instance.DismissPopup(this.PopupType);
                     }
                 }
             });
@@ -171,7 +171,7 @@ public class PopupUserSetting : Popup
                 OkAction();
 
             TKManager.Instance.SaveFile();
-            PopupMgr.Instance.DismissPopup();
+            PopupMgr.Instance.DismissPopup(this.PopupType);
         }
     }
 
