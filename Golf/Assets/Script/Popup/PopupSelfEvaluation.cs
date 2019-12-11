@@ -67,6 +67,7 @@ public class PopupSelfEvaluation : Popup
         }
             
         Msg.text = "";
+        StarCount = 5;
         RefreshStar();
     }
 
