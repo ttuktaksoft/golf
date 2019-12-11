@@ -23,10 +23,10 @@ public class SafeAreaScale : MonoBehaviour
 
     void Refresh()
     {
-        //Rect safeArea = GetSafeArea();
+        Rect safeArea = GetSafeArea();
 
-        //if (safeArea != LastSafeArea)
-        //    ApplySafeArea(safeArea);
+        if (safeArea != LastSafeArea)
+            ApplySafeArea(safeArea);
     }
 
     Rect GetSafeArea()
