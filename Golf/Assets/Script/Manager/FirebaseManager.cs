@@ -79,7 +79,7 @@ public class FirebaseManager : MonoBehaviour
 
     public void init()
     {
-        FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://golfhometraining.firebaseio.com/");
+        FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://lmygolf.firebaseio.com/");
         auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
         mDatabaseRef = FirebaseDatabase.DefaultInstance.RootReference;
 

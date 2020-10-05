@@ -1,39 +1,44 @@
 {
   "project_info": {
-    "project_number": "817764521458",
-    "firebase_url": "https://golfhometraining.firebaseio.com",
-    "project_id": "golfhometraining",
-    "storage_bucket": "golfhometraining.appspot.com"
+    "project_number": "278760475883",
+    "firebase_url": "https://lmygolf.firebaseio.com",
+    "project_id": "lmygolf",
+    "storage_bucket": "lmygolf.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:817764521458:android:6ed410b265538fe5",
+        "mobilesdk_app_id": "1:278760475883:android:2742bf158e6f005d95c2ae",
         "android_client_info": {
-          "package_name": "com.GolfAcademy.Golf"
+          "package_name": "com.lmygolf.swing"
         }
       },
       "oauth_client": [
         {
-          "client_id": "817764521458-avjq34pru6a1of9r0il30likenoap9rr.apps.googleusercontent.com",
+          "client_id": "278760475883-aaedlofd317mss36aa6tb7o58bmcpn1b.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAO5DnXs_pmSRailpyYGZWu2vsJGabUU6o"
+          "current_key": "AIzaSyBhKAKGntAVm6dnS_7n51shzGgEkYCHZis"
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 2
+          "other_platform_oauth_client": [
+            {
+              "client_id": "278760475883-aaedlofd317mss36aa6tb7o58bmcpn1b.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "278760475883-9htkplo49vp2u1ntpaje5mucjt9ks4s6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.lmygolf.swing"
+              }
+            }
+          ]
         }
       }
     }
