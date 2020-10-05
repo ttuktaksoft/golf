@@ -10,6 +10,8 @@ public class PopupUserSetting : Popup
     public Button ThumbnailEdit;
     public Image Thumbnail;
     public InputField Name;
+    public GameObject NameDescObj;
+    public Text NameDesc;
     public InputField Number;
     public Button ManButton;
     public Button WomanButton;
@@ -71,7 +73,23 @@ public class PopupUserSetting : Popup
 
         OkAction = popupData.OkAction;
 
+        Name.gameObject.SetActive(false);
+        NameDesc.gameObject.SetActive(false);
+        NameDescObj.gameObject.SetActive(false);
         Name.text = TKManager.Instance.Mydata.Name;
+        if(string.IsNullOrWhiteSpace(TKManager.Instance.Mydata.Name))
+        {
+            Name.text = "";
+            Name.gameObject.SetActive(true);
+        }
+        else
+        {
+            NameDescObj.gameObject.SetActive(true);
+            NameDesc.gameObject.SetActive(true);
+            Name.text = TKManager.Instance.Mydata.Name;
+            NameDesc.text = TKManager.Instance.Mydata.Name;
+        }
+            
         Number.text = TKManager.Instance.Mydata.PhoneNumber;
         Gender = TKManager.Instance.Mydata.Gender;
 
@@ -120,13 +138,18 @@ public class PopupUserSetting : Popup
             return;
         }
         */
+        if(string.IsNullOrWhiteSpace(Name.text.ToString()))
+        {
+            PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.MSG, new PopupMsg.PopupData("이름을 입력해주세요", null, null, PopupMsg.BUTTON_TYPE.ONE));
+            return;
+        }
         if (Firstuser)
         {
             FirebaseManager.Instance.IsExistNickName(Name.text.ToString(), () =>
             {
                 if (FirebaseManager.Instance.NickNameExist)
                 {
-                    PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.MSG, new PopupMsg.PopupData("닉네임이 중복입니다", null, null, PopupMsg.BUTTON_TYPE.ONE));
+                    PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.MSG, new PopupMsg.PopupData("이름이 중복입니다", null, null, PopupMsg.BUTTON_TYPE.ONE));
                 }
                 else
                 {
