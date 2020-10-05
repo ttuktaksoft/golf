@@ -39,7 +39,8 @@ public class LoadingUI : MonoBehaviour
 
     private void Awake()
     {
-        ApplicationChrome.statusBarState = ApplicationChrome.States.Visible;
+        Screen.fullScreen = false;
+        StatusBarController.Show();
 
         GuestLogin.onClick.AddListener(OnClickGuestLogin);
         Kakao.onClick.AddListener(OnClickKakaoLogin);

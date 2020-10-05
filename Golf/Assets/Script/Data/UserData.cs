@@ -49,7 +49,7 @@ public class UserData
         ThumbnailSpriteURL = ThumbNail;
         Grade = CommonFunc.RefreshGrade(AccumulatePoint);
 
-        AddGiftcon(1, "http://cfs11.tistory.com/upload_control/download.blog?fhandle=YmxvZzM0NTUzOEBmczExLnRpc3RvcnkuY29tOi9hdHRhY2gvMS8zMzAwMDAwMDAxODcuanBn", "https://t1.daumcdn.net/cfile/tistory/995A4F395B9BD7C20E");
+        //AddGiftcon(1, "http://cfs11.tistory.com/upload_control/download.blog?fhandle=YmxvZzM0NTUzOEBmczExLnRpc3RvcnkuY29tOi9hdHRhY2gvMS8zMzAwMDAwMDAxODcuanBn", "https://t1.daumcdn.net/cfile/tistory/995A4F395B9BD7C20E");
         TextureCacheManager.Instance.AddLoadImageURL("http://cfs11.tistory.com/upload_control/download.blog?fhandle=YmxvZzM0NTUzOEBmczExLnRpc3RvcnkuY29tOi9hdHRhY2gvMS8zMzAwMDAwMDAxODcuanBn");
         TextureCacheManager.Instance.AddLoadImageURL("https://t1.daumcdn.net/cfile/tistory/995A4F395B9BD7C20E");
     }

@@ -185,19 +185,12 @@ public class FirebaseManager : MonoBehaviour
         {
             int tempCount = Convert.ToInt32(mutableData.Value);
 
-            if (tempCount == 0)
-            {
-                tempCount = 0;
-            }
-            else
-            {
-                TKManager.Instance.Mydata.Init(tempCount.ToString());
+            TKManager.Instance.Mydata.Init(tempCount.ToString());
 
-                SetUserData();
-                mutableData.Value = tempCount + 1;
+            SetUserData();
+            mutableData.Value = tempCount + 1;
 
-                RegisterUserProgress = false;
-            }
+            RegisterUserProgress = false;
 
             return TransactionResult.Success(mutableData);
         });
