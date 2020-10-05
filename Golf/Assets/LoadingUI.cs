@@ -52,6 +52,7 @@ public class LoadingUI : MonoBehaviour
         WebViewClose.gameObject.SetActive(false);
         LoadingPage.gameObject.SetActive(true);
         LoginPage.gameObject.SetActive(false);
+        Kakao.gameObject.SetActive(false);
 #if (UNITY_ANDROID && !UNITY_EDITOR)
 
       int version = getSDKInt();
@@ -124,11 +125,15 @@ public class LoadingUI : MonoBehaviour
         yield return null;
         yield return null;
 
+        print("Loading the Scene 1");
         TKManager.Instance.gyro.enabled = false;
+        print("Loading the Scene 2");
         TKManager.Instance.LoadFile();
+        print("Loading the Scene 3");
         DataManager.Instance.init();
+        print("Loading the Scene 4");
         TextureCacheManager.Instance.init();
-
+        print("Loading the Scene 5");
         yield return new WaitForSeconds(2f);
         TKManager.Instance.HideLoading();
         
@@ -241,7 +246,7 @@ public class LoadingUI : MonoBehaviour
 
         while (true)
         {
-            if (TextureCacheManager.Instance.ImageLoadProgress)
+            if (TextureCacheManager.Instance.ImageLoadProgress == false)
                 break;
 
             yield return null;

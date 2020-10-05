@@ -121,7 +121,7 @@ public class PopupFreindPlus : Popup
 
         while (true)
         {
-            if (TextureCacheManager.Instance.ImageLoadProgress)
+            if (TextureCacheManager.Instance.ImageLoadProgress == false)
                 break;
 
             yield return null;

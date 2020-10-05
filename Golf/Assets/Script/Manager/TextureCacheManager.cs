@@ -40,6 +40,7 @@ public class TextureCacheManager : MonoBehaviour
     }
     public void LoadImage()
     {
+        ImageLoadProgress = true;
         StartCoroutine(LoadTexture());
     }
 
