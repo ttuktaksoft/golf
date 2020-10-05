@@ -23,7 +23,7 @@ public class LoadingUI : MonoBehaviour
     public Button Kakao;
     public GameObject WebviewObj;
     public RectTransform WebviewObjRect;
-    public WebViewObject WebView;
+    //public WebViewObject WebView;
     public Button WebViewClose;
 
     private bool KakaoDataSaveProgress = false;
@@ -269,7 +269,7 @@ public class LoadingUI : MonoBehaviour
     public void OnClickWebViewClose()
     {
         WebViewClose.gameObject.SetActive(false);
-        WebView.SetVisibility(false);
+        //WebView.SetVisibility(false);
     }
     public void OnClickKakaoLogin()
     {
@@ -309,70 +309,70 @@ public class LoadingUI : MonoBehaviour
 
         string strUrl = www.uri.AbsoluteUri;
         bool codeLoad = false;
-        WebView.Init((msg) =>
-        {
-            Debug.Log(string.Format("CallFromJS_onJS[{0}]", msg));
-        },
-        false,
-        "",
-        (msg) =>
-        {
-            Debug.Log(string.Format("CallFromJS_onError[{0}]", msg));
-        },
-        (msg) =>
-        {
-            Debug.Log(string.Format("CallFromJS_onHttpError[{0}]", msg));
-        },
-        (msg) =>
-        {
-            Debug.Log(string.Format("CallFromJS_onLoaded[{0}]", msg));
-        },
-        false,
-        (msg) =>
-        {
-            Debug.Log(string.Format("CallFromJS_onStarted[{0}]", msg));
+        //WebView.Init((msg) =>
+        //{
+        //    Debug.Log(string.Format("CallFromJS_onJS[{0}]", msg));
+        //},
+        //false,
+        //"",
+        //(msg) =>
+        //{
+        //    Debug.Log(string.Format("CallFromJS_onError[{0}]", msg));
+        //},
+        //(msg) =>
+        //{
+        //    Debug.Log(string.Format("CallFromJS_onHttpError[{0}]", msg));
+        //},
+        //(msg) =>
+        //{
+        //    Debug.Log(string.Format("CallFromJS_onLoaded[{0}]", msg));
+        //},
+        //false,
+        //(msg) =>
+        //{
+        //    Debug.Log(string.Format("CallFromJS_onStarted[{0}]", msg));
 
-            if (msg.Contains(CommonData.KAKAO_REDIRECT_URI + "?code="))
-            {
-                int index = msg.IndexOf("=");
-                if (index > 0)
-                {
-                    TKManager.Instance.HideLoading();
-                    string code = msg.Substring(index + 1);
-                    Debug.Log(string.Format("CallFromJS_onStarted code {0}", code));
-                    StartCoroutine(Co_GetAccessToken(code, createUser));
-                    codeLoad = true;
-                    //Destroy(WebView);
-                }
-            }
-            else if(msg.Contains("error_description"))
-            {
-                TKManager.Instance.HideLoading();
-                WebViewClose.gameObject.SetActive(false);
-                WebView.SetVisibility(false);
-            }
+        //    if (msg.Contains(CommonData.KAKAO_REDIRECT_URI + "?code="))
+        //    {
+        //        int index = msg.IndexOf("=");
+        //        if (index > 0)
+        //        {
+        //            TKManager.Instance.HideLoading();
+        //            string code = msg.Substring(index + 1);
+        //            Debug.Log(string.Format("CallFromJS_onStarted code {0}", code));
+        //            StartCoroutine(Co_GetAccessToken(code, createUser));
+        //            codeLoad = true;
+        //            //Destroy(WebView);
+        //        }
+        //    }
+        //    else if(msg.Contains("error_description"))
+        //    {
+        //        TKManager.Instance.HideLoading();
+        //        WebViewClose.gameObject.SetActive(false);
+        //        WebView.SetVisibility(false);
+        //    }
 
-        });
+        //});
 
-        var widthoffeset = Screen.width - WebviewObjRect.rect.width;
-        var heightffeset = Screen.height - WebviewObjRect.rect.height;
+        //var widthoffeset = Screen.width - WebviewObjRect.rect.width;
+        //var heightffeset = Screen.height - WebviewObjRect.rect.height;
 
-        WebView.SetMargins(0, (int)heightffeset, 0, 0);
-        WebView.LoadURL(strUrl);
-        WebView.SetVisibility(true);
+        //WebView.SetMargins(0, (int)heightffeset, 0, 0);
+        //WebView.LoadURL(strUrl);
+        //WebView.SetVisibility(true);
 
-        while(true)
-        {
-            yield return null;
+        //while(true)
+        //{
+        //    yield return null;
 
-            if (codeLoad)
-            {
-                Destroy(WebView);
-                break;
-            }
+        //    if (codeLoad)
+        //    {
+        //        Destroy(WebView);
+        //        break;
+        //    }
 
-            yield return null;
-        }
+        //    yield return null;
+        //}
     }
 
     [System.Serializable]
