@@ -103,7 +103,7 @@ public class CommonData : MonoBehaviour
 
     public static int ANGLE_MAX_LEVEL = 4;
 
-    public static string[] GRADE_STR = { "달걀", "병아리", "닭", "새", "독수리", "알바트로스" };
+    public static string[] GRADE_STR = { "동메달", "은메달", "금메달", "버디", "이글", "알바트로스" };
     public static string[] GRADE_IMG_STR = { "grade_1", "grade_2", "grade_3", "grade_4", "grade_5", "grade_6" };
 
     public static int[] TRAINING_TIME = { 5, 10, 15, 20 };
