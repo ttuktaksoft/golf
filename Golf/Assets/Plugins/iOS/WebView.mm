@@ -19,6 +19,8 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
+#if !(__IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_9_0)
+
 #import <UIKit/UIKit.h>
 #import <WebKit/WebKit.h>
 
@@ -32,7 +34,6 @@ extern "C" void UnitySendMessage(const char *, const char *, const char *);
 @property (nullable, nonatomic, copy) UIColor *backgroundColor UI_APPEARANCE_SELECTOR;
 @property (nonatomic, getter=isHidden) BOOL hidden;
 @property (nonatomic) CGRect frame;
-@property (nullable, nonatomic, assign) id <UIWebViewDelegate> delegate;
 @property (nullable, nonatomic, weak) id <WKNavigationDelegate> navigationDelegate;
 @property (nullable, nonatomic, weak) id <WKUIDelegate> UIDelegate;
 @property (nullable, nonatomic, readonly, copy) NSURL *URL;
@@ -43,15 +44,15 @@ extern "C" void UnitySendMessage(const char *, const char *, const char *);
 @property (nonatomic, readonly) BOOL canGoForward;
 - (void)goBack;
 - (void)goForward;
+- (void)reload;
 - (void)stopLoading;
+- (void)setScrollBounce:(BOOL)enable;
 @end
 
 @interface WKWebView(WebViewProtocolConformed) <WebViewProtocol>
 @end
 
 @implementation WKWebView(WebViewProtocolConformed)
-
-@dynamic delegate;
 
 - (void)load:(NSURLRequest *)request
 {
@@ -80,84 +81,85 @@ extern "C" void UnitySendMessage(const char *, const char *, const char *);
     [webView loadHTMLString:html baseURL:baseUrl];
 }
 
-@end
-
-@interface UIWebView(WebViewProtocolConformed) <WebViewProtocol>
-@end
-
-@implementation UIWebView(WebViewProtocolConformed)
-
-@dynamic navigationDelegate;
-@dynamic UIDelegate;
-
-- (NSURL *)URL
+- (void)setScrollBounce:(BOOL)enable
 {
-    return [NSURL URLWithString:[self stringByEvaluatingJavaScriptFromString:@"document.URL"]];
-}
-
-- (void)load:(NSURLRequest *)request
-{
-    UIWebView *webView = (UIWebView *)self;
-    [webView loadRequest:request];
-}
-
-- (void)loadHTML:(NSString *)html baseURL:(NSURL *)baseUrl
-{
-    UIWebView *webView = (UIWebView *)self;
-    [webView loadHTMLString:html baseURL:baseUrl];
-}
-
-- (void)evaluateJavaScript:(NSString *)javaScriptString completionHandler:(void (^ __nullable)(__nullable id, NSError * __nullable error))completionHandler
-{
-    NSString *result = [self stringByEvaluatingJavaScriptFromString:javaScriptString];
-    if (completionHandler) {
-        completionHandler(result, nil);
-    }
+    WKWebView *webView = (WKWebView *)self;
+    webView.scrollView.bounces = enable;
 }
 
 @end
 
-@interface CWebViewPlugin : NSObject<UIWebViewDelegate, WKUIDelegate, WKNavigationDelegate, WKScriptMessageHandler>
+@interface CWebViewPlugin : NSObject<WKUIDelegate, WKNavigationDelegate, WKScriptMessageHandler>
 {
     UIView <WebViewProtocol> *webView;
     NSString *gameObjectName;
     NSMutableDictionary *customRequestHeader;
+    BOOL alertDialogEnabled;
+    NSRegularExpression *allowRegex;
+    NSRegularExpression *denyRegex;
+    NSRegularExpression *hookRegex;
+    NSString *basicAuthUserName;
+    NSString *basicAuthPassword;
 }
-- (void)dispose;
-+ (void)clearCookies;
 @end
 
 @implementation CWebViewPlugin
 
+static WKProcessPool *_sharedProcessPool;
+static NSMutableArray *_instances = [[NSMutableArray alloc] init];
 
-- (id)initWithGameObjectName:(const char *)gameObjectName_ transparent:(BOOL)transparent ua:(const char *)ua enableWKWebView:(BOOL)enableWKWebView
+- (id)initWithGameObjectName:(const char *)gameObjectName_ transparent:(BOOL)transparent ua:(const char *)ua enableWKWebView:(BOOL)enableWKWebView contentMode:(WKContentMode)contentMode
 {
     self = [super init];
 
     gameObjectName = [NSString stringWithUTF8String:gameObjectName_];
     customRequestHeader = [[NSMutableDictionary alloc] init];
-    if (ua != NULL && strcmp(ua, "") != 0) {
-        [[NSUserDefaults standardUserDefaults]
-            registerDefaults:@{ @"UserAgent": [[NSString alloc] initWithUTF8String:ua] }];
-    }
+    alertDialogEnabled = true;
+    allowRegex = nil;
+    denyRegex = nil;
+    hookRegex = nil;
+    basicAuthUserName = nil;
+    basicAuthPassword = nil;
     UIView *view = UnityGetGLViewController().view;
     if (enableWKWebView && [WKWebView class]) {
+        if (_sharedProcessPool == NULL) {
+            _sharedProcessPool = [[WKProcessPool alloc] init];
+        }
         WKWebViewConfiguration *configuration = [[WKWebViewConfiguration alloc] init];
         WKUserContentController *controller = [[WKUserContentController alloc] init];
         [controller addScriptMessageHandler:self name:@"unityControl"];
         configuration.userContentController = controller;
         configuration.allowsInlineMediaPlayback = true;
-        configuration.mediaTypesRequiringUserActionForPlayback = WKAudiovisualMediaTypeNone;
+        if (@available(iOS 10.0, *)) {
+            configuration.mediaTypesRequiringUserActionForPlayback = WKAudiovisualMediaTypeNone;
+        } else {
+            if (@available(iOS 9.0, *)) {
+                configuration.requiresUserActionForMediaPlayback = NO;
+            } else {
+                configuration.mediaPlaybackRequiresUserAction = NO;
+            }
+        }
         configuration.websiteDataStore = [WKWebsiteDataStore defaultDataStore];
+        configuration.processPool = _sharedProcessPool;
+        if (@available(iOS 13.0, *)) {
+            configuration.defaultWebpagePreferences.preferredContentMode = contentMode;
+        }
         webView = [[WKWebView alloc] initWithFrame:view.frame configuration:configuration];
         webView.UIDelegate = self;
         webView.navigationDelegate = self;
+        if (ua != NULL && strcmp(ua, "") != 0) {
+            ((WKWebView *)webView).customUserAgent = [[NSString alloc] initWithUTF8String:ua];
+        }
+        // cf. https://rick38yip.medium.com/wkwebview-weird-spacing-issue-in-ios-13-54a4fc686f72
+        // cf. https://stackoverflow.com/questions/44390971/automaticallyadjustsscrollviewinsets-was-deprecated-in-ios-11-0
+        if (@available(iOS 11.0, *)) {
+            ((WKWebView *)webView).scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        } else {
+            //UnityGetGLViewController().automaticallyAdjustsScrollViewInsets = false;
+        }
     } else {
-        UIWebView *uiwebview = [[UIWebView alloc] initWithFrame:view.frame];
-        uiwebview.allowsInlineMediaPlayback = YES;
-        uiwebview.mediaPlaybackRequiresUserAction = NO;
-        webView = uiwebview;
-        webView.delegate = self;
+        webView = nil;
+        return self;
     }
     if (transparent) {
         webView.opaque = NO;
@@ -165,32 +167,37 @@ extern "C" void UnitySendMessage(const char *, const char *, const char *);
     }
     webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     webView.hidden = YES;
-    
+
     [webView addObserver:self forKeyPath: @"loading" options: NSKeyValueObservingOptionNew context:nil];
-    
+
     [view addSubview:webView];
-    
+
     return self;
 }
 
 - (void)dispose
 {
-    UIView <WebViewProtocol> *webView0 = webView;
-    webView = nil;
-    if ([webView0 isKindOfClass:[WKWebView class]]) {
-        webView0.UIDelegate = nil;
-        webView0.navigationDelegate = nil;
-    } else {
-        webView0.delegate = nil;
+    if (webView != nil) {
+        UIView <WebViewProtocol> *webView0 = webView;
+        webView = nil;
+        if ([webView0 isKindOfClass:[WKWebView class]]) {
+            webView0.UIDelegate = nil;
+            webView0.navigationDelegate = nil;
+        }
+        [webView0 stopLoading];
+        [webView0 removeFromSuperview];
+        [webView0 removeObserver:self forKeyPath:@"loading"];
     }
-    [webView0 stopLoading];
-    [webView0 removeFromSuperview];
-    [webView0 removeObserver:self forKeyPath:@"loading"];
+    basicAuthPassword = nil;
+    basicAuthUserName = nil;
+    hookRegex = nil;
+    denyRegex = nil;
+    allowRegex = nil;
     customRequestHeader = nil;
     gameObjectName = nil;
 }
 
-+(void)clearCookies
++ (void)clearCookies
 {
     // cf. https://dev.classmethod.jp/smartphone/remove-webview-cookies/
     NSString *libraryPath = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES).firstObject;
@@ -200,6 +207,10 @@ extern "C" void UnitySendMessage(const char *, const char *, const char *);
     [[NSFileManager defaultManager] removeItemAtPath:webKitPath error:nil];
 
     NSHTTPCookieStorage *cookieStorage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
+    if (cookieStorage == nil) {
+        // cf. https://stackoverflow.com/questions/33876295/nshttpcookiestorage-sharedhttpcookiestorage-comes-up-empty-in-10-11
+        cookieStorage = [NSHTTPCookieStorage sharedCookieStorageForGroupContainerIdentifier:@"Cookies"];
+    }
     [[cookieStorage cookies] enumerateObjectsUsingBlock:^(NSHTTPCookie *cookie, NSUInteger idx, BOOL *stop) {
         [cookieStorage deleteCookie:cookie];
     }];
@@ -212,6 +223,62 @@ extern "C" void UnitySendMessage(const char *, const char *, const char *);
                                                    modifiedSince:date
                                                completionHandler:^{}];
     }
+}
+
++ saveCookies
+{
+    // cf. https://stackoverflow.com/questions/33156567/getting-all-cookies-from-wkwebview/49744695#49744695
+    _sharedProcessPool = [[WKProcessPool alloc] init];
+    [_instances enumerateObjectsUsingBlock:^(CWebViewPlugin *obj, NSUInteger idx, BOOL *stop) {
+        if ([obj->webView isKindOfClass:[WKWebView class]]) {
+            WKWebView *webView = (WKWebView *)obj->webView;
+            webView.configuration.processPool = _sharedProcessPool;
+        }
+    }];
+}
+
++ (const char *)getCookies:(const char *)url
+{
+    // cf. https://stackoverflow.com/questions/33156567/getting-all-cookies-from-wkwebview/49744695#49744695
+    _sharedProcessPool = [[WKProcessPool alloc] init];
+    [_instances enumerateObjectsUsingBlock:^(CWebViewPlugin *obj, NSUInteger idx, BOOL *stop) {
+        if ([obj->webView isKindOfClass:[WKWebView class]]) {
+            WKWebView *webView = (WKWebView *)obj->webView;
+            webView.configuration.processPool = _sharedProcessPool;
+        }
+    }];
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    formatter.locale = [NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"];
+    [formatter setDateFormat:@"EEE, dd MMM yyyy HH:mm:ss zzz"];
+    NSMutableString *result = [NSMutableString string];
+    NSHTTPCookieStorage *cookieStorage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
+    if (cookieStorage == nil) {
+        // cf. https://stackoverflow.com/questions/33876295/nshttpcookiestorage-sharedhttpcookiestorage-comes-up-empty-in-10-11
+        cookieStorage = [NSHTTPCookieStorage sharedCookieStorageForGroupContainerIdentifier:@"Cookies"];
+    }
+    [[cookieStorage cookiesForURL:[NSURL URLWithString:[[NSString alloc] initWithUTF8String:url]]]
+        enumerateObjectsUsingBlock:^(NSHTTPCookie *cookie, NSUInteger idx, BOOL *stop) {
+            [result appendString:[NSString stringWithFormat:@"%@=%@", cookie.name, cookie.value]];
+            if ([cookie.domain length] > 0) {
+                [result appendString:[NSString stringWithFormat:@"; "]];
+                [result appendString:[NSString stringWithFormat:@"Domain=%@", cookie.domain]];
+            }
+            if ([cookie.path length] > 0) {
+                [result appendString:[NSString stringWithFormat:@"; "]];
+                [result appendString:[NSString stringWithFormat:@"Path=%@", cookie.path]];
+            }
+            if (cookie.expiresDate != nil) {
+                [result appendString:[NSString stringWithFormat:@"; "]];
+                [result appendString:[NSString stringWithFormat:@"Expires=%@", [formatter stringFromDate:cookie.expiresDate]]];
+            }
+            [result appendString:[NSString stringWithFormat:@"; "]];
+            [result appendString:[NSString stringWithFormat:@"Version=%zd", cookie.version]];
+            [result appendString:[NSString stringWithFormat:@"\n"]];
+        }];
+    const char *s = [result UTF8String];
+    char *r = (char *)malloc(strlen(s) + 1);
+    strcpy(r, s);
+    return r;
 }
 
 - (void)userContentController:(WKUserContentController *)userContentController
@@ -239,20 +306,15 @@ extern "C" void UnitySendMessage(const char *, const char *, const char *);
                        context:(void *)context {
     if (webView == nil)
         return;
-    
+
     if ([keyPath isEqualToString:@"loading"] && [[change objectForKey:NSKeyValueChangeNewKey] intValue] == 0
         && [webView URL] != nil) {
         UnitySendMessage(
                          [gameObjectName UTF8String],
                          "CallOnLoaded",
                          [[[webView URL] absoluteString] UTF8String]);
-        
-    }
-}
 
-- (void)webView:(UIWebView *)uiWebView didFailLoadWithError:(NSError *)error
-{
-    UnitySendMessage([gameObjectName UTF8String], "CallOnError", [[error description] UTF8String]);
+    }
 }
 
 - (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(WKNavigation *)navigation withError:(NSError *)error
@@ -265,36 +327,13 @@ extern "C" void UnitySendMessage(const char *, const char *, const char *);
     UnitySendMessage([gameObjectName UTF8String], "CallOnError", [[error description] UTF8String]);
 }
 
-- (void)webViewDidFinishLoad:(UIWebView *)uiWebView {
-    if (webView == nil)
-        return;
-    // cf. http://stackoverflow.com/questions/10996028/uiwebview-when-did-a-page-really-finish-loading/15916853#15916853
-    if ([[uiWebView stringByEvaluatingJavaScriptFromString:@"document.readyState"] isEqualToString:@"complete"]
-        && [webView URL] != nil) {
-        UnitySendMessage(
-            [gameObjectName UTF8String],
-            "CallOnLoaded",
-            [[[webView URL] absoluteString] UTF8String]);
-    }
-}
-
-- (BOOL)webView:(UIWebView *)uiWebView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
+- (WKWebView *)webView:(WKWebView *)wkWebView createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration forNavigationAction:(WKNavigationAction *)navigationAction windowFeatures:(WKWindowFeatures *)windowFeatures
 {
-    if (webView == nil)
-        return YES;
-
-    NSString *url = [[request URL] absoluteString];
-    if ([url hasPrefix:@"unity:"]) {
-        UnitySendMessage([gameObjectName UTF8String], "CallFromJS", [[url substringFromIndex:6] UTF8String]);
-        return NO;
-    } else {
-        if (![self isSetupedCustomHeader:request]) {
-            [uiWebView loadRequest:[self constructionCustomHeader:request]];
-            return NO;
-        }
-        UnitySendMessage([gameObjectName UTF8String], "CallOnStarted", [url UTF8String]);
-        return YES;
+    // cf. for target="_blank", cf. http://qiita.com/ShingoFukuyama/items/b3a1441025a36ab7659c
+    if (!navigationAction.targetFrame.isMainFrame) {
+        [wkWebView loadRequest:navigationAction.request];
     }
+    return nil;
 }
 
 - (void)webView:(WKWebView *)wkWebView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
@@ -305,12 +344,26 @@ extern "C" void UnitySendMessage(const char *, const char *, const char *);
     }
     NSURL *nsurl = [navigationAction.request URL];
     NSString *url = [nsurl absoluteString];
+    BOOL pass = YES;
+    if (allowRegex != nil && [allowRegex firstMatchInString:url options:0 range:NSMakeRange(0, url.length)]) {
+         pass = YES;
+    } else if (denyRegex != nil && [denyRegex firstMatchInString:url options:0 range:NSMakeRange(0, url.length)]) {
+         pass = NO;
+    }
+    if (!pass) {
+        decisionHandler(WKNavigationActionPolicyCancel);
+        return;
+    }
     if ([url rangeOfString:@"//itunes.apple.com/"].location != NSNotFound) {
         [[UIApplication sharedApplication] openURL:nsurl];
         decisionHandler(WKNavigationActionPolicyCancel);
         return;
     } else if ([url hasPrefix:@"unity:"]) {
         UnitySendMessage([gameObjectName UTF8String], "CallFromJS", [[url substringFromIndex:6] UTF8String]);
+        decisionHandler(WKNavigationActionPolicyCancel);
+        return;
+    } else if (hookRegex != nil && [hookRegex firstMatchInString:url options:0 range:NSMakeRange(0, url.length)]) {
+        UnitySendMessage([gameObjectName UTF8String], "CallOnHooked", [url UTF8String]);
         decisionHandler(WKNavigationActionPolicyCancel);
         return;
     } else if (![url hasPrefix:@"about:blank"]  // for loadHTML(), cf. #365
@@ -349,7 +402,7 @@ extern "C" void UnitySendMessage(const char *, const char *, const char *);
 
         NSHTTPURLResponse * response = (NSHTTPURLResponse *)navigationResponse.response;
         if (response.statusCode >= 400) {
-			UnitySendMessage([gameObjectName UTF8String], "CallOnHttpError", [[NSString stringWithFormat:@"%d", response.statusCode] UTF8String]);
+            UnitySendMessage([gameObjectName UTF8String], "CallOnHttpError", [[NSString stringWithFormat:@"%d", response.statusCode] UTF8String]);
         }
 
     }
@@ -359,6 +412,10 @@ extern "C" void UnitySendMessage(const char *, const char *, const char *);
 // alert
 - (void)webView:(WKWebView *)webView runJavaScriptAlertPanelWithMessage:(NSString *)message initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(void))completionHandler
 {
+    if (!alertDialogEnabled) {
+        completionHandler();
+        return;
+    }
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@""
                                                                              message:message
                                                                       preferredStyle:UIAlertControllerStyleAlert];
@@ -373,6 +430,10 @@ extern "C" void UnitySendMessage(const char *, const char *, const char *);
 // confirm
 - (void)webView:(WKWebView *)webView runJavaScriptConfirmPanelWithMessage:(NSString *)message initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(BOOL))completionHandler
 {
+    if (!alertDialogEnabled) {
+        completionHandler(NO);
+        return;
+    }
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@""
                                                                              message:message
                                                                       preferredStyle:UIAlertControllerStyleAlert];
@@ -392,6 +453,10 @@ extern "C" void UnitySendMessage(const char *, const char *, const char *);
 // prompt
 - (void)webView:(WKWebView *)webView runJavaScriptTextInputPanelWithPrompt:(NSString *)prompt defaultText:(NSString *)defaultText initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(NSString *))completionHandler
 {
+    if (!alertDialogEnabled) {
+        completionHandler(nil);
+        return;
+    }
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@""
                                                                              message:prompt
                                                                       preferredStyle:UIAlertControllerStyleAlert];
@@ -410,6 +475,20 @@ extern "C" void UnitySendMessage(const char *, const char *, const char *);
                                                           completionHandler(nil);
                                                       }]];
     [UnityGetGLViewController() presentViewController:alertController animated:YES completion:^{}];
+}
+
+- (void)webView:(WKWebView *)webView didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential *))completionHandler
+{
+    NSURLSessionAuthChallengeDisposition disposition;
+    NSURLCredential *credential;
+    if (basicAuthUserName && basicAuthPassword && [challenge previousFailureCount] == 0) {
+        disposition = NSURLSessionAuthChallengeUseCredential;
+        credential = [NSURLCredential credentialWithUser:basicAuthUserName password:basicAuthPassword persistence:NSURLCredentialPersistenceForSession];
+    } else {
+        disposition = NSURLSessionAuthChallengePerformDefaultHandling;
+        credential = nil;
+    }
+    completionHandler(disposition, credential);
 }
 
 - (BOOL)isSetupedCustomHeader:(NSURLRequest *)targetRequest
@@ -433,32 +512,25 @@ extern "C" void UnitySendMessage(const char *, const char *, const char *);
     return (NSURLRequest *)[convertedRequest copy];
 }
 
-- (void)setFrame:(NSInteger)x positionY:(NSInteger)y width:(NSInteger)width height:(NSInteger)height
-{
-    if (webView == nil)
-        return;
-    UIView* view = UnityGetGLViewController().view;
-    CGRect frame = webView.frame;
-    CGRect screen = view.bounds;
-    frame.origin.x = x + ((screen.size.width - width) / 2);
-    frame.origin.y = -y + ((screen.size.height - height) / 2);
-    frame.size.width = width;
-    frame.size.height = height;
-    webView.frame = frame;
-}
-
-- (void)setMargins:(int)left top:(int)top right:(int)right bottom:(int)bottom
+- (void)setMargins:(float)left top:(float)top right:(float)right bottom:(float)bottom relative:(BOOL)relative
 {
     if (webView == nil)
         return;
     UIView *view = UnityGetGLViewController().view;
     CGRect frame = webView.frame;
     CGRect screen = view.bounds;
-    CGFloat scale = 1.0f / [self getScale:view];
-    frame.size.width = screen.size.width - scale * (left + right) ;
-    frame.size.height = screen.size.height - scale * (top + bottom) ;
-    frame.origin.x = scale * left ;
-    frame.origin.y = scale * top ;
+    if (relative) {
+        frame.size.width = screen.size.width * (1.0f - left - right);
+        frame.size.height = screen.size.height * (1.0f - top - bottom);
+        frame.origin.x = screen.size.width * left;
+        frame.origin.y = screen.size.height * top;
+    } else {
+        CGFloat scale = 1.0f / [self getScale:view];
+        frame.size.width = screen.size.width - scale * (left + right) ;
+        frame.size.height = screen.size.height - scale * (top + bottom) ;
+        frame.origin.x = scale * left ;
+        frame.origin.y = scale * top ;
+    }
     webView.frame = frame;
 }
 
@@ -474,6 +546,64 @@ extern "C" void UnitySendMessage(const char *, const char *, const char *);
     if (webView == nil)
         return;
     webView.hidden = visibility ? NO : YES;
+}
+
+- (void)setAlertDialogEnabled:(BOOL)enabled
+{
+    alertDialogEnabled = enabled;
+}
+
+- (void)setScrollBounceEnabled:(BOOL)enabled
+{
+    [webView setScrollBounce:enabled];
+}
+
+- (BOOL)setURLPattern:(const char *)allowPattern and:(const char *)denyPattern and:(const char *)hookPattern
+{
+    NSError *err = nil;
+    NSRegularExpression *allow = nil;
+    NSRegularExpression *deny = nil;
+    NSRegularExpression *hook = nil;
+    if (allowPattern == nil || *allowPattern == '\0') {
+        allow = nil;
+    } else {
+        allow
+            = [NSRegularExpression
+                regularExpressionWithPattern:[NSString stringWithUTF8String:allowPattern]
+                                     options:0
+                                       error:&err];
+        if (err != nil) {
+            return NO;
+        }
+    }
+    if (denyPattern == nil || *denyPattern == '\0') {
+        deny = nil;
+    } else {
+        deny
+            = [NSRegularExpression
+                regularExpressionWithPattern:[NSString stringWithUTF8String:denyPattern]
+                                     options:0
+                                       error:&err];
+        if (err != nil) {
+            return NO;
+        }
+    }
+    if (hookPattern == nil || *hookPattern == '\0') {
+        hook = nil;
+    } else {
+        hook
+            = [NSRegularExpression
+                regularExpressionWithPattern:[NSString stringWithUTF8String:hookPattern]
+                                     options:0
+                                       error:&err];
+        if (err != nil) {
+            return NO;
+        }
+    }
+    allowRegex = allow;
+    denyRegex = deny;
+    hookRegex = hook;
+    return YES;
 }
 
 - (void)loadURL:(const char *)url
@@ -543,18 +673,25 @@ extern "C" void UnitySendMessage(const char *, const char *, const char *);
     [webView goForward];
 }
 
+- (void)reload
+{
+    if (webView == nil)
+        return;
+    [webView reload];
+}
+
 - (void)addCustomRequestHeader:(const char *)headerKey value:(const char *)headerValue
 {
     NSString *keyString = [NSString stringWithUTF8String:headerKey];
     NSString *valueString = [NSString stringWithUTF8String:headerValue];
-    
+
     [customRequestHeader setObject:valueString forKey:keyString];
 }
 
 - (void)removeCustomRequestHeader:(const char *)headerKey
 {
     NSString *keyString = [NSString stringWithUTF8String:headerKey];
-    
+
     if ([[customRequestHeader allKeys]containsObject:keyString]) {
         [customRequestHeader removeObjectForKey:keyString];
     }
@@ -572,21 +709,41 @@ extern "C" void UnitySendMessage(const char *, const char *, const char *);
     if (!result) {
         return NULL;
     }
-    
+
     const char *s = [result UTF8String];
     char *r = (char *)malloc(strlen(s) + 1);
     strcpy(r, s);
     return r;
 }
+
+- (void)setBasicAuthInfo:(const char *)userName password:(const char *)password
+{
+    basicAuthUserName = [NSString stringWithUTF8String:userName];
+    basicAuthPassword = [NSString stringWithUTF8String:password];
+}
+
+- (void)clearCache:(BOOL)includeDiskFiles
+{
+    if (webView == nil)
+        return;
+    NSMutableSet *types = [NSMutableSet setWithArray:@[WKWebsiteDataTypeMemoryCache]];
+    if (includeDiskFiles) {
+        [types addObject:WKWebsiteDataTypeDiskCache];
+    }
+    NSDate *date = [NSDate dateWithTimeIntervalSince1970:0];
+    [[WKWebsiteDataStore defaultDataStore] removeDataOfTypes:types modifiedSince:date completionHandler:^{}];
+}
 @end
 
 extern "C" {
-    void *_CWebViewPlugin_Init(const char *gameObjectName, BOOL transparent, const char *ua, BOOL enableWKWebView);
+    void *_CWebViewPlugin_Init(const char *gameObjectName, BOOL transparent, const char *ua, BOOL enableWKWebView, int contentMode);
     void _CWebViewPlugin_Destroy(void *instance);
-    void _CWebViewPlugin_SetFrame(void* instace, int x, int y, int width, int height);
     void _CWebViewPlugin_SetMargins(
-        void *instance, int left, int top, int right, int bottom);
+        void *instance, float left, float top, float right, float bottom, BOOL relative);
     void _CWebViewPlugin_SetVisibility(void *instance, BOOL visibility);
+    void _CWebViewPlugin_SetAlertDialogEnabled(void *instance, BOOL visibility);
+    void _CWebViewPlugin_SetScrollBounceEnabled(void *instance, BOOL enabled);
+    BOOL _CWebViewPlugin_SetURLPattern(void *instance, const char *allowPattern, const char *denyPattern, const char *hookPattern);
     void _CWebViewPlugin_LoadURL(void *instance, const char *url);
     void _CWebViewPlugin_LoadHTML(void *instance, const char *html, const char *baseUrl);
     void _CWebViewPlugin_EvaluateJS(void *instance, const char *url);
@@ -595,114 +752,182 @@ extern "C" {
     BOOL _CWebViewPlugin_CanGoForward(void *instance);
     void _CWebViewPlugin_GoBack(void *instance);
     void _CWebViewPlugin_GoForward(void *instance);
+    void _CWebViewPlugin_Reload(void *instance);
     void _CWebViewPlugin_AddCustomHeader(void *instance, const char *headerKey, const char *headerValue);
     void _CWebViewPlugin_RemoveCustomHeader(void *instance, const char *headerKey);
     void _CWebViewPlugin_ClearCustomHeader(void *instance);
     void _CWebViewPlugin_ClearCookies();
+    void _CWebViewPlugin_SaveCookies();
+    const char *_CWebViewPlugin_GetCookies(const char *url);
     const char *_CWebViewPlugin_GetCustomHeaderValue(void *instance, const char *headerKey);
+    void _CWebViewPlugin_SetBasicAuthInfo(void *instance, const char *userName, const char *password);
+    void _CWebViewPlugin_ClearCache(void *instance, BOOL includeDiskFiles);
 }
 
-void *_CWebViewPlugin_Init(const char *gameObjectName, BOOL transparent, const char *ua, BOOL enableWKWebView)
+void *_CWebViewPlugin_Init(const char *gameObjectName, BOOL transparent, const char *ua, BOOL enableWKWebView, int contentMode)
 {
-    id instance = [[CWebViewPlugin alloc] initWithGameObjectName:gameObjectName transparent:transparent ua:ua enableWKWebView:enableWKWebView];
-    return (__bridge_retained void *)instance;
+    if (! (enableWKWebView && [WKWebView class]))
+        return nil;
+    WKContentMode wkContentMode = WKContentModeRecommended;
+    switch (contentMode) {
+    case 1:
+        wkContentMode = WKContentModeMobile;
+        break;
+    case 2:
+        wkContentMode = WKContentModeDesktop;
+        break;
+    default:
+        wkContentMode = WKContentModeRecommended;
+        break;
+    }
+    CWebViewPlugin *webViewPlugin = [[CWebViewPlugin alloc] initWithGameObjectName:gameObjectName transparent:transparent ua:ua enableWKWebView:enableWKWebView contentMode:wkContentMode];
+    [_instances addObject:webViewPlugin];
+    return (__bridge_retained void *)webViewPlugin;
 }
 
 void _CWebViewPlugin_Destroy(void *instance)
 {
+    if (instance == NULL)
+        return;
     CWebViewPlugin *webViewPlugin = (__bridge_transfer CWebViewPlugin *)instance;
+    [_instances removeObject:webViewPlugin];
     [webViewPlugin dispose];
     webViewPlugin = nil;
 }
 
-void _CWebViewPlugin_SetFrame(void* instance, int x, int y, int width, int height)
-{
-    float screenScale = [UIScreen instancesRespondToSelector:@selector(scale)] ? [UIScreen mainScreen].scale : 1.0f;
-    CWebViewPlugin* webViewPlugin = (__bridge CWebViewPlugin*)instance;
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad && screenScale == 2.0f)
-        screenScale = 1.0f;
-    [webViewPlugin
-        setFrame:x / screenScale
-        positionY:y / screenScale
-        width:width / screenScale
-        height:height / screenScale];
-}
-
 void _CWebViewPlugin_SetMargins(
-    void *instance, int left, int top, int right, int bottom)
+    void *instance, float left, float top, float right, float bottom, BOOL relative)
 {
+    if (instance == NULL)
+        return;
     CWebViewPlugin *webViewPlugin = (__bridge CWebViewPlugin *)instance;
-    [webViewPlugin setMargins:left top:top right:right bottom:bottom];
+    [webViewPlugin setMargins:left top:top right:right bottom:bottom relative:relative];
 }
 
 void _CWebViewPlugin_SetVisibility(void *instance, BOOL visibility)
 {
+    if (instance == NULL)
+        return;
     CWebViewPlugin *webViewPlugin = (__bridge CWebViewPlugin *)instance;
     [webViewPlugin setVisibility:visibility];
 }
 
+void _CWebViewPlugin_SetAlertDialogEnabled(void *instance, BOOL enabled)
+{
+    if (instance == NULL)
+        return;
+    CWebViewPlugin *webViewPlugin = (__bridge CWebViewPlugin *)instance;
+    [webViewPlugin setAlertDialogEnabled:enabled];
+}
+
+void _CWebViewPlugin_SetScrollBounceEnabled(void *instance, BOOL enabled)
+{
+    if (instance == NULL)
+        return;
+    CWebViewPlugin *webViewPlugin = (__bridge CWebViewPlugin *)instance;
+    [webViewPlugin setScrollBounceEnabled:enabled];
+}
+
+BOOL _CWebViewPlugin_SetURLPattern(void *instance, const char *allowPattern, const char *denyPattern, const char *hookPattern)
+{
+    if (instance == NULL)
+        return NO;
+    CWebViewPlugin *webViewPlugin = (__bridge CWebViewPlugin *)instance;
+    return [webViewPlugin setURLPattern:allowPattern and:denyPattern and:hookPattern];
+}
+
 void _CWebViewPlugin_LoadURL(void *instance, const char *url)
 {
+    if (instance == NULL)
+        return;
     CWebViewPlugin *webViewPlugin = (__bridge CWebViewPlugin *)instance;
     [webViewPlugin loadURL:url];
 }
 
 void _CWebViewPlugin_LoadHTML(void *instance, const char *html, const char *baseUrl)
 {
+    if (instance == NULL)
+        return;
     CWebViewPlugin *webViewPlugin = (__bridge CWebViewPlugin *)instance;
     [webViewPlugin loadHTML:html baseURL:baseUrl];
 }
 
 void _CWebViewPlugin_EvaluateJS(void *instance, const char *js)
 {
+    if (instance == NULL)
+        return;
     CWebViewPlugin *webViewPlugin = (__bridge CWebViewPlugin *)instance;
     [webViewPlugin evaluateJS:js];
 }
 
 int _CWebViewPlugin_Progress(void *instance)
 {
+    if (instance == NULL)
+        return 0;
     CWebViewPlugin *webViewPlugin = (__bridge CWebViewPlugin *)instance;
     return [webViewPlugin progress];
 }
 
 BOOL _CWebViewPlugin_CanGoBack(void *instance)
 {
+    if (instance == NULL)
+        return false;
     CWebViewPlugin *webViewPlugin = (__bridge CWebViewPlugin *)instance;
     return [webViewPlugin canGoBack];
 }
 
 BOOL _CWebViewPlugin_CanGoForward(void *instance)
 {
+    if (instance == NULL)
+        return false;
     CWebViewPlugin *webViewPlugin = (__bridge CWebViewPlugin *)instance;
     return [webViewPlugin canGoForward];
 }
 
 void _CWebViewPlugin_GoBack(void *instance)
 {
+    if (instance == NULL)
+        return;
     CWebViewPlugin *webViewPlugin = (__bridge CWebViewPlugin *)instance;
     [webViewPlugin goBack];
 }
 
 void _CWebViewPlugin_GoForward(void *instance)
 {
+    if (instance == NULL)
+        return;
     CWebViewPlugin *webViewPlugin = (__bridge CWebViewPlugin *)instance;
     [webViewPlugin goForward];
 }
 
+void _CWebViewPlugin_Reload(void *instance)
+{
+    if (instance == NULL)
+        return;
+    CWebViewPlugin *webViewPlugin = (__bridge CWebViewPlugin *)instance;
+    [webViewPlugin reload];
+}
+
 void _CWebViewPlugin_AddCustomHeader(void *instance, const char *headerKey, const char *headerValue)
 {
+    if (instance == NULL)
+        return;
     CWebViewPlugin *webViewPlugin = (__bridge CWebViewPlugin *)instance;
     [webViewPlugin addCustomRequestHeader:headerKey value:headerValue];
 }
 
 void _CWebViewPlugin_RemoveCustomHeader(void *instance, const char *headerKey)
 {
+    if (instance == NULL)
+        return;
     CWebViewPlugin *webViewPlugin = (__bridge CWebViewPlugin *)instance;
     [webViewPlugin removeCustomRequestHeader:headerKey];
 }
 
 void _CWebViewPlugin_ClearCustomHeader(void *instance)
 {
+    if (instance == NULL)
+        return;
     CWebViewPlugin *webViewPlugin = (__bridge CWebViewPlugin *)instance;
     [webViewPlugin clearCustomRequestHeader];
 }
@@ -712,8 +937,38 @@ void _CWebViewPlugin_ClearCookies()
     [CWebViewPlugin clearCookies];
 }
 
+void _CWebViewPlugin_SaveCookies()
+{
+    [CWebViewPlugin saveCookies];
+}
+
+const char *_CWebViewPlugin_GetCookies(const char *url)
+{
+    return [CWebViewPlugin getCookies:url];
+}
+
 const char *_CWebViewPlugin_GetCustomHeaderValue(void *instance, const char *headerKey)
 {
+    if (instance == NULL)
+        return NULL;
     CWebViewPlugin *webViewPlugin = (__bridge CWebViewPlugin *)instance;
     return [webViewPlugin getCustomRequestHeaderValue:headerKey];
 }
+
+void _CWebViewPlugin_SetBasicAuthInfo(void *instance, const char *userName, const char *password)
+{
+    if (instance == NULL)
+        return;
+    CWebViewPlugin *webViewPlugin = (__bridge CWebViewPlugin *)instance;
+    [webViewPlugin setBasicAuthInfo:userName password:password];
+}
+
+void _CWebViewPlugin_ClearCache(void *instance, BOOL includeDiskFiles)
+{
+    if (instance == NULL)
+        return;
+    CWebViewPlugin *webViewPlugin = (__bridge CWebViewPlugin *)instance;
+    [webViewPlugin clearCache:includeDiskFiles];
+}
+
+#endif // !(__IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_9_0)
