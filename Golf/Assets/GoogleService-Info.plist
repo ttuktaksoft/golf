@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>278760475883-9htkplo49vp2u1ntpaje5mucjt9ks4s6.apps.googleusercontent.com</string>
+	<string>278760475883-bhch2nos7ei5anuolpvr38d09bvs5ts3.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.278760475883-9htkplo49vp2u1ntpaje5mucjt9ks4s6</string>
+	<string>com.googleusercontent.apps.278760475883-bhch2nos7ei5anuolpvr38d09bvs5ts3</string>
 	<key>API_KEY</key>
 	<string>AIzaSyDlkbJd7tqWyKfQgivbQC-PYaGgT3zMGRY</string>
 	<key>GCM_SENDER_ID</key>
@@ -13,7 +13,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.lmygolf.swing</string>
+	<string>com.lmygolf.swingtraining</string>
 	<key>PROJECT_ID</key>
 	<string>lmygolf</string>
 	<key>STORAGE_BUCKET</key>
@@ -29,7 +29,7 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:278760475883:ios:06748b117de6963f95c2ae</string>
+	<string>1:278760475883:ios:4a8b954f56e9a72295c2ae</string>
 	<key>DATABASE_URL</key>
 	<string>https://lmygolf.firebaseio.com</string>
 </dict>
