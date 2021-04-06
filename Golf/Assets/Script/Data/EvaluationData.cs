@@ -1,21 +1,73 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using UnityEngine;
 
 [System.Serializable]
 public class EvaluationData
 {
-    public long Date;
+    public string TKDate;
+    public DateTime Time;
 
-    private CommonData.TRAINING_TYPE TrainingType = CommonData.TRAINING_TYPE.TRAINING_POSE;
-    private int TrainingCount = 0;
-    private CommonData.TRAINING_POSE PoseType = CommonData.TRAINING_POSE.TRAINING_ADDRESS;
-    private Dictionary<CommonData.TRAINING_ANGLE, int> AngleTypeList = new Dictionary<CommonData.TRAINING_ANGLE, int>();
+    public CommonData.TRAINING_TYPE TrainingType = CommonData.TRAINING_TYPE.TRAINING_POSE;
+    public int TrainingCount = 0;
+    public CommonData.TRAINING_POSE PoseType = CommonData.TRAINING_POSE.TRAINING_ADDRESS;
+    public Dictionary<CommonData.TRAINING_ANGLE, int> AngleTypeList = new Dictionary<CommonData.TRAINING_ANGLE, int>();
+    public Dictionary<string, int> AngleTypeList_Str = new Dictionary<string, int>();
 
     public int StarCount { get; private set; }
     public string Msg { get; private set; }
+
+    public EvaluationData(Dictionary<string, object> dic)
+    {
+        TrainingType = CommonFunc.ToEnum<CommonData.TRAINING_TYPE>(dic["TrainingType"].ToString());
+
+        long tkTime = Convert.ToInt64(dic["TKDate"].ToString());
+        Time = DateTime.MinValue;
+        if (tkTime <= 0)
+            Time = DateTime.MinValue;
+        else
+        {
+            try
+            {
+                Time = DateTime.ParseExact(tkTime.ToString(), "yyyyMMddHHmmssffff", null);
+                CultureInfo cultures = CultureInfo.CreateSpecificCulture("ko-KR");
+                TKDate = Time.ToString("yyyyMMddHHmmssffff", cultures);
+            }
+            catch
+            {
+                Time = DateTime.MinValue;
+                CultureInfo cultures = CultureInfo.CreateSpecificCulture("ko-KR");
+                TKDate = Time.ToString("yyyyMMddHHmmssffff", cultures);
+            }
+        }
+
+        TrainingCount = Convert.ToInt32(dic["TrainingCount"].ToString());
+        StarCount = Convert.ToInt32(dic["StarCount"].ToString());
+        if(dic.ContainsKey("Msg"))
+            Msg = dic["Msg"].ToString();
+
+        if (TrainingType == CommonData.TRAINING_TYPE.TRAINING_POSE)
+        {
+            PoseType = CommonFunc.ToEnum<CommonData.TRAINING_POSE>(dic["PoseType"].ToString());
+            var dic_angle = dic["AngleTypeList"] as Dictionary<string, object>;
+            var e = dic_angle.GetEnumerator();
+            while (e.MoveNext())
+            {
+                var k = CommonFunc.ToEnum<CommonData.TRAINING_ANGLE>(e.Current.Key);
+                var v = Convert.ToInt32(e.Current.Value);
+                AngleTypeList.Add(k, v);
+            }
+
+            var e_1 = AngleTypeList.GetEnumerator();
+            while (e_1.MoveNext())
+            {
+                AngleTypeList_Str.Add(e_1.Current.Key.ToString(), e_1.Current.Value);
+            }
+        }
+    }
 
     public EvaluationData(long date,
         CommonData.TRAINING_TYPE trainingType, 
@@ -25,11 +77,18 @@ public class EvaluationData
         int starCount,
         string msg)
     {
-        Date = date;
+        Time = new DateTime(date);
+        CultureInfo cultures = CultureInfo.CreateSpecificCulture("ko-KR");
+        TKDate = Time.ToString("yyyyMMddHHmmssffff", cultures);
         TrainingType = trainingType;
         TrainingCount = trainingCount;
         PoseType = poseType;
         AngleTypeList = angleTypeList;
+        var e = AngleTypeList.GetEnumerator();
+        while (e.MoveNext())
+        {
+            AngleTypeList_Str.Add(e.Current.Key.ToString(), e.Current.Value);
+        }
         StarCount = starCount;
         Msg = msg;
     }
@@ -40,7 +99,9 @@ public class EvaluationData
         int starCount,
         string msg)
     {
-        Date = date;
+        Time = new DateTime(date);
+        CultureInfo cultures = CultureInfo.CreateSpecificCulture("ko-KR");
+        TKDate = Time.ToString("yyyyMMddHHmmssffff", cultures);
         TrainingType = trainingType;
         TrainingCount = trainingCount;
         StarCount = starCount;
@@ -49,8 +110,7 @@ public class EvaluationData
 
     public string GetDate()
     {
-        DateTime time = new DateTime(Date);
-        return string.Format("{0:D2}월 {1:D2}일", time.Month, time.Day);
+        return string.Format("{0:D2}월 {1:D2}일", Time.Month, Time.Day);
     }
 
     public string GetTraining()

@@ -186,7 +186,7 @@ public class TKManager : MonoBehaviour
     {
         MySaveData.Save();
         BinaryFormatter formatter = new BinaryFormatter();
-        string path = pathForDocumentsFile("PlayerData.ini");
+        string path = pathForDocumentsFile("PlayerData2.ini");
         FileStream stream = new FileStream(path, FileMode.Create);
         formatter.Serialize(stream, MySaveData);
         stream.Close();
@@ -194,7 +194,7 @@ public class TKManager : MonoBehaviour
 
     public void LoadFile()
     {
-        string path = pathForDocumentsFile("PlayerData.ini");
+        string path = pathForDocumentsFile("PlayerData2.ini");
         FileInfo fileInfo = new FileInfo(path);
         if (fileInfo.Exists)
         {

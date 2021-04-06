@@ -7,7 +7,7 @@ using Firebase.Database;
 using Firebase.Storage;
 using Firebase.Unity.Editor;
 using Firebase.Auth;
-
+using System.Text;
 
 public class FirebaseManager : MonoBehaviour
 {
@@ -37,6 +37,35 @@ public class FirebaseManager : MonoBehaviour
 
     private bool FirebaseProgress = false;
     private Action FirebaseProgressEndAction = null;
+
+    [NonSerialized]
+    public bool FirebaseLoadWait = false;
+    public IEnumerator LoadingData(Action loadingAction, Action completeAction, bool loadingPopup = true)
+    {
+        yield return null;
+
+        if (loadingAction == null)
+            yield break;
+
+        FirebaseLoadWait = true;
+        if (loadingPopup)
+            TKManager.Instance.ShowLoading();
+
+        loadingAction();
+
+        while (FirebaseLoadWait)
+        {
+            yield return null;
+        }
+
+
+
+        if (loadingPopup)
+            TKManager.Instance.HideLoading();
+        if (completeAction != null)
+            completeAction();
+
+    }
 
     public void SetFirebaseProgressEndAction(Action action)
     {
@@ -94,7 +123,8 @@ public class FirebaseManager : MonoBehaviour
         Firebase.Auth.Credential credential =
         Firebase.Auth.GoogleAuthProvider.GetCredential(googleIdToken, googleAccessToken);
 
-        auth.SignInWithCredentialAsync(credential).ContinueWith(task => {
+        auth.SignInWithCredentialAsync(credential).ContinueWith(task =>
+        {
             if (task.IsCanceled)
             {
                 Debug.LogError("SignInWithCredentialAsync was canceled.");
@@ -114,7 +144,8 @@ public class FirebaseManager : MonoBehaviour
 
     public void SignUpByAnonymouse()
     {
-        auth.SignInAnonymouslyAsync().ContinueWith(task => {
+        auth.SignInAnonymouslyAsync().ContinueWith(task =>
+        {
             if (task.IsCanceled)
             {
                 Debug.LogError("SignInAnonymouslyAsync was canceled.");
@@ -166,6 +197,7 @@ public class FirebaseManager : MonoBehaviour
         GetAlarmData();
         GetFreindList();
         GetSeasonData();
+        GetEvaluationData();
     }
 
     private void AddFirstLoadingComplete()
@@ -173,23 +205,24 @@ public class FirebaseManager : MonoBehaviour
         if (FirstLoadingComplete == false)
             LoadingCount++;
 
-        if (LoadingCount == 6)
+        if (LoadingCount == 7)
             FirstLoadingComplete = true;
     }
 
     // 유져 인덱스 받아오기
-    public void RegisterUserByFirebase()
+    public void RegisterUserByFirebase(Action<int> endAction)
     {
         RegisterUserProgress = true;
         mDatabaseRef.Child("UsersCount").RunTransaction(mutableData =>
         {
+            if (mutableData.Value == null)
+                return TransactionResult.Success(mutableData);
+
             int tempCount = Convert.ToInt32(mutableData.Value);
 
-            TKManager.Instance.Mydata.Init(tempCount.ToString());
-
-            SetUserData();
             mutableData.Value = tempCount + 1;
 
+            endAction(Convert.ToInt32(mutableData.Value));
             RegisterUserProgress = false;
 
             return TransactionResult.Success(mutableData);
@@ -241,7 +274,7 @@ public class FirebaseManager : MonoBehaviour
                 Debug.Log("GetUserData End");
                 AddFirstLoadingComplete();
                 //  Debug.LogFormat("UserInfo: Index : {0} NickName {1} Point {2}", TKManager.Instance.MyData.Index, TKManager.Instance.MyData.NickName, TKManager.Instance.MyData.Point);
-                }
+            }
         });
     }
 
@@ -263,7 +296,7 @@ public class FirebaseManager : MonoBehaviour
                {
                    foreach (var tempChild in snapshot.Children)
                    {
-                       int tempIndex = Convert.ToInt32(tempChild.Key);                       
+                       int tempIndex = Convert.ToInt32(tempChild.Key);
                        var tempData = tempChild.Value as Dictionary<string, object>;
                        var tempTitle = tempData["Title"].ToString();
                        var tempType = tempData["Type"].ToString();
@@ -275,7 +308,7 @@ public class FirebaseManager : MonoBehaviour
                }
                else
                {
-                    
+
                }
                Debug.Log("GetTutorialData End");
                AddFirstLoadingComplete();
@@ -299,7 +332,7 @@ public class FirebaseManager : MonoBehaviour
                DataSnapshot snapshot = task.Result;
                if (snapshot != null && snapshot.Exists)
                {
-                   DataManager.Instance.AcademyURL = snapshot.Value.ToString();                   
+                   DataManager.Instance.AcademyURL = snapshot.Value.ToString();
                }
                else
                {
@@ -365,7 +398,7 @@ public class FirebaseManager : MonoBehaviour
                         var tempData = tempChild.Value as Dictionary<string, object>;
                         var tempThumb = tempData["Thumb"].ToString();
                         var tempContent = tempData["Content"].ToString();
-                    }                    
+                    }
                 }
                 else
                 {
@@ -548,7 +581,7 @@ public class FirebaseManager : MonoBehaviour
     // 사용자 트레이닝 세팅    
     public void SetTraingReport(int trainingType, int trainingCount)
     {
-        switch(trainingType)
+        switch (trainingType)
         {
             case 0:
                 GetPoseTrainingCount("Address", trainingCount);
@@ -567,7 +600,7 @@ public class FirebaseManager : MonoBehaviour
 
     public void GetPoseTrainingCount(string trainingType, int trainingCount)
     {
-        
+
         mDatabaseRef.Child("TraingReport").Child("PoseTraining").Child(trainingType).Child(TKManager.Instance.Mydata.Index).GetValueAsync().ContinueWith(task =>
         {
             if (task.IsFaulted)
@@ -595,7 +628,7 @@ public class FirebaseManager : MonoBehaviour
             }
 
             //  Debug.LogFormat("UserInfo: Index : {0} NickName {1} Point {2}", TKManager.Instance.MyData.Index, TKManager.Instance.MyData.NickName, TKManager.Instance.MyData.Point);
-        
+
         });
     }
 
@@ -661,7 +694,7 @@ public class FirebaseManager : MonoBehaviour
         }
         */
     }
- 
+
     public void SetRecommenderCode()
     {
         char[] stringChars = new char[4];
@@ -716,7 +749,7 @@ public class FirebaseManager : MonoBehaviour
     }
 
     public void GetFreindList()
-    {        
+    {
         mDatabaseRef.Child("Users").Child(TKManager.Instance.Mydata.Index).Child("FriendList").GetValueAsync().ContinueWith(task =>
         {
             if (task.IsFaulted)
@@ -798,7 +831,7 @@ public class FirebaseManager : MonoBehaviour
             });
         }
 
-        while(getDataCount > 0)
+        while (getDataCount > 0)
         {
             yield return null;
         }
@@ -879,6 +912,96 @@ public class FirebaseManager : MonoBehaviour
                 }
                 else
                 {
+                }
+
+                AddFirstLoadingComplete();
+            }
+        });
+    }
+
+    public void SetEvaluationData(EvaluationData data, Action endAction)
+    {
+        if (data == null)
+        {
+            endAction();
+            return;
+        }
+
+        string userID = TKManager.Instance.Mydata.Index;
+
+        Dictionary<string, object> sendData = new Dictionary<string, object>();
+        if (data.TrainingType == CommonData.TRAINING_TYPE.TRAINING_TEMPO)
+        {
+            sendData.Add("USER_ID", userID);
+            sendData.Add("TKDate", data.TKDate);
+            sendData.Add("TrainingType", data.TrainingType.ToString());
+            sendData.Add("TrainingCount", data.TrainingCount);
+            sendData.Add("StarCount", data.StarCount);
+            sendData.Add("Msg", data.Msg);
+        }
+        else
+        {
+            sendData.Add("USER_ID", userID);
+            sendData.Add("TKDate", data.TKDate);
+            sendData.Add("TrainingType", data.TrainingType.ToString());
+            sendData.Add("TrainingCount", data.TrainingCount);
+            sendData.Add("PoseType", data.PoseType.ToString());
+            sendData.Add("AngleTypeList", data.AngleTypeList_Str);
+            sendData.Add("StarCount", data.StarCount);
+            sendData.Add("Msg", data.Msg);
+        }
+
+
+        mDatabaseRef.Child("EvaluationData").Child(userID).Child(data.TKDate).SetValueAsync(sendData).ContinueWith(task =>
+        {
+            if (task.IsFaulted)
+            {
+                // Handle the error...
+            }
+            else if (task.IsCompleted)
+            {
+                endAction();
+                //  Debug.LogFormat("UserInfo: Index : {0} NickName {1} Point {2}", TKManager.Instance.MyData.Index, TKManager.Instance.MyData.NickName, TKManager.Instance.MyData.Point);
+            }
+        });
+    }
+    public void GetEvaluationData()
+    {
+        string userIdx = TKManager.Instance.Mydata.Index;
+
+        mDatabaseRef.Child("EvaluationData").Child(userIdx).GetValueAsync().ContinueWith(task =>
+        {
+
+            if (task.IsFaulted)
+            {
+                // Handle the error...
+            }
+            else if (task.IsCompleted)
+            {
+                DataSnapshot snapshot = task.Result;
+
+                if (snapshot.Exists)
+                {
+                    var tempData = snapshot.Value as Dictionary<string, object>;
+
+                    foreach (object item in tempData.Values)
+                    {
+                        if (item == null)
+                            continue;
+
+                        Dictionary<string, object> itemDic = item as Dictionary<string, object>;
+
+                        try
+                        {
+                            var eData = new EvaluationData(itemDic);
+                            TKManager.Instance.Mydata.AddEvaluationData(eData);
+                        }
+                        catch
+                        {
+                            int a = 10;
+                        }
+                        
+                    }
                 }
 
                 AddFirstLoadingComplete();

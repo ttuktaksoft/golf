@@ -191,4 +191,12 @@ public class CommonFunc : MonoBehaviour
 
         return returnGrade;
     }
+
+    public static T ToEnum<T>(string value)
+    {
+        if (!System.Enum.IsDefined(typeof(T), value))
+            return default(T);
+
+        return (T)System.Enum.Parse(typeof(T), value, true);
+    }
 }

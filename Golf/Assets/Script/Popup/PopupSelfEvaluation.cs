@@ -89,35 +89,61 @@ public class PopupSelfEvaluation : Popup
 
     public void OnClickOK()
     {
-        if(TrainingType == CommonData.TRAINING_TYPE.TRAINING_POSE)
-        {
-            TKManager.Instance.Mydata.AddEvaluationData(
-            new EvaluationData(
-                DateTime.Now.Ticks,
-                CommonData.TRAINING_TYPE.TRAINING_POSE,
-                TrainingCount,
-                PoseType,
-                new Dictionary<CommonData.TRAINING_ANGLE, int>(AngleTypeList),
-                StarCount,
-                Msg.text.ToString())
-            );
-        }
-        else
-        {
-            TKManager.Instance.Mydata.AddEvaluationData(
-            new EvaluationData(
-                DateTime.Now.Ticks,
-                CommonData.TRAINING_TYPE.TRAINING_TEMPO,
-                TrainingCount,
-                StarCount,
-                Msg.text.ToString())
-            );
-        }
+        
 
-        TKManager.Instance.Mydata.AddSeasonPoint(TrainingPoint);
-        TKManager.Instance.SaveFile();
+        Action la = () =>
+        {
+            EvaluationData eData = null;
+            if (TrainingType == CommonData.TRAINING_TYPE.TRAINING_POSE)
+            {
+                var dic = new Dictionary<CommonData.TRAINING_ANGLE, int>();
+                var e = AngleTypeList.GetEnumerator();
+                while (e.MoveNext())
+                {
+                    dic.Add(e.Current.Key, e.Current.Value);
+                }
+                eData = new EvaluationData(
+                    DateTime.Now.Ticks,
+                    CommonData.TRAINING_TYPE.TRAINING_POSE,
+                    TrainingCount,
+                    PoseType,
+                    dic,
+                    StarCount,
+                    Msg.text.ToString());
 
-        PopupMgr.Instance.DismissPopup();
+                TKManager.Instance.Mydata.AddEvaluationData(eData);
+            }
+            else
+            {
+                eData = new EvaluationData(
+                    DateTime.Now.Ticks,
+                    CommonData.TRAINING_TYPE.TRAINING_TEMPO,
+                    TrainingCount,
+                    StarCount,
+                    Msg.text.ToString());
+
+                TKManager.Instance.Mydata.AddEvaluationData(eData);
+            }
+
+            FirebaseManager.Instance.SetEvaluationData(eData, () =>
+            {
+                FirebaseManager.Instance.FirebaseLoadWait = false;
+            });
+
+        };
+
+        Action ca = () =>
+        {
+            TKManager.Instance.Mydata.AddSeasonPoint(TrainingPoint);
+            TKManager.Instance.SaveFile();
+
+            PopupMgr.Instance.DismissPopup();
+        };
+
+        StartCoroutine(FirebaseManager.Instance.LoadingData(la, ca));
+
+
+        
 
         if (EndAction != null)
             EndAction();

@@ -159,26 +159,36 @@ public class PopupUserSetting : Popup
                         {
                             TKManager.Instance.Mydata.SetData(Gender, Name.text.ToString(), Number.text.ToString(), 0, 0, "");
 
-                            FirebaseManager.Instance.RegisterUserByFirebase();
+                            FirebaseManager.Instance.RegisterUserByFirebase((index) =>
+                            {
+                                TKManager.Instance.Mydata.Init(index.ToString());
 
-                            if (OkAction != null)
-                                OkAction();
+                                FirebaseManager.Instance.SetUserData();
 
-                            TKManager.Instance.SaveFile();
-                            PopupMgr.Instance.DismissPopup();
+                                if (OkAction != null)
+                                    OkAction();
+
+                                TKManager.Instance.SaveFile();
+                                PopupMgr.Instance.DismissPopup();
+                            });
                         }));
                     }
                     else
                     {
                         TKManager.Instance.Mydata.SetData(Gender, Name.text.ToString(), Number.text.ToString(), 0, 0, "");
 
-                        FirebaseManager.Instance.RegisterUserByFirebase();
+                        FirebaseManager.Instance.RegisterUserByFirebase((index) =>
+                        {
+                            TKManager.Instance.Mydata.Init(index.ToString());
 
-                        if (OkAction != null)
-                            OkAction();
+                            FirebaseManager.Instance.SetUserData();
 
-                        TKManager.Instance.SaveFile();
-                        PopupMgr.Instance.DismissPopup(this.PopupType);
+                            if (OkAction != null)
+                                OkAction();
+
+                            TKManager.Instance.SaveFile();
+                            PopupMgr.Instance.DismissPopup(this.PopupType);
+                        });
                     }
                 }
             });

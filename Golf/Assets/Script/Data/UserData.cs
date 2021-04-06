@@ -90,7 +90,7 @@ public class UserData
     public void AddEvaluationData(EvaluationData data)
     {
         EvaluationDataList.Insert(0, data);
-        TKManager.Instance.SaveFile();
+        //TKManager.Instance.SaveFile();
     }
 
     public void AddGiftcon(int index, string thumbnailURL, string giftconURL)
