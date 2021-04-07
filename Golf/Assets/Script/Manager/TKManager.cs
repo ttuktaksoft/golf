@@ -48,7 +48,7 @@ public class TKManager : MonoBehaviour
         PoseType = CommonData.TRAINING_POSE.TRAINING_ADDRESS;
         gyro = Input.gyro;
         gyro.enabled = false;
-        Input.location.Start(0.5f);
+        //Input.location.Start(0.5f);
 
         DontDestroyOnLoad(this);
 
@@ -127,22 +127,22 @@ public class TKManager : MonoBehaviour
 
     public void SetUserLocation()
     {
-        if (Input.location.isEnabledByUser)
-        {
-            if (Input.location.status != LocationServiceStatus.Failed)
-            {
-                Mydata.currentGPSPosition = Input.location.lastData;
-                FirebaseManager.Instance.SetUserLocation(Mydata.currentGPSPosition);
-            }
-            else
-            {
-                Debug.Log("!!!!!!Input.location.status" + LocationServiceStatus.Failed);
-            }
-        }
-        else
-        {
-            Debug.Log("!!!!!!SetUserLocation not enable" + Input.location.isEnabledByUser);
-        }
+        //if (Input.location.isEnabledByUser)
+        //{
+        //    if (Input.location.status != LocationServiceStatus.Failed)
+        //    {
+        //        Mydata.currentGPSPosition = Input.location.lastData;
+        //        FirebaseManager.Instance.SetUserLocation(Mydata.currentGPSPosition);
+        //    }
+        //    else
+        //    {
+        //        Debug.Log("!!!!!!Input.location.status" + LocationServiceStatus.Failed);
+        //    }
+        //}
+        //else
+        //{
+        //    Debug.Log("!!!!!!SetUserLocation not enable" + Input.location.isEnabledByUser);
+        //}
     }
 
 
