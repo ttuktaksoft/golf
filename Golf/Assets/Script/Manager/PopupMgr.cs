@@ -39,6 +39,8 @@ public class PopupMgr : MonoBehaviour
         REWARD_SELECT,
         PURCHASE,
         PURCHASE_SHIPPING,
+        CRAETE,
+        LOGIN,
     }
     
     private Dictionary<POPUP_TYPE, Popup> PopupList = new Dictionary<POPUP_TYPE, Popup>();

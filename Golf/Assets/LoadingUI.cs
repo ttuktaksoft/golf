@@ -29,6 +29,10 @@ public class LoadingUI : MonoBehaviour
     private bool KakaoDataSaveProgress = false;
     private string KakaoAccessToken = "";
 
+
+    public Button Login_Button;
+    public Button Create_Button;
+
     static int getSDKInt()
     {
         using (var version = new AndroidJavaClass("android.os.Build$VERSION"))
@@ -46,6 +50,9 @@ public class LoadingUI : MonoBehaviour
         Kakao.onClick.AddListener(OnClickKakaoLogin);
         WebViewClose.onClick.AddListener(OnClickWebViewClose);
         WebviewObj.gameObject.SetActive(false);
+
+        Login_Button.onClick.AddListener(OnClickUserLogin);
+        Create_Button.onClick.AddListener(OnClickUserCreate);
     }
 
     void Start()
@@ -149,7 +156,7 @@ public class LoadingUI : MonoBehaviour
         else
         {
             // 로그인이 안되었다.
-            CreateUser();
+            // CreateUser();
             LoadingPage.gameObject.SetActive(false);
             LoginPage.gameObject.SetActive(true);
         }
@@ -175,14 +182,32 @@ public class LoadingUI : MonoBehaviour
 
     }
 
+    public void OnClickUserLogin()
+    {
+        PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.LOGIN, new PopupUserLogin.PopupData(() =>
+        {
+            GetUserData();
+        }));
+    }
+
+    public void OnClickUserCreate()
+    {
+        PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.CRAETE, new PopupUserCreate.PopupData(() =>
+        {
+            GetUserData();
+        }));
+    }
+
     public void CreateUser()
     {
+        /*
         PopupMgr.Instance.ShowPopup(PopupMgr.POPUP_TYPE.USER_SETTING, new PopupUserSetting.PopupData(() =>
         {
             StartCoroutine(Co_RegisterUserProgress());
         }, true));
+        */
     }
-
+    /*
     public IEnumerator Co_RegisterUserProgress()
     {
         TKManager.Instance.ShowLoading();
@@ -213,7 +238,7 @@ public class LoadingUI : MonoBehaviour
 
         GetUserData();
     }
-
+    */
     public void GetUserData()
     {
         StartCoroutine(Co_GetUserData());
@@ -222,6 +247,8 @@ public class LoadingUI : MonoBehaviour
     public IEnumerator Co_GetUserData()
     {
         TKManager.Instance.ShowLoading();
+
+        //TKManager.Instance.SaveFile();
 
         FirebaseManager.Instance.GetData();
 

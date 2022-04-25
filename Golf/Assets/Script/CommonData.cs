@@ -47,6 +47,14 @@ public class CommonData : MonoBehaviour
         GENDER_WOMAN  = 1
     }
 
+    public enum LOGIN_TYPE
+    {
+        ERROR,
+        OK,
+        ID_FAIL,
+        PW_FAIL
+    }
+
     public enum SOUND_TYPE
     {
         TRAINING_ENTER,

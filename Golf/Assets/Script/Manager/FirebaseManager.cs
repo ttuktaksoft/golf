@@ -32,6 +32,7 @@ public class FirebaseManager : MonoBehaviour
     public DatabaseReference mDatabaseRef;
 
     public bool NickNameExist = false;
+    public bool UserIDExist = false;
     public bool AddFriendEnable = false;
     public bool RegisterUserProgress = false;
 
@@ -526,7 +527,104 @@ public class FirebaseManager : MonoBehaviour
         });
     }
 
+    // 아이디 중복 체크
+    public void IsExistID(string userID, Action endAction)
+    {
+        SetFirebaseProgressEndAction(endAction);
+
+        mDatabaseRef.Child("UserIDList").Child(userID).GetValueAsync().ContinueWith(task =>
+        {
+
+            if (task.IsFaulted)
+            {
+                // Handle the error...
+            }
+            else if (task.IsCompleted)
+            {
+                DataSnapshot snapshot = task.Result;
+
+                if (snapshot.Exists || snapshot.Value != null)
+                {
+                    UserIDExist = true;
+                }
+                else
+                {
+                    UserIDExist = false;
+                }
+                //  Debug.LogFormat("UserInfo: Index : {0} NickName {1} Point {2}", TKManager.Instance.MyData.Index, TKManager.Instance.MyData.NickName, TKManager.Instance.MyData.Point);
+            }
+
+            FirebaseProgress = false;
+        });
+    }
+
+    public void UserLogin(string userID, string userPW, Action<CommonData.LOGIN_TYPE> completeAction, Action endAction)
+    {
+        Debug.LogFormat("UserLogin Start");
+
+        SetFirebaseProgressEndAction(endAction);
+
+        mDatabaseRef.Child("UserIDList").Child(userID).GetValueAsync().ContinueWith(task =>
+        {
+            if (task.IsFaulted)
+            {
+                // Handle the error...
+            }
+            else if (task.IsCompleted)
+            {
+                DataSnapshot snapshot = task.Result;
+
+                if (snapshot.Exists)
+                {
+                    var tempData = snapshot.Value as Dictionary<string, object>;
+
+
+                    if (tempData.ContainsKey("PW"))
+                    {
+                        if (tempData["PW"].ToString().Equals(userPW))
+                        {
+                            if (tempData.ContainsKey("Index"))
+                            {
+                                TKManager.Instance.Mydata.Init(tempData["Index"].ToString());
+                                completeAction(CommonData.LOGIN_TYPE.OK);
+                                FirebaseProgress = false;
+                            }
+                            else
+                            {
+                                completeAction(CommonData.LOGIN_TYPE.ERROR);
+                                FirebaseProgress = false;
+                            }
+                        }
+                        else
+                        {
+                            // 비번 틀림
+                            completeAction(CommonData.LOGIN_TYPE.PW_FAIL);
+                            FirebaseProgress = false;
+                        }
+                    }
+                }
+                else
+                {
+                    completeAction(CommonData.LOGIN_TYPE.ID_FAIL);
+                    FirebaseProgress = false;
+                }
+
+                Debug.LogFormat("UserLogin End");
+            }
+        });
+    }
+
+
     // 사용자 정보 파이어베이스에 세팅
+    public void SetUserCreateData(string id, string pw, int index)
+    {
+        Dictionary<string, string> userData = new Dictionary<string, string>();
+        userData.Add("ID", id);
+        userData.Add("PW", pw);
+        userData.Add("Index", index.ToString());
+        mDatabaseRef.Child("UserIDList").Child(id).SetValueAsync(userData);
+
+    }
     public void SetUserData()
     {
         mDatabaseRef.Child("UserNameList").Child(TKManager.Instance.Mydata.Name).SetValueAsync(TKManager.Instance.Mydata.Index);
